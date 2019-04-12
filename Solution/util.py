@@ -54,12 +54,17 @@ def isin_center(x, y):
         The parameters can be two single numbers, or two pandas Series.
         The return value will correspondingly be a number or a Series consists of 1 and 0.
     '''
+    
+    MIN_X = 3750901.5068
+    MAX_X = 3770901.5068
+    MIN_Y = -19268905.6133
+    MAX_Y = -19208905.6133
+
     if isinstance(x, (int, float)) and isinstance(y, (int, float)):
-        res = 3750901.5068 <= x <= 3770901.5068 and -19268905.6133 <= y <= -19208905.6133
+        res = MIN_X <= x <= MAX_X and MIN_Y <= y <= MAX_Y
         return 1 if res else 0
     elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
-        res = (3750901.5068 <= x) & (
-            x <= 3770901.5068) & (-19268905.6133 <= y) & (y <= -19208905.6133)
+        res = (MIN_X <= x) & (x <= MAX_X) & (MIN_Y <= y) & (y <= MAX_Y)
         res = res.apply(lambda x: 1 if x else 0)
         res.name = "target"   # To make it in accordance with the submission file
         return res
