@@ -105,3 +105,11 @@ venv.bak/
 
 # Competition Original File
 OriginalFile/*
+
+# Pycharm
+.idea/*
+
+# Temp csv file
+temp*.csv
+
+
