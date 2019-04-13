@@ -3,6 +3,14 @@ from util import Raw_DF_Reader
 from sklearn.base import TransformerMixin, BaseEstimator
 import numpy as np
 
+traj_id_ix = 1
+time_entry_ix = 2
+time_exit_ix = 3
+x_entry_ix = 7
+y_entry_ix = 8
+x_exit_ix = 9
+y_exit_ix = 10
+
 
 class FillPathTransformer(TransformerMixin, BaseEstimator):
     def fit(self, X):
@@ -14,26 +22,28 @@ class FillPathTransformer(TransformerMixin, BaseEstimator):
     def __connect_one_device(self, group):
         hash_, df = group[0], group[1]
 
-        def rename_traj_id(x):
+        def add_p5_suffix(x):
             return x + ".5"
 
         new_df = pd.DataFrame([[
-            hash_,
-            rename_traj_id(df.iloc[i, 1]),
-            df.iloc[i, 3],
-            df.iloc[i+1, 2],
-            np.nan,
-            np.nan,
-            np.nan,
-            df.iloc[i, 9],
-            df.iloc[i, 10],
-            df.iloc[i+1, 7],
-            df.iloc[i+1, 8]
+            hash_,  # hash
+            add_p5_suffix(df.iloc[i, traj_id_ix]),  # traj_id
+            df.iloc[i, time_exit_ix],  # time_entry
+            df.iloc[i+1, time_entry_ix],    # time_exit
+            np.nan,  # vmax
+            np.nan,  # vmin
+            np.nan,  # vmean
+            df.iloc[i, x_exit_ix],  # x_entry
+            df.iloc[i, y_exit_ix],  # y_entry
+            df.iloc[i+1, x_entry_ix],    # x_exit
+            df.iloc[i+1, y_entry_ix]     # y_exit
         ] for i in range(df.shape[0] - 1)], columns=df.columns)
 
-        return pd.concat([df,new_df], axis=0).sort_values(by="time_entry", ascending=True)
+        return pd.concat([df, new_df], axis=0).sort_values(by="time_entry", ascending=True)
 
-
+'''
+# Test
 if __name__ == "__main__":
-    df = Raw_DF_Reader().test
+    df = Raw_DF_Reader().test.iloc[0:100]
     print(FillPathTransformer().fit_transform(df))
+'''
