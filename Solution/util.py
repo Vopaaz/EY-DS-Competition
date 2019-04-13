@@ -35,7 +35,7 @@ class Raw_DF_Reader(object):
 
     def __preprocess(self):
         '''
-            Convert the "time_entry" and "time_exit" column into datetime type.
+            Convert the "time_entry" and "time_exit" column into datetime data type.
         '''
 
         self.test.loc[:, ["time_entry", "time_exit"]] = pd.to_datetime(
@@ -47,14 +47,14 @@ class Raw_DF_Reader(object):
 
 def isin_center(x, y):
     '''
-        Define whether a coordinate is in the center of Atlanta.
+        Return whether a coordinate is in the center of Atlanta.
         The return value will be 1 and 0 instead of True or False,
         so as to be consistent with the competition requirement.
 
         The parameters can be two single numbers, or two pandas Series.
         The return value will correspondingly be a number or a Series consists of 1 and 0.
     '''
-    
+
     MIN_X = 3750901.5068
     MAX_X = 3770901.5068
     MIN_Y = -19268905.6133
