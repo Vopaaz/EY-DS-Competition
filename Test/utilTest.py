@@ -2,11 +2,12 @@ import sys
 sys.path.append(".")
 sys.path.append(r".\Solution")
 
-from Solution.util import distance_to_border, isin_center
-from Solution.NaiveFeature import NaiveDistanceExtractor
-import numpy as np
-import pandas as pd
 import unittest
+import pandas as pd
+import numpy as np
+from Solution.NaiveFeature import NaiveDistanceExtractor
+from Solution.util import distance_to_border, isin_center
+
 
 MIN_X = 3750901.5068
 MAX_X = 3770901.5068

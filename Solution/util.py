@@ -13,6 +13,7 @@ class Raw_DF_Reader(object):
         Attributes:
             test: Test dataset
             train: Train dataset
+
         In the table, "time_entry" and "time_exit" column are datetime data type,
         their year-month-date will be 1900-01-01 as they it is not provided in the source.
     '''
@@ -52,6 +53,9 @@ class Raw_DF_Reader(object):
 
 
 def xy_is_number(x, y):
+    '''
+        Return whether the two parameters are both numeric data types.
+    '''
     return isinstance(x, (int, float, np.float64, np.int64)) and isinstance(y, (int, float, np.float64, np.int64))
 
 
@@ -61,7 +65,7 @@ def isin_center(x, y):
         The return value will be 1 and 0 instead of True or False,
         so as to be consistent with the competition requirement.
 
-        The parameters can be two single numbers, or two pandas Series.
+        Parameters can be two single numbers, or two pandas Series.
         The return value will correspondingly be a number or a Series consists of 1 and 0.
     '''
 
@@ -79,6 +83,12 @@ def isin_center(x, y):
 
 
 def distance_to_border(x, y):
+    '''
+        Return the l1 distance of a point to the border of the central area.
+
+        Parameters can be two single numbers, or two pandas Series.
+        The return value will correspondingly be a number or a Series.
+    '''
     if xy_is_number(x, y):
         return _one_point_distance_to_border(x, y)
     elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
@@ -90,6 +100,11 @@ def distance_to_border(x, y):
 
 
 def _one_point_distance_to_border(x, y):
+    '''
+        Return the l1 distance of a point to the border of the central area.
+
+        Parameters: two single numbers
+    '''
     if isin_center(x, y):
         d_north = y - MAX_Y
         d_south = MIN_Y - y
@@ -101,6 +116,12 @@ def _one_point_distance_to_border(x, y):
 
 
 def _one_no_center_point_distance_to_border(x, y):
+    '''
+        Return the l1 distance of a point to the border of the central area.
+        The point MUST NOT be in the central area.
+
+        Parameters: two single numbers
+    '''
     if MIN_X <= x <= MAX_X:
         return min([abs(y-MIN_Y), abs(y-MAX_Y)])
     elif MIN_Y <= y <= MAX_Y:
