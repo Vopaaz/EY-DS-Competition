@@ -6,6 +6,7 @@ import pandas as pd
 class NaiveDistanceExtractor(TransformerMixin, BaseEstimator):
     '''
         Extract the max, min, average level of the distance of all the points recorded by a device.
+
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
     '''
