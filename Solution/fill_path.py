@@ -1,7 +1,8 @@
-import pandas as pd
-from util import Raw_DF_Reader
-from sklearn.base import TransformerMixin, BaseEstimator
 import numpy as np
+import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+
+from util import Raw_DF_Reader
 
 traj_id_ix = 1
 time_entry_ix = 2
@@ -40,6 +41,7 @@ class FillPathTransformer(TransformerMixin, BaseEstimator):
         ] for i in range(df.shape[0] - 1)], columns=df.columns)
 
         return pd.concat([df, new_df], axis=0).sort_values(by="time_entry", ascending=True)
+
 
 '''
 # Test
