@@ -14,16 +14,31 @@ y_exit_ix = 10
 
 
 class FillPathTransformer(TransformerMixin, BaseEstimator):
+    '''
+        To fill all the path for raw train dataframe.
+    '''
     def fit(self, X):
         return self
 
     def transform(self, X):
+        '''
+            Parameter X is raw train dataframe.
+            Return a full-path train dataframe.
+        '''
         return pd.concat([self.__connect_one_device(i) for i in X.groupby("hash")], axis=0).reset_index(drop=True)
 
     def __connect_one_device(self, group):
+        '''
+            Create new paths,
+            concat them to the raw train dataframe,
+            and sort by time_entry.
+        '''
         hash_, df = group[0], group[1]
 
         def add_p5_suffix(x):
+            '''
+                Transform a new traj_id by adding ".5" to the end of the original traj_id
+            '''
             return x + ".5"
 
         new_df = pd.DataFrame([[
