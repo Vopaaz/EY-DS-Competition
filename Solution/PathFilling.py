@@ -41,11 +41,3 @@ class FillPathTransformer(TransformerMixin, BaseEstimator):
         ] for i in range(df.shape[0] - 1)], columns=df.columns)
 
         return pd.concat([df, new_df], axis=0).sort_values(by="time_entry", ascending=True)
-
-
-'''
-# Test
-if __name__ == "__main__":
-    df = Raw_DF_Reader().test.iloc[0:100]
-    print(FillPathTransformer().fit_transform(df))
-'''
