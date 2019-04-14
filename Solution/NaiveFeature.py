@@ -7,6 +7,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from util import Raw_DF_Reader, distance_to_border
 from PathFilling import FillPathTransformer
 
+
 class NaiveDistanceExtractor(TransformerMixin, BaseEstimator):
     '''
         Extract the max, min, average level of the distance of all the points recorded by a device.
