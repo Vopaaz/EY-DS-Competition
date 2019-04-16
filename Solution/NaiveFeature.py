@@ -158,4 +158,9 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
                 Each column is a feature, as described by the class docstring.
         '''
 
-        return X.groupby("hash").apply(lambda group: group[["x_entry", "y_entry"]].iloc[-1]).rename(columns={"x_entry": "x_last_point", "y_entry": "y_last_point"})
+        return X.groupby("hash").apply(
+            lambda group: group[["x_entry", "y_entry"]].iloc[-1]
+        ).rename(columns={
+            "x_entry": "x_last_point",
+            "y_entry": "y_last_point"
+        })
