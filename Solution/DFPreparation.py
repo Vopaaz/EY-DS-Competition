@@ -102,10 +102,20 @@ class DFProvider(object):
             self.df.to_csv(f, line_terminator="\n")
 
 
+
+'''
+    The following code can calculate and save the most useful csv files.
+'''
+'''
 if __name__ == "__main__":
+    import threading
     for i in ["train", "test"]:
         for j in [True, False]:
             try:
-                DFProvider(i, path_filled=j, overwrite=False).get_df()
-            except:
-                pass
+                t = threading.Thread(
+                    target = DFProvider(i, path_filled=j, overwrite=True).get_df
+                )
+                t.start()
+            except Exception as e:
+                print(e)
+'''
