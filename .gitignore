@@ -111,5 +111,5 @@ OriginalFile/*
 
 # Temp csv file
 temp*.csv
-
+Tmp/*
 

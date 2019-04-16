@@ -4,8 +4,8 @@ sys.path.append(r".\Solution")
 import unittest
 import pandas as pd
 import numpy as np
-from Solution.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
-from Solution.util import distance_to_border, isin_center, distance_between, time_delta
+from Solution.util.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
+from Solution.util.utilFunc import distance_to_border, isin_center, distance_between, time_delta
 
 
 MIN_X = 3750901.5068
