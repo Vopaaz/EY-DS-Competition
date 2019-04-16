@@ -12,7 +12,29 @@ from util.utilFunc import Raw_DF_Reader
 
 
 class DFProvider(object):
+    '''
+        Provide the applicable DataFrame, each row is one device,
+        each column is one feature (or the prediction label if for train set).
+        Invalid values (np.nan) are contained.
 
+        The calculate result will be automately saved in Tmp/,
+        the filename is also auto-mapped.
+
+        Parameters:
+            - set_: ["train"/"test"], get train set or test set.
+            - features: str "all" or list containing the following options:
+                - "coordinate"
+                - "distance"
+                - "path"
+                Each means a set of features. Default "all".
+            - path_filled: boolean, whether or not to apply the path filling routine. Default True
+            - overwrite: boolean, whether or not ignore the existed csv file and recalculate the dataframe.
+
+        ---
+        Inserting New Extractors by modifying the code:
+        1. add the extractor class to ALL_EXTRACTORS constant dictionary.
+        2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
+    '''
     ALL_EXTRACTORS = {
         "coordinate": CoordinateInfoExtractor,
         "distance": DistanceInfoExtractor,
@@ -53,6 +75,9 @@ class DFProvider(object):
         self.__filepath = self.__get_filepath()
 
     def __provide_df(self):
+        '''
+            Returns the required DataFrame.
+        '''
         self.__initialize_extractors()
         if self.set_ == "train":
             self.extractor_objs.append(Labeller())
@@ -77,20 +102,26 @@ class DFProvider(object):
         self.extractor_objs = [i(self.path_filled) for i in self.extractors]
 
     def __get_filepath(self):
+        '''
+            Map the parameters of the provider to an identifiable filepath.
+        '''
         dir_ = r"Tmp"
         fname = self.set_.upper() + "-" + "-".join(self.features) + \
             ("-pathfilled" if self.path_filled else "") + ".csv"
         return os.path.join(dir_, fname)
 
     def get_df(self):
+        '''
+            Returns the required DataFrame.
+        '''
         if os.path.exists(self.__filepath) and not self.overwrite:
             print("Detected existed required file.")
             with open(self.__filepath, "r", encoding="utf-8") as f:
                 self.df = pd.read_csv(f)
         else:
             print(
-                "No existed required file" if not self.overwrite else "Forced overwrite"+", recalculating")
-            self.df = self.__provide_df()
+                "No existed required file" if not self.overwrite else "Forced overwrite"+", recalculating.")
+            self.df = self.__provide_df().apply(pd.to_numeric, errors="coerce")
             self.__write_df()
             print("Newly calculated dataframe retrieved and saved.")
 
@@ -102,20 +133,18 @@ class DFProvider(object):
             self.df.to_csv(f, line_terminator="\n")
 
 
-
 '''
     The following code can calculate and save the most useful csv files.
 '''
-'''
+
 if __name__ == "__main__":
     import threading
     for i in ["train", "test"]:
         for j in [True, False]:
             try:
                 t = threading.Thread(
-                    target = DFProvider(i, path_filled=j, overwrite=True).get_df
+                    target=DFProvider(i, path_filled=j, overwrite=True).get_df
                 )
                 t.start()
             except Exception as e:
                 print(e)
-'''

@@ -151,6 +151,9 @@ def distance_between(x1, y1, x2, y2):
 
 
 def _distance_between_points(x1, y1, x2, y2):
+    '''
+        Return the l1 distance(s) between the two coodinate (Series).
+    '''
     return abs(x1-x2) + abs(y1-y2)
 
 
@@ -180,4 +183,3 @@ def _single_pair_time_delta(timestamp1, timestamp2):
         Parameters: Two single pandas Timestamps
     '''
     return abs((timestamp1 - timestamp2).total_seconds())
-

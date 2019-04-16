@@ -152,8 +152,8 @@ class LabelTest(unittest.TestCase):
     def test_labelling(self):
         test_df = pd.DataFrame({
             "hash": ["1", "1", "2", "2"],
-            "x_entry": [np.nan, MIN_X+1, np.nan, MAX_X+1],
-            "y_entry": [np.nan, MIN_Y, np.nan, MIN_Y]
+            "x_exit": [np.nan, MIN_X+1, np.nan, MAX_X+1],
+            "y_exit": [np.nan, MIN_Y, np.nan, MIN_Y]
         })
         res = Labeller().fit_transform(test_df)
         self.assertSequenceEqual(list(res.target), [1, 0])
