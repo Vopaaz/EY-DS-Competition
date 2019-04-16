@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util import Raw_DF_Reader
+from util.utilFunc import Raw_DF_Reader
 
 traj_id_ix = 1
 time_entry_ix = 2
