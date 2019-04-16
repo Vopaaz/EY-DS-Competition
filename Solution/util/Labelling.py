@@ -20,6 +20,6 @@ class Labeller(TransformerMixin, BaseEstimator):
         '''
         res = pd.DataFrame(X.groupby("hash").apply(
             lambda series: isin_center(
-                series.x_entry.iloc[-1], series.y_entry.iloc[-1]),
+                series.x_exit.iloc[-1], series.y_exit.iloc[-1]),
         ), columns=["target"])
         return res
