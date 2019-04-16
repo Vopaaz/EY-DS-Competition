@@ -20,7 +20,7 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
         All the distances will be l1 distance.
     '''
 
-    def __init__(self, path_filled=True):
+    def __init__(self, path_filled=False):
         self.path_filled = path_filled
 
     def fit(self, X):
@@ -56,8 +56,8 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
         distance = distance_to_border(group.x_entry, group.y_entry)
 
         return pd.Series({
-            "max_distance": max(distance),
-            "min_distance": min(distance),
+            "max_distance": distance.max(),
+            "min_distance": distance.min(),
             "avg_distance": distance.mean(),
             "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
             "last_path_dist_diff": distance.iloc[-1] - distance.iloc[-2]
@@ -77,8 +77,8 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
         distance = pd.concat([distance_1, distance_2])
 
         return pd.Series({
-            "max_distance": max(distance),
-            "min_distance": min(distance),
+            "max_distance": distance.max(),
+            "min_distance": distance.min(),
             "avg_distance": distance.mean(),
             "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
             "last_path_dist_diff": distance.iloc[-1] - distance.iloc[group.shape[0]-2]
@@ -127,12 +127,12 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
             lambda series: series.iloc[0]/series.iloc[1] if series.iloc[1] != 0 else np.nan, axis=1).dropna()
 
         return pd.Series({
-            "max_length": max(lengths),
-            "min_length": min(lengths),
+            "max_length": lengths.max(),
+            "min_length": lengths.min(),
             "avg_length": lengths.mean(),
-            "max_velocity": max(velocities) if not velocities.empty else np.nan,
-            "min_velocity": min(velocities) if not velocities.empty else np.nan,
-            "avg_velocity": velocities.mean() if not velocities.empty else np.nan
+            "max_velocity": velocities.max(),
+            "min_velocity": velocities.min(),
+            "avg_velocity": velocities.mean()
         })
 
 
