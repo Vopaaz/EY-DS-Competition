@@ -4,16 +4,21 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util import Raw_DF_Reader, distance_to_border
+from util import Raw_DF_Reader, distance_to_border, distance_between, time_delta
 from PathFilling import FillPathTransformer
 
 
-class NaiveDistanceExtractor(TransformerMixin, BaseEstimator):
+class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     '''
-        Extract the max, min, average level of the distance of all the points recorded by a device.
+        Features extracted:
+            - The max, min, average level of the distance of all the points recorded by a device.
+            - The difference between the distance of the entry of the first path and the exit of the last one.
+            - The difference between the distance of the entry and the exit of the last path.
 
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
+
+        All the distances will be l1 distance.
     '''
 
     def __init__(self, path_filled=True):
@@ -28,13 +33,13 @@ class NaiveDistanceExtractor(TransformerMixin, BaseEstimator):
                 X: Dataframe containing column "hash", "x_entry", "y_entry", "x_exit", "y_exit"
 
             Returns:
-                A Dataframe containing numbers of "hash" rows, three columns.
+                A Dataframe containing numbers of "hash" rows, five columns.
                 The index is the hash value of the device.
-                Each column is correspondingly max, min, average distance of all the points recorded by a device.
+                Each column is a feature, as described by the class docstring.
 
-            If the Extractor is path_filled, it only consider the entries.
-            Otherwise it consider both exits and entries.
+            The last path will not be considered.
         '''
+
         if self.path_filled:
             distance_info_in_group = self.__filled_distance_info_in_group
         else:
@@ -44,25 +49,113 @@ class NaiveDistanceExtractor(TransformerMixin, BaseEstimator):
 
     def __filled_distance_info_in_group(self, group):
         '''
-            The calculated points are only entries.
+            Extract the features from the records of one device.
+            The result will be identical to that of using self.__not_filled_distance_info_in_group()
+            But the performance might be slightly better.
         '''
+
         distance = distance_to_border(group.x_entry, group.y_entry)
+
         return pd.Series({
             "max_distance": max(distance),
             "min_distance": min(distance),
-            "avg_distance": distance.mean()
+            "avg_distance": distance.mean(),
+            "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+            "last_path_dist_diff": distance.iloc[-1] - distance.iloc[-2]
         })
 
     def __not_filled_distance_info_in_group(self, group):
         '''
-            The calculated points are both entries and exits.
+            Extract the features from the records of one device.
         '''
-        distance_1 = distance_to_border(group.x_entry, group.y_entry)
+        group_considered = group.iloc[:-1]
+
+        distance_1 = distance_to_border(
+            group_considered.x_entry, group_considered.y_entry)
         distance_2 = distance_to_border(
-            group.iloc[:-1].x_exit, group.iloc[:-1].y_exit)
+            group_considered.x_exit, group_considered.y_exit)
+
         distance = pd.concat([distance_1, distance_2])
+
         return pd.Series({
             "max_distance": max(distance),
             "min_distance": min(distance),
-            "avg_distance": distance.mean()
+            "avg_distance": distance.mean(),
+            "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+            "last_path_dist_diff": distance.iloc[-1] - distance.iloc[group.shape[0]-2]
         })
+
+
+class PathInfoExtractor(TransformerMixin, BaseEstimator):
+    '''
+        Features extracted:
+            - The min, max, average level of the length of all the paths recorded by a device
+            - The min, max, average level of the average velocity of all the paths recorded by a device
+    '''
+
+    def fit(self, X):
+        return self
+
+    def transform(self, X):
+        '''
+            Parameters:
+                X: Dataframe containing column:
+                "hash", "x_entry", "y_entry", "x_exit", "y_exit", "time_entry", "time_exit"
+
+            Returns:
+                A Dataframe containing numbers of "hash" rows, six columns.
+                The index is the hash value of the device.
+                Each column is a feature, as described by the class docstring.
+
+            The last path will not be considered.
+        '''
+
+        return X.groupby("hash").apply(self.__path_info_in_group)
+
+    def __path_info_in_group(self, group):
+        '''
+            Extract the features from the records of one device.
+        '''
+
+        group_considered = group.iloc[:-1]
+        lengths = distance_between(group_considered.x_entry, group_considered.y_entry,
+                                   group_considered.x_exit, group_considered.y_exit)
+
+        time_deltas = time_delta(
+            group_considered.time_entry, group_considered.time_exit)
+
+        velocities = pd.concat([lengths, time_deltas], axis=1).apply(
+            lambda series: series.iloc[0]/series.iloc[1] if series.iloc[1] != 0 else np.nan, axis=1).dropna()
+
+        return pd.Series({
+            "max_length": max(lengths),
+            "min_length": min(lengths),
+            "avg_length": lengths.mean(),
+            "max_velocity": max(velocities) if not velocities.empty else np.nan,
+            "min_velocity": min(velocities) if not velocities.empty else np.nan,
+            "avg_velocity": velocities.mean() if not velocities.empty else np.nan
+        })
+
+
+class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
+    '''
+        Features Extracted:
+            - The coordinate of the start point of the last path (the unknown, to be predicted path).
+    '''
+
+    def fit(self, X):
+        return self
+
+    def transform(self, X):
+        '''
+            Parameters:
+                X: Dataframe containing column:
+                "hash", "x_entry", "y_entry"
+
+            Returns:
+                A Dataframe containing numbers of "hash" rows, two columns.
+                The index is the hash value of the device.
+                Each column is a feature, as described by the class docstring.
+        '''
+
+        return X.groupby("hash").apply(lambda group: group[["x_entry", "y_entry"]].iloc[-1]).rename(columns={"x_entry": "x_last_point", "y_entry": "y_last_point"})

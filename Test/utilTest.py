@@ -1,12 +1,11 @@
 import sys
 sys.path.append(".")
 sys.path.append(r".\Solution")
-
 import unittest
 import pandas as pd
 import numpy as np
-from Solution.NaiveFeature import NaiveDistanceExtractor
-from Solution.util import distance_to_border, isin_center
+from Solution.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
+from Solution.util import distance_to_border, isin_center, distance_between, time_delta
 
 
 MIN_X = 3750901.5068
@@ -46,10 +45,32 @@ class UtilTest(unittest.TestCase):
         y = pd.Series([MIN_Y-1, MIN_Y+2, MAX_Y+10])
         self.assertSequenceEqual(list(distance_to_border(x, y)), [2, -1, 10])
 
+    def test_distance_between_points(self):
+        self.assertEqual(distance_between(0, 0, 2, 2), 4)
+        self.assertEqual(distance_between(0, 0, 2, 2), 4)
+        self.assertEqual(distance_between(0, 10, 0, 5), 5)
+        x1 = pd.Series([0, 1])
+        y1 = pd.Series([0, -1])
+        x2 = pd.Series([3, 4])
+        y2 = pd.Series([5, 4])
+        self.assertSequenceEqual(
+            list(distance_between(x1, y1, x2, y2)), [8, 8])
 
-class NaiveDistanceTest(unittest.TestCase):
+    def test_time_delta(self):
+        ts1 = pd.Timestamp("2019-4-16 12:00:00")
+        ts2 = pd.Timestamp("2019-4-16 12:01:00")
+
+        ts_series1 = pd.Series([ts1, ts2])
+        ts_series2 = pd.Series([ts2, ts1])
+
+        self.assertEqual(time_delta(ts1, ts2), 60)
+        self.assertSequenceEqual(
+            list(time_delta(ts_series1, ts_series2)), [60, 60])
+
+
+class DistanceInfoTest(unittest.TestCase):
     def test_filled_case(self):
-        t = NaiveDistanceExtractor(path_filled=True)
+        t = DistanceInfoExtractor(path_filled=True)
         test_df = pd.DataFrame({
             "hash": ["1", "1", "2", "2"],
             "x_entry": [MIN_X, MIN_X+1, MAX_X-1, MAX_X+1],
@@ -61,9 +82,11 @@ class NaiveDistanceTest(unittest.TestCase):
         self.assertSequenceEqual(list(res.max_distance), [0, 1])
         self.assertSequenceEqual(list(res.min_distance), [-1, 0])
         self.assertSequenceEqual(list(res.avg_distance), [-0.5, 0.5])
+        self.assertSequenceEqual(list(res.start_end_dist_diff), [-1, 1])
+        self.assertSequenceEqual(list(res.last_path_dist_diff), [-1, 1])
 
     def test_not_filled_case(self):
-        t = NaiveDistanceExtractor(path_filled=False)
+        t = DistanceInfoExtractor(path_filled=False)
         test_df = pd.DataFrame({
             "hash": ["1", "1", "2", "2"],
             "x_entry": [MIN_X, MIN_X+1, MAX_X-1, MAX_X+1],
@@ -75,6 +98,54 @@ class NaiveDistanceTest(unittest.TestCase):
         self.assertSequenceEqual(list(res.max_distance), [0, 2])
         self.assertSequenceEqual(list(res.min_distance), [-2, 0])
         self.assertSequenceEqual(list(res.avg_distance), [-1, 1])
+        self.assertSequenceEqual(list(res.start_end_dist_diff), [-2, 2])
+        self.assertSequenceEqual(list(res.last_path_dist_diff), [-2, 2])
+
+
+class PathInfoTest(unittest.TestCase):
+    def test_path_info(self):
+        test_df = pd.DataFrame({
+            "hash": ["1", "1", "1", "2", "2", "2"],
+            "x_entry": [0, 0, 0, 0, 0, 0],
+            "y_entry": [0, 0, 0, 0, 0, 0],
+            "x_exit": [0, 0, 0, 0, 0, 0],
+            "y_exit": [1, 2, 3, 4, 5, 6],
+            "time_entry": [
+                pd.Timestamp("2000-01-01 00:00:00"),
+                pd.Timestamp("2000-01-01 00:01:00"),
+                pd.Timestamp("2000-01-01 00:01:00"),
+                pd.Timestamp("2000-01-01 00:00:00"),
+                pd.Timestamp("2000-01-01 00:01:00"),
+                pd.Timestamp("2000-01-01 00:02:00"),
+            ],
+            "time_exit": [
+                pd.Timestamp("2000-01-01 00:00:00"),
+                pd.Timestamp("2000-01-01 00:01:01"),
+                pd.Timestamp("2000-01-01 00:02:00"),
+                pd.Timestamp("2000-01-01 00:00:01"),
+                pd.Timestamp("2000-01-01 00:01:05"),
+                pd.Timestamp("2000-01-01 00:02:10"),
+            ]
+        })
+        res = PathInfoExtractor().fit_transform(test_df)
+        self.assertSequenceEqual(list(res.max_length), [2, 5])
+        self.assertSequenceEqual(list(res.min_length), [1, 4])
+        self.assertSequenceEqual(list(res.avg_length), [1.5, 4.5])
+        self.assertSequenceEqual(list(res.max_velocity), [2, 4])
+        self.assertSequenceEqual(list(res.min_velocity), [2, 1])
+        self.assertSequenceEqual(list(res.avg_velocity), [2, 2.5])
+
+
+class CoordinateInfoTest(unittest.TestCase):
+    def test_last_coordinate(self):
+        test_df = pd.DataFrame({
+            "hash": ["1", "1", "1", "2", "2", "2"],
+            "x_entry": [0, 1, 2, 3, 4, 5],
+            "y_entry": [6, 5, 4, 3, 2, 1]
+        })
+        res = CoordinateInfoExtractor().fit_transform(test_df)
+        self.assertSequenceEqual(list(res.x_last_point), [2, 5])
+        self.assertSequenceEqual(list(res.y_last_point), [4, 1])
 
 
 if __name__ == "__main__":
