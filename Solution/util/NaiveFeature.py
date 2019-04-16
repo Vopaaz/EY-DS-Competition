@@ -20,7 +20,7 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
         All the distances will be l1 distance.
     '''
 
-    def __init__(self, path_filled=False):
+    def __init__(self, path_filled=False, *args, **kwargs):
         self.path_filled = path_filled
 
     def fit(self, X):
@@ -55,13 +55,22 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
 
         distance = distance_to_border(group.x_entry, group.y_entry)
 
-        return pd.Series({
-            "max_distance": distance.max(),
-            "min_distance": distance.min(),
-            "avg_distance": distance.mean(),
-            "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
-            "last_path_dist_diff": distance.iloc[-1] - distance.iloc[-2]
-        })
+        try:
+            return pd.Series({
+                "max_distance": distance.max(),
+                "min_distance": distance.min(),
+                "avg_distance": distance.mean(),
+                "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+                "last_path_dist_diff": distance.iloc[-1] - distance.iloc[-2]
+            })
+        except:
+            return pd.Series({
+                "max_distance": distance.max(),
+                "min_distance": distance.min(),
+                "avg_distance": distance.mean(),
+                "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+                "last_path_dist_diff": np.nan
+            })
 
     def __not_filled_distance_info_in_group(self, group):
         '''
@@ -76,13 +85,22 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
 
         distance = pd.concat([distance_1, distance_2])
 
-        return pd.Series({
-            "max_distance": distance.max(),
-            "min_distance": distance.min(),
-            "avg_distance": distance.mean(),
-            "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
-            "last_path_dist_diff": distance.iloc[-1] - distance.iloc[group.shape[0]-2]
-        })
+        try:
+            return pd.Series({
+                "max_distance": distance.max(),
+                "min_distance": distance.min(),
+                "avg_distance": distance.mean(),
+                "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+                "last_path_dist_diff": distance.iloc[-1] - distance.iloc[group.shape[0]-2]
+            })
+        except:
+            return pd.Series({
+                "max_distance": distance.max(),
+                "min_distance": distance.min(),
+                "avg_distance": distance.mean(),
+                "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
+                "last_path_dist_diff": np.nan
+            })
 
 
 class PathInfoExtractor(TransformerMixin, BaseEstimator):
@@ -91,6 +109,9 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
             - The min, max, average level of the length of all the paths recorded by a device
             - The min, max, average level of the average velocity of all the paths recorded by a device
     '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
 
     def fit(self, X):
         return self
@@ -141,6 +162,9 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
         Features Extracted:
             - The coordinate of the start point of the last path (the unknown, to be predicted path).
     '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
 
     def fit(self, X):
         return self

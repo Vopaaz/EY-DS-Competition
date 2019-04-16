@@ -1,12 +1,12 @@
 import sys
 sys.path.append(".")
 sys.path.append(r".\Solution")
-import unittest
-import pandas as pd
-import numpy as np
-from Solution.util.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
+from Solution.util.Labelling import Labeller
 from Solution.util.utilFunc import distance_to_border, isin_center, distance_between, time_delta
-
+from Solution.util.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
+import numpy as np
+import pandas as pd
+import unittest
 
 MIN_X = 3750901.5068
 MAX_X = 3770901.5068
@@ -146,6 +146,17 @@ class CoordinateInfoTest(unittest.TestCase):
         res = CoordinateInfoExtractor().fit_transform(test_df)
         self.assertSequenceEqual(list(res.x_last_point), [2, 5])
         self.assertSequenceEqual(list(res.y_last_point), [4, 1])
+
+
+class LabelTest(unittest.TestCase):
+    def test_labelling(self):
+        test_df = pd.DataFrame({
+            "hash": ["1", "1", "2", "2"],
+            "x_entry": [np.nan, MIN_X+1, np.nan, MAX_X+1],
+            "y_entry": [np.nan, MIN_Y, np.nan, MIN_Y]
+        })
+        res = Labeller().fit_transform(test_df)
+        self.assertSequenceEqual(list(res.target), [1, 0])
 
 
 if __name__ == "__main__":
