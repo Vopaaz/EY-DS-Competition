@@ -92,8 +92,12 @@ def distance_to_border(x, y):
     if xy_is_number(x, y):
         return _one_point_distance_to_border(x, y)
     elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
-        return pd.DataFrame([x, y]).apply(
+        res = pd.DataFrame([x, y]).apply(
             lambda series: _one_point_distance_to_border(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
     else:
         raise TypeError(
             "Parameter type should be both number or both pandas Series. The parameter type now is {}, {}".format(type(x), type(y)))
@@ -144,7 +148,12 @@ def distance_between(x1, y1, x2, y2):
     if xy_is_number(x1, y1) and xy_is_number(x2, y2):
         return _distance_between_points(x1, y1, x2, y2)
     elif isinstance(x1, pd.Series) and isinstance(y1, pd.Series) and isinstance(x2, pd.Series) and isinstance(y2, pd.Series):
-        return pd.DataFrame([x1, y1, x2, y2]).apply(lambda series: _distance_between_points(series[0], series[1], series[2], series[3]), axis=0)
+        res = pd.DataFrame([x1, y1, x2, y2]).apply(lambda series: _distance_between_points(
+            series[0], series[1], series[2], series[3]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
     else:
         raise TypeError(
             "Parameter type should be all numbers or all pandas Series. The parameter type now is {}, {}, {}, {}".format(type(x1), type(y1), type(x2), type(y2)))
@@ -168,8 +177,12 @@ def time_delta(timestamp1, timestamp2):
     if isinstance(timestamp1, pd.Timestamp) and isinstance(timestamp2, pd.Timestamp):
         return _single_pair_time_delta(timestamp1, timestamp2)
     elif isinstance(timestamp1, pd.Series) and isinstance(timestamp2, pd.Series):
-        return pd.DataFrame([timestamp1, timestamp2]).apply(
+        res = pd.DataFrame([timestamp1, timestamp2]).apply(
             lambda series: _single_pair_time_delta(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
     else:
         raise TypeError(
             "Parameter type should be two numbers or two pandas Series. The parameter type now is {}, {}".format(type(timestamp1), type(timestamp2)))

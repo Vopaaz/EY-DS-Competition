@@ -145,7 +145,9 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
             group_considered.time_entry, group_considered.time_exit)
 
         velocities = pd.concat([lengths, time_deltas], axis=1).apply(
-            lambda series: series.iloc[0]/series.iloc[1] if series.iloc[1] != 0 else np.nan, axis=1).dropna()
+            lambda series: series.iloc[0]/series.iloc[1] if series.iloc[1] != 0 else np.nan, axis=1)
+        if velocities.empty:
+            velocities = pd.Series([])
 
         return pd.Series({
             "max_length": lengths.max(),
