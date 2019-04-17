@@ -55,6 +55,15 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
 
         distance = distance_to_border(group.x_entry, group.y_entry)
 
+        if distance.empty:
+            return pd.Series({
+                "max_distance": np.nan,
+                "min_distance": np.nan,
+                "avg_distance": np.nan,
+                "start_end_dist_diff": np.nan,
+                "last_path_dist_diff": np.nan
+            })
+
         try:
             return pd.Series({
                 "max_distance": distance.max(),
@@ -85,21 +94,21 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
 
         distance = pd.concat([distance_1, distance_2])
 
-        try:
+        if distance.empty:
+            return pd.Series({
+                "max_distance": np.nan,
+                "min_distance": np.nan,
+                "avg_distance": np.nan,
+                "start_end_dist_diff": np.nan,
+                "last_path_dist_diff": np.nan
+            })
+        else:
             return pd.Series({
                 "max_distance": distance.max(),
                 "min_distance": distance.min(),
                 "avg_distance": distance.mean(),
                 "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
                 "last_path_dist_diff": distance.iloc[-1] - distance.iloc[group.shape[0]-2]
-            })
-        except:
-            return pd.Series({
-                "max_distance": distance.max(),
-                "min_distance": distance.min(),
-                "avg_distance": distance.mean(),
-                "start_end_dist_diff": distance.iloc[-1] - distance.iloc[0],
-                "last_path_dist_diff": np.nan
             })
 
 
@@ -146,6 +155,7 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
 
         velocities = pd.concat([lengths, time_deltas], axis=1).apply(
             lambda series: series.iloc[0]/series.iloc[1] if series.iloc[1] != 0 else np.nan, axis=1)
+
         if velocities.empty:
             velocities = pd.Series([])
 
