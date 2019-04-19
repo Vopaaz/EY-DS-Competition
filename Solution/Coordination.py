@@ -1,17 +1,29 @@
 import logging
 
 import pandas as pd
+import datetime
+import os
+from sklearn.preprocessing import StandardScaler
 
 from util.utilFunc import Raw_DF_Reader
 
 
-def split_hash_feature_target(full):
+def split_hash_feature_target(full_df):
+    '''
+        Split the hash, feature and target column from a DataFrame.
+        Parameter:
+            - full_df: the DataFrame to be splitted. It MUST contain column "hash", but "target" is optional.
 
-    has_target = "target" in full.columns.values
+        Return:
+            - hash_: hash Series
+            - feature: feature DataFrame
+            - target: target Series, or None
+    '''
+    has_target = "target" in full_df.columns.values
 
-    hash_ = full.hash
-    feature = full.drop(columns=["hash"])
-    target = full.target if has_target else None
+    hash_ = full_df.hash
+    feature = full_df.drop(columns=["hash"])
+    target = full_df.target if has_target else None
 
     if has_target:
         feature = feature.drop(columns=["target"])
@@ -20,6 +32,11 @@ def split_hash_feature_target(full):
 
 
 def _check_preprocessed(func):
+    '''
+        Decorator: Check whether the preprocess is applied.
+        For decoration of the methods of NanCoordinator.
+    '''
+
     def inner(self, *args, **kwargs):
         if not self.preprocessed:
             msg = "The datasets are NOT PREPROCESSED in the coordinator. " +\
@@ -109,10 +126,10 @@ class NanCoordiantor(object):
         self.tests = [self.tests.fillna(0)]
 
     def __separate_all(self):
-        pass
+        raise NotImplementedError
 
     def __separate_part(self):
-        pass
+        raise NotImplementedError
 
     def preprocess(self, PreprocessingExecutor, *params, **kwparams):
         '''
@@ -121,10 +138,13 @@ class NanCoordiantor(object):
             Parameters:
                 - PreprocessingExecutor: a class that handles the preprocessing routines.
                   It must provide the following APIs:
-                    - fit: use the dataset to fit the transformer
-                    - transform: preprocess and transform the dataset
+                    - fit: use the dataset to fit the transformer, RETURN ITSELF.
+                    - transform: preprocess and transform the dataset, return a FULL DataFrame
                 - params & kwparams: the parameters to be passed to the Preprocessing Executor when initializing the object.
 
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter,
+            and its transform method should also be a DataFrame containing all the columns.
         '''
         self.preprocessors = [
             PreprocessingExecutor(*params, **kwparams).fit(i) for i in self.trains]
@@ -142,11 +162,14 @@ class NanCoordiantor(object):
             Parameters:
                 - TrainExecutor: a class that handles the machine learning training routines.
                   It must provide the following APIs:
-                    - fit: takes one train set as the parameter and return a model
+                    - fit: takes one train set as the parameter and return a model, who has a 'predict' API.
                 - params & kwparams: the parameters to be passed to the TrainExecutor when initializing the object.
 
             Returns:
                 - A list of trained models.
+
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter.
         '''
 
         self.models = [TrainExecutor(*params, **kwparams).fit(i)
@@ -155,7 +178,12 @@ class NanCoordiantor(object):
 
     @_check_preprocessed
     def predict(self):
+        '''
+            Predict the results based on the fitted models.
+            The result of the splitted groups will be combined in one DataFrame.
 
+            Returns: a full DataFrame containing columns "hash" and "target".
+        '''
         def predict_one_group(test, model):
             hash_, feature, _ = split_hash_feature_target(test)
             return pd.DataFrame({
@@ -169,10 +197,29 @@ class NanCoordiantor(object):
 
 
 class BaseExecutor(object):
+    '''
+        The Executor Base class.
+    '''
+
     def split_hash_feature_target(self, X):
+        '''
+            Wrap the split_hash_feature_target method (at the beginning of this file).
+        '''
         return split_hash_feature_target(X)
 
     def combine_hash_feature_target(self, hash_, feature, target, feature_cols=None):
+        '''
+        Combine the hash, feature and target column into a DataFrame.
+
+        Parameter:
+            - hash_: hash Series
+            - feature: feature np.ndarray (or pd.DataFrame)
+            - target: target Series, or None
+            - feature_cols: optional, the column name for the features.
+
+        Return:
+            - full_df: the combined DataFrame
+        '''
         if not feature_cols:
             feature_cols = pd.RangeIndex(0, feature.shape[1])
 
@@ -185,6 +232,10 @@ class BaseExecutor(object):
 
 
 class BasePreprocessingExecutor(BaseExecutor):
+    '''
+        Base class for the preprocessing executors.
+    '''
+
     def fit(self, train):
         raise NotImplementedError
 
@@ -193,18 +244,59 @@ class BasePreprocessingExecutor(BaseExecutor):
 
 
 class BaseTrainExecutor(BaseExecutor):
+    '''
+        Base class for the train executors
+    '''
+
     def fit(self, train):
         raise NotImplementedError
 
 
 class Submitter(object):
-    def __init__(self):
-        self.raw_test = Raw_DF_Reader().test
+    '''
+        Convert the hash_target DataFrame to the (traj_)id_target DataFrame,
+        which is the required format.
+        It can also save the result and with some memo infomation.
 
-    def transform(self, hash_result):
-        groups = self.raw_test.groupby("hash")
-        res = pd.DataFrame()
-        res["id"] = hash_result.apply(
+        Parameters:
+            - hash_result: the prediction result by other components.
+                Should have two columns: "hash" and "target"
+
+        Attributes:
+            - result: the transformed DataFrame with columns "id" and "target"
+    '''
+
+    def __init__(self, hash_result):
+        self.hash_result = hash_result
+        self.__transform_result()
+
+    def __transform_result(self):
+        '''
+            Transform the hash_target DataFrame to
+        '''
+        raw_test = Raw_DF_Reader().test
+        groups = raw_test.groupby("hash")
+        result = pd.DataFrame()
+        result["id"] = self.hash_result.apply(
             lambda series: groups.get_group(series.hash).trajectory_id.iloc[-1], axis=1)
-        res["target"] = hash_result.target
-        return res
+        result["target"] = self.hash_result.target
+        self.result = result
+
+    def save(self, memo=""):
+        '''
+            Save the result DataFrame to csv file.
+            The target diretory is "Result". The file will be named by monthday-hour-minute-second.
+
+            Parameters:
+                - memo: A string that describes this result DataFrame, it will be written in the memo.txt under the Result dir. 
+        '''
+        filename = datetime.datetime.now().strftime(r"%m%d-%H-%M-%S") + ".csv"
+        filepath = os.path.join("Result", filename)
+        self.result.to_csv(filepath, encoding="utf-8",
+                           index=False, line_terminator="\n")
+
+        with open(os.path.join("Result", "memo.txt"), "a+", encoding="utf-8") as f:
+            f.write(filename)
+            f.write("\t")
+            f.write(str(memo))
+            f.write("\n")
