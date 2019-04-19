@@ -35,6 +35,7 @@ class DFProvider(object):
         1. add the extractor class to ALL_EXTRACTORS constant dictionary.
         2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
     '''
+
     ALL_EXTRACTORS = {
         "coordinate": CoordinateInfoExtractor,
         "distance": DistanceInfoExtractor,
@@ -135,7 +136,6 @@ class DFProvider(object):
 
 '''
     The following code can calculate and save the most useful csv files.
-'''
 
 if __name__ == "__main__":
     import threading
@@ -148,4 +148,4 @@ if __name__ == "__main__":
                 t.start()
             except Exception as e:
                 print(e)
-
+'''
