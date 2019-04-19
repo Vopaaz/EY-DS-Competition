@@ -115,3 +115,6 @@ Tmp/*
 
 # VS Code
 .vscode/*
+
+# Results
+Result/*
