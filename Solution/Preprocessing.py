@@ -23,7 +23,7 @@ class StandardPreprocessor(BasePreprocessingExecutor):
         return self.combine_hash_feature_target(hash_, res, target)
 
 
-class StandardAndOutlierPreprocessor(BasePreprocessingExecutor):
+class StandardOutlierPreprocessor(BasePreprocessingExecutor):
     '''
         Wrap the sklearn.preprocessing.StandardPreprocessor and sklearn.ensemble.IsolationForest
         Parameter (please put it in kwargs when initiallizing)
@@ -35,7 +35,7 @@ class StandardAndOutlierPreprocessor(BasePreprocessingExecutor):
         _, feature, _ = self.split_hash_feature_target(X)
         contamination = self.kwargs["contamination"] if "contamination" in self.kwargs else 0.05
         self.i_forest = IsolationForest(
-            contamination=contamination, behavior="new")
+            contamination=contamination, behaviour="new")
         self.std_scaler = StandardScaler()
         self.i_forest.fit(feature)
         self.std_scaler.fit(feature)
