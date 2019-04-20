@@ -131,7 +131,7 @@ class NanCoordiantor(object):
     def __separate_part(self):
         raise NotImplementedError
 
-    def preprocess(self, PreprocessingExecutor, *params, **kwparams):
+    def preprocess(self, PreprocessingExecutor, *args, **kwargs):
         '''
             Apply the same preprocessing process to the train and test sets.
 
@@ -140,14 +140,14 @@ class NanCoordiantor(object):
                   It must provide the following APIs:
                     - fit: use the dataset to fit the transformer, RETURN ITSELF.
                     - transform: preprocess and transform the dataset, return a FULL DataFrame
-                - params & kwparams: the parameters to be passed to the Preprocessing Executor when initializing the object.
+                - args & kwargs: the parameters to be passed to the Preprocessing Executor when initializing the object.
 
             WARNING:
             The Executors should receive the full (containing hash and target) as the parameter,
             and its transform method should also be a DataFrame containing all the columns.
         '''
         self.preprocessors = [
-            PreprocessingExecutor(*params, **kwparams).fit(i) for i in self.trains]
+            PreprocessingExecutor(*args, **kwargs).fit(i) for i in self.trains]
         self.trains = [
             preprocessor.transform(i) for (i, preprocessor) in zip(self.trains, self.preprocessors)]
         self.tests = [
@@ -155,7 +155,7 @@ class NanCoordiantor(object):
         self.preprocessed = True
 
     @_check_preprocessed
-    def fit(self, TrainExecutor, *params, **kwparams):
+    def fit(self, TrainExecutor, *args, **kwargs):
         '''
             Fit machine learning models based on the selected strategy.
 
@@ -163,7 +163,7 @@ class NanCoordiantor(object):
                 - TrainExecutor: a class that handles the machine learning training routines.
                   It must provide the following APIs:
                     - fit: takes one train set as the parameter and return a model, who has a 'predict' API.
-                - params & kwparams: the parameters to be passed to the TrainExecutor when initializing the object.
+                - args & kwargs: the parameters to be passed to the TrainExecutor when initializing the object.
 
             Returns:
                 - A list of trained models.
@@ -172,7 +172,7 @@ class NanCoordiantor(object):
             The Executors should receive the full (containing hash and target) as the parameter.
         '''
 
-        self.models = [TrainExecutor(*params, **kwparams).fit(i)
+        self.models = [TrainExecutor(*args, **kwargs).fit(i)
                        for i in self.trains]
         return self.models
 
@@ -200,6 +200,10 @@ class BaseExecutor(object):
     '''
         The Executor Base class.
     '''
+
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
 
     def split_hash_feature_target(self, X):
         '''
