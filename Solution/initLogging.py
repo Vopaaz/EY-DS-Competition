@@ -8,3 +8,4 @@ def init_logging():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+    return logger

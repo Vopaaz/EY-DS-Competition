@@ -10,7 +10,7 @@ import logging
 from initLogging import init_logging
 from params import random_forest_2, gradient_boosting_2
 
-init_logging()
+logger = init_logging()
 SCORING = make_scorer(f1_score)
 
 
