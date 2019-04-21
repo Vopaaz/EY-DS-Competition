@@ -7,8 +7,8 @@ random_forest_1 = {
 }
 
 random_forest_2 = {
-    "n_estimators": [100, 500, 1000],
-    "max_features": [0.7,0.8,0.9],
+    "n_estimators": [50, 100, 500],
+    "max_features": [0.7, 0.8, 0.9],
     "max_depth": [5, 10, 20],
     "min_samples_leaf": [2, 5]
 }
