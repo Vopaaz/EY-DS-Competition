@@ -8,7 +8,7 @@ from Coordination import BaseTrainExecutor
 
 import logging
 from initLogging import init_logging
-from params import random_forest_1, gradient_boosting_1
+from params import random_forest_2, gradient_boosting_2
 
 init_logging()
 SCORING = make_scorer(f1_score)
@@ -17,7 +17,7 @@ SCORING = make_scorer(f1_score)
 class RandomForestExecutor(BaseTrainExecutor):
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
-        param_grid = random_forest_1
+        param_grid = random_forest_2
         rand_forest = RandomForestClassifier()
         g_search = GridSearchCV(rand_forest, param_grid,
                                 cv=5, scoring=SCORING)
@@ -29,7 +29,7 @@ class RandomForestExecutor(BaseTrainExecutor):
 class GradientBoostingExecutor(BaseTrainExecutor):
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
-        param_grid = gradient_boosting_1
+        param_grid = gradient_boosting_2
         g_boosting = GradientBoostingClassifier()
         g_search = GridSearchCV(g_boosting, param_grid, cv=5, scoring=SCORING)
         g_search.fit(feature, target),
