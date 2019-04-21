@@ -30,9 +30,4 @@ if __name__ == "__main__":
     # Submitter(res).save(
     #     "Only for exploration, RandomForest")
 
-    nc = NanCoordiantor(train, test, "fill_0")
-    nc.preprocess(StandardOutlierPreprocessor)
-    nc.fit(GradientBoostingExecutor)
-    res = nc.predict()
-    Submitter(res).save(
-        "Only for exploration, GradientBoosting")
+
