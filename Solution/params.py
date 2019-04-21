@@ -1,9 +1,16 @@
 # Final params: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
 random_forest_1 = {
-    "n_estimators": [10, 100, 100],
+    "n_estimators": [10, 100],
     "max_features": ["auto", None, 0.8],
     "max_depth": [None, 10, 100],
     "min_samples_leaf": [1, 2, 10],
+}
+
+random_forest_2 = {
+    "n_estimators": [100, 500, 1000],
+    "max_features": [0.7,0.8,0.9],
+    "max_depth": [5, 10, 20],
+    "min_samples_leaf": [2, 5]
 }
 
 # Final params: {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
@@ -12,4 +19,11 @@ gradient_boosting_1 = {
     "max_features": ["auto", None],
     "max_depth": [3, 5, 10],
     "min_samples_leaf": [1, 2, 10],
+}
+
+gradient_boosting_2 = {
+    "n_estimators": [50, 100, 300],
+    "max_features": [None],
+    "max_depth": [5],
+    "min_samples_leaf": [5, 10, 20]
 }
