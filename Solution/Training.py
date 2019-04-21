@@ -7,27 +7,17 @@ from sklearn.ensemble import VotingClassifier
 from Coordination import BaseTrainExecutor
 
 import logging
+from initLogging import init_logging
+from params import random_forest_1, gradient_boosting_1
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(r"log\trainLog.txt")
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-
+init_logging()
 SCORING = make_scorer(f1_score)
 
 
 class RandomForestExecutor(BaseTrainExecutor):
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
-        param_grid = {
-            "n_estimators": [10, 100, 100],
-            "max_features": ["auto", None, 0.8],
-            "max_depth": [None, 10, 100],
-            "min_samples_leaf": [1, 2, 10],
-        }
+        param_grid = random_forest_1
         rand_forest = RandomForestClassifier()
         g_search = GridSearchCV(rand_forest, param_grid,
                                 cv=5, scoring=SCORING)
@@ -39,12 +29,7 @@ class RandomForestExecutor(BaseTrainExecutor):
 class GradientBoostingExecutor(BaseTrainExecutor):
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
-        param_grid = {
-            "n_estimators": [100, 1000],
-            "max_features": ["auto", None],
-            "max_depth": [3, 5, 10],
-            "min_samples_leaf": [1, 2, 10],
-        }
+        param_grid = gradient_boosting_1
         g_boosting = GradientBoostingClassifier()
         g_search = GridSearchCV(g_boosting, param_grid, cv=5, scoring=SCORING)
         g_search.fit(feature, target),

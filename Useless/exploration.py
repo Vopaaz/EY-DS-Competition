@@ -20,16 +20,15 @@ class ExploreTrainer(BaseTrainExecutor):
 
 if __name__ == "__main__":
 
-    train = DFProvider("train", path_filled=True).get_df().iloc[:100]
+    train = DFProvider("train", path_filled=True).get_df()
     test = DFProvider("test", path_filled=True).get_df()
 
-    nc = NanCoordiantor(train, test, "fill_0")
-    nc.preprocess(StandardOutlierPreprocessor)
-    nc.fit(RandomForestExecutor)
-    res = nc.predict()
-
-    Submitter(res).save(
-        "Only for exploration, RandomForest")
+    # nc = NanCoordiantor(train, test, "fill_0")
+    # nc.preprocess(StandardOutlierPreprocessor)
+    # nc.fit(RandomForestExecutor)
+    # res = nc.predict()
+    # Submitter(res).save(
+    #     "Only for exploration, RandomForest")
 
     nc = NanCoordiantor(train, test, "fill_0")
     nc.preprocess(StandardOutlierPreprocessor)
