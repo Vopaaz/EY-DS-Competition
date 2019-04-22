@@ -5,7 +5,7 @@ def init_logging():
     logger.setLevel(logging.INFO)
     handler = logging.FileHandler(r"log\trainLog.txt")
     handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s\n')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
