@@ -29,3 +29,9 @@ gradient_boosting_2 = {
     "max_depth": [5],
     "min_samples_leaf": [5, 10, 20]
 }
+
+SVC_1 = {
+    "C": [1.0, 0.75, 1.25, 0.5, 1.5],
+    "kernel": ["rbf", "sigmoid", "poly"],
+    "gamma": ["auto", "scale"]
+}
