@@ -7,6 +7,7 @@ random_forest_1 = {
 }
 
 # fill_0 best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+# drop best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
 random_forest_2 = {
     "n_estimators": [50, 100, 500],
     "max_features": [0.8, 0.9],
@@ -23,6 +24,7 @@ gradient_boosting_1 = {
 }
 
 # fill_0 best: {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
+# drop best: {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 20, 'n_estimators': 100}
 gradient_boosting_2 = {
     "n_estimators": [50, 100, 300],
     "max_features": [None],
@@ -51,6 +53,6 @@ SVC_fill_0_best = {'C': 1.5, 'gamma': 'auto',
 XGBoosting_1 = {
     "max_depth": [2, 3, 5],
     "learning_rate": [0.05, 0.1, 0.2],
-    "n_estimators": [50, 100, 200, 500],
+    "n_estimators": [50, 100, 200],
     "gamma": [0, 0.01, 0.05],
 }

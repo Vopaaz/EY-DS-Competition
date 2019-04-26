@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # res = nc.predict()
     # Submitter(res).save("Combined Voting without SVC, use only random forest and gradient boosting, drop strategy. Parameters not optimized, using the best parameters of the fill_0 strategy")
 
-    nc = NanCoordiantor(train.iloc[0:100], test.iloc[0:100], "drop")
+    nc = NanCoordiantor(train, test, "drop")
     nc.preprocess(StandardOutlierPreprocessor)
     nc.fit(XGBoostExecutor)
     res = nc.predict()

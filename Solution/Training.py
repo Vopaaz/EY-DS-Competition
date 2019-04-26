@@ -57,7 +57,7 @@ class XGBoostExecutor(BaseTrainExecutor):
         xgb = XGBClassifier()
         g_search = GridSearchCV(xgb, param_grid, cv=5, scoring=SCORING)
         g_search.fit(feature, target)
-        # logger.info("XGBoost "+str(g_search.best_params_))
+        logger.info("XGBoost "+str(g_search.best_params_))
         return g_search.best_estimator_
 
 class CombinedExecutor(BaseTrainExecutor):
