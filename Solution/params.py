@@ -30,6 +30,7 @@ gradient_boosting_2 = {
     "min_samples_leaf": [5, 10, 20]
 }
 
+# fill_0 best: {'C': 1.5, 'gamma': 'auto', 'kernel': 'rbf'}
 SVC_1 = {
     "C": [1.0, 0.75, 1.25, 0.5, 1.5],
     "kernel": ["rbf", "sigmoid", "poly"],

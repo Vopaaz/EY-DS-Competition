@@ -23,22 +23,22 @@ if __name__ == "__main__":
     train = DFProvider("train", path_filled=True).get_df()
     test = DFProvider("test", path_filled=True).get_df()
 
-    # nc = NanCoordiantor(train, test, "fill_0")
-    # nc.preprocess(StandardOutlierPreprocessor)
-    # nc.fit(RandomForestExecutor)
-    # res = nc.predict()
-    # Submitter(res).save(
-    #     "Only for exploration, RandomForest")
+    nc = NanCoordiantor(train, test, "drop")
+    nc.preprocess(StandardOutlierPreprocessor)
+    nc.fit(RandomForestExecutor)
+    res = nc.predict()
+    Submitter(res).save(
+        "Drop Strategy, RandomForest")
 
-    # nc = NanCoordiantor(train, test, "fill_0")
-    # nc.preprocess(StandardOutlierPreprocessor)
-    # nc.fit(GradientBoostingExecutor)
-    # res = nc.predict()
-    # Submitter(res).save(
-    #     "Only for exploration, GradientBoosting")
+    nc = NanCoordiantor(train, test, "drop")
+    nc.preprocess(StandardOutlierPreprocessor)
+    nc.fit(GradientBoostingExecutor)
+    res = nc.predict()
+    Submitter(res).save(
+        "Drop Strategy, GradientBoosting")
 
-    nc = NanCoordiantor(train.iloc[0:500], test, "fill_0")
+    nc = NanCoordiantor(train, test, "drop")
     nc.preprocess(StandardOutlierPreprocessor)
     nc.fit(SupportVectorExecutor)
     res = nc.predict()
-    Submitter(res).save("1st round SVC params search.")
+    Submitter(res).save("Drop Strategy, SVC")
