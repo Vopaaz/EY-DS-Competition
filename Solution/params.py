@@ -36,3 +36,21 @@ SVC_1 = {
     "kernel": ["rbf", "sigmoid", "poly"],
     "gamma": ["auto", "scale"]
 }
+
+
+random_forest_fill_0_best = {'max_depth': 10, 'max_features': 0.8,
+                             'min_samples_leaf': 2, 'n_estimators': 100}
+
+gradient_boosting_fill_0_best = {
+    'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
+
+SVC_fill_0_best = {'C': 1.5, 'gamma': 'auto',
+                   'kernel': 'rbf', 'probability': True}
+
+
+XGBoosting_1 = {
+    "max_depth": [2, 3, 5],
+    "learning_rate": [0.05, 0.1, 0.2],
+    "n_estimators": [50, 100, 200, 500],
+    "gamma": [0, 0.01, 0.05],
+}
