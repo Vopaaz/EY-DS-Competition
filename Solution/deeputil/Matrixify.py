@@ -39,21 +39,17 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         return pd.DataFrame(X.groupby("hash").apply(self.__matrixfy_one_device), columns=["map"])
 
     def __matrixfy_one_device(self, df):
+        '''
+        Modify this function only.
+
+        Parameters:
+            - X: the raw DataFrame of only one device
+
+        Returns: the numpy 2d array or sparse matrix, or equivalent Data Structure.
+        '''
         map_ = np.zeros(self.resolution)
-        df.apply(self.__add_one_path_into_map, map_=map_, axis=1)
         return map_
 
-    def __add_one_path_into_map(self, series, map_):
-        x_entry = series.x_entry
-        y_entry = series.y_entry
-        x_exit = series.x_exit
-        y_exit = series.y_exit
-
-        if (not x_exit and not y_exit) or (x_entry == y_entry and x_exit == y_exit):
-            self.__add_one_dot_into_map(series, map_)
-
-    def __add_one_dot_into_map(self, series, map_):
-        pass
 
 
 if __name__ == "__main__":
