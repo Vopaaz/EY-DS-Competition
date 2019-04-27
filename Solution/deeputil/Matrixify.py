@@ -130,7 +130,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
-        return pd.DataFrame(X.groupby("hash").apply(self.__matrixfy_one_device), columns=["map"])
+        return pd.DataFrame(X.groupby("hash").apply(self.__matrixfy_one_device), columns=["map_"])
 
     def __center_x(self, i):
         return (i + 0.5) * self.pixel + self.min_x
@@ -173,7 +173,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         return value_number
 
-    def __matrix_path(self, map, path, case):
+    def __matrix_path(self, map_, path, case):
         '''
             The main function to construct the matrix
             Return:
@@ -183,7 +183,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         i, j = path.i_start, path.j_start
         while (not ((i == path.i_end) and (j == path.j_end))):
             i, j = path.i_start, path.j_start
-            map[i, j] = self.__assign_value(i, j, path)
+            map_[i, j] = self.__assign_value(i, j, path)
             d1 = _get_dist(self.__center_x(i + 1), self.__center_y(j),
                            path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # down
             d2 = _get_dist(self.__center_x(i), self.__center_y(j + 1),
@@ -195,8 +195,8 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             i, j = _next_place(i, j, case, d1, d2, d3, d4)
             path.i_start, path.j_start = i, j
 
-        map[i, j] = self.__assign_value(i, j, path)
-        return map
+        map_[i, j] = self.__assign_value(i, j, path)
+        return map_
 
     def __matrixfy_one_device(self, df):
         '''
@@ -207,7 +207,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         Returns: the numpy 2d array or sparse matrix, or equivalent Data Structure.
         '''
-        map = np.zeros(
+        map_ = np.zeros(
             (
                 math.floor((self.max_x - self.min_x)/self.pixel) + 1,
                 math.floor((self.max_y - self.min_y)/self.pixel) + 1
@@ -225,5 +225,5 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             case = _position_case(sX, sY, eX, eY)
             path = Path(i_start, j_start, i_end, j_end, sX,
                         sY, eX, eY, start_time, end_time)
-            map = self.__matrix_path(map, path, case)
-        return map
+            map_ = self.__matrix_path(map_, path, case)
+        return map_
