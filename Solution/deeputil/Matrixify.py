@@ -4,11 +4,13 @@ import pandas as pd
 import math
 from datetime import datetime
 
+
 class Path(object):
     '''
         Contains time and location information of a path
     '''
-    def __init__(self,i_start, j_start, i_end, j_end, sPoint_x, sPoint_y, ePoint_x, ePoint_y, start_time, end_time):
+
+    def __init__(self, i_start, j_start, i_end, j_end, sPoint_x, sPoint_y, ePoint_x, ePoint_y, start_time, end_time):
         self.i_start = i_start
         self.j_start = j_start
         self.i_end = i_end
@@ -21,8 +23,7 @@ class Path(object):
         self.end_time = end_time
 
 
-
-def get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
+def _get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
     '''
         Parameters:
             point_x: x coordination of the point
@@ -32,7 +33,7 @@ def get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
             line_x2: x coordination of the end point of the line
             line_y2: y coordination of the end point of the line
         Return:
-             The distance of the point to the line
+             The l2 distance of the point to the line
     '''
     a = line_y2 - line_y1
     b = line_x1 - line_x2
@@ -40,7 +41,8 @@ def get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
     dis = (math.fabs(a*point_x+b*point_y+c))/(math.pow(a*a+b*b, 0.5))
     return dis
 
-def point_dist(x1, y1, x2, y2):
+
+def _point_dist(x1, y1, x2, y2):
     '''
         Parameters:
             x1: the x coordination of point1
@@ -48,24 +50,12 @@ def point_dist(x1, y1, x2, y2):
             x2: the x coordination of point2
             y2: the y coordination of point2
         Return:
-             The distance from one point to the other
+             The l2 distance from one point to the other
     '''
     return math.sqrt(math.pow((x1 - x2), 2) + math.pow((y1 - y2), 2))
 
-def value_function(seconds_0, seconds_1, ratio):
-    '''
-        The value assignment function
-        Parameters haven't been determined.
-        It's still a temporary function.
-        Return:
-            The value to be assigned to the square
-    '''
-    return (seconds_1 * ratio + seconds_0)/61200
 
-
-
-
-def position_case(sPoint_x, sPoint_y, ePoint_x, ePoint_y):
+def _position_case(sPoint_x, sPoint_y, ePoint_x, ePoint_y):
     '''
         Determine which kind of relative position the 2 point is in
         Parameters:
@@ -91,7 +81,8 @@ def position_case(sPoint_x, sPoint_y, ePoint_x, ePoint_y):
     elif sPoint_x == ePoint_x and sPoint_y == ePoint_y:
         return -1
 
-def next_place(i, j, case, d1, d2, d3, d4):
+
+def _next_place(i, j, case, d1, d2, d3, d4):
     '''
         Select next square according to the distance
         Returns:
@@ -119,11 +110,10 @@ def next_place(i, j, case, d1, d2, d3, d4):
             return i, j+1
 
 
-
-
 class MatrixfyTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, pixel):
+    def __init__(self, pixel, value_func):
         self.pixel = pixel
+        self.value_func = value_func
 
     def fit(self, train, test):
 
@@ -140,15 +130,15 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
-        return pd.DataFrame(X.groupby("hash").apply(self.matrixfy_one_device), columns=["map"])
+        return pd.DataFrame(X.groupby("hash").apply(self.__matrixfy_one_device), columns=["map"])
 
-    def center_x(self, i):
+    def __center_x(self, i):
         return (i + 0.5) * self.pixel + self.min_x
 
-    def center_y(self, j):
+    def __center_y(self, j):
         return (j + 0.5) * self.pixel + self.min_y
 
-    def xy_to_ij(self, point_x, point_y):
+    def __xy_to_ij(self, point_x, point_y):
         '''
             Determine which square the point is in
             Parameters:
@@ -160,24 +150,30 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         '''
         return int((point_x - self.min_x) / self.pixel), int((point_y - self.min_y) / self.pixel)
 
-    def assign_value(self, i, j, path):
+    def __assign_value(self, i, j, path):
         '''
             Assign value to the selected square
             Return:
                 The value to be assigned to the selected square
         '''
-        start_dist = point_dist(self.center_x(
-            i), self.center_y(j), path.sPoint_x, path.sPoint_y)
-        end_dist = point_dist(self.center_x(
-            i), self.center_y(j), path.ePoint_x, path.ePoint_y)
+        start_dist = _point_dist(self.__center_x(
+            i), self.__center_y(j), path.sPoint_x, path.sPoint_y)
+        end_dist = _point_dist(self.__center_x(
+            i), self.__center_y(j), path.ePoint_x, path.ePoint_y)
+
+        # TODO: TIME_FUNC NEEDS TO CHANGE
         ratio = start_dist / (start_dist + end_dist)
-        base_time = datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+        base_time = datetime.strptime(
+            '1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+
         base_delta = path.start_time - base_time
         delta = path.end_time - path.start_time
-        value_number = value_function(base_delta.seconds, delta.seconds, ratio)
+
+        value_number = self.value_func(this_time_timestamp)
+
         return value_number
 
-    def matrix_path(self, map, path, case):
+    def __matrix_path(self, map, path, case):
         '''
             The main function to construct the matrix
             Return:
@@ -187,22 +183,22 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         i, j = path.i_start, path.j_start
         while (not ((i == path.i_end) and (j == path.j_end))):
             i, j = path.i_start, path.j_start
-            map[i, j] = self.assign_value(i, j, path)
-            d1 = get_dist(self.center_x(i + 1), self.center_y(j),
-                          path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # down
-            d2 = get_dist(self.center_x(i), self.center_y(j + 1),
-                          path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # right
-            d3 = get_dist(self.center_x(i - 1), self.center_y(j),
-                          path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # up
-            d4 = get_dist(self.center_x(i), self.center_y(j - 1),
-                          path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # left
-            i, j = next_place(i, j, case, d1, d2, d3, d4)
+            map[i, j] = self.__assign_value(i, j, path)
+            d1 = _get_dist(self.__center_x(i + 1), self.__center_y(j),
+                           path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # down
+            d2 = _get_dist(self.__center_x(i), self.__center_y(j + 1),
+                           path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # right
+            d3 = _get_dist(self.__center_x(i - 1), self.__center_y(j),
+                           path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # up
+            d4 = _get_dist(self.__center_x(i), self.__center_y(j - 1),
+                           path.sPoint_x, path.sPoint_y, path.ePoint_x, path.ePoint_y)  # left
+            i, j = _next_place(i, j, case, d1, d2, d3, d4)
             path.i_start, path.j_start = i, j
 
-        map[i, j] = self.assign_value(i, j, path)
+        map[i, j] = self.__assign_value(i, j, path)
         return map
 
-    def matrixfy_one_device(self, df):
+    def __matrixfy_one_device(self, df):
         '''
         Modify this function only.
 
@@ -224,13 +220,10 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             eY = df.iloc[i, 11]
             start_time = pd.to_datetime(df.iloc[i, 3])
             end_time = pd.to_datetime(df.iloc[i, 4])
-            i_start, j_start = self.xy_to_ij(sX, sY)
-            i_end, j_end = self.xy_to_ij(eX, eY)
-            case = position_case(sX, sY, eX, eY)
-            path = Path(i_start, j_start, i_end, j_end, sX, sY, eX, eY, start_time, end_time)
-            map = self.matrix_path(map, path, case)
+            i_start, j_start = self.__xy_to_ij(sX, sY)
+            i_end, j_end = self.__xy_to_ij(eX, eY)
+            case = _position_case(sX, sY, eX, eY)
+            path = Path(i_start, j_start, i_end, j_end, sX,
+                        sY, eX, eY, start_time, end_time)
+            map = self.__matrix_path(map, path, case)
         return map
-
-
-
-
