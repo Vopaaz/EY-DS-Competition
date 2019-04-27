@@ -49,7 +49,7 @@ gradient_boosting_fill_0_best = {
 SVC_fill_0_best = {'C': 1.5, 'gamma': 'auto',
                    'kernel': 'rbf', 'probability': True}
 
-
+# drop best: {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 200}
 XGBoosting_1 = {
     "max_depth": [2, 3, 5],
     "learning_rate": [0.05, 0.1, 0.2],
