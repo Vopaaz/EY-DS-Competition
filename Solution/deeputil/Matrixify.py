@@ -161,14 +161,12 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         end_dist = _point_dist(self.__center_x(
             i), self.__center_y(j), path.ePoint_x, path.ePoint_y)
 
-        # TODO: TIME_FUNC NEEDS TO CHANGE
         ratio = start_dist / (start_dist + end_dist)
         base_time = datetime.strptime(
             '1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
 
-        base_delta = path.start_time - base_time
         delta = path.end_time - path.start_time
-
+        this_time_timestamp = path.start_time + delta*ratio
         value_number = self.value_func(this_time_timestamp)
 
         return value_number
