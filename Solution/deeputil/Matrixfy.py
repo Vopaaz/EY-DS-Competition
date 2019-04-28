@@ -127,6 +127,10 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         self.max_y = max(train.y_entry.max(), train.y_exit.max(),
                          test.y_entry.max(), test.y_exit.max())
 
+        self.resolution = (
+            math.floor((self.max_x - self.min_x)/self.pixel) + 1,
+            math.floor((self.max_y - self.min_y)/self.pixel) + 1
+        )
         return self
 
     def transform(self, X):
@@ -205,12 +209,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         Returns: the numpy 2d array or sparse matrix, or equivalent Data Structure.
         '''
-        map_ = np.zeros(
-            (
-                math.floor((self.max_x - self.min_x)/self.pixel) + 1,
-                math.floor((self.max_y - self.min_y)/self.pixel) + 1
-            )
-        )
+        map_ = np.zeros(self.resolution)
         for i in range(len(df)):
             sX = df.iloc[i, 8]
             sY = df.iloc[i, 9]
