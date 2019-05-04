@@ -4,6 +4,13 @@ import pandas as pd
 import math
 from datetime import datetime
 
+time_entry_ix = 2
+time_exit_ix = 3
+x_entry_ix = 7
+y_entry_ix = 8
+x_exit_ix = 9
+y_exit_ix = 10
+
 
 class Path(object):
     '''
@@ -208,26 +215,30 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         Returns: the numpy 2d array or sparse matrix, or equivalent Data Structure.
         '''
+
         map_ = np.zeros(self.resolution)
-        for i in range(len(df)):
-            sX = list(df['x_entry'])[i]
-            sY = list(df['y_entry'])[i]
-            start_time = list(df['time_entry'])[i]
-            end_time = list(df['time_exit'])[i]
+
+        for i in range(df.shape[0]):
+            sX = df.iloc[i, x_entry_ix]
+            sY = df.iloc[i, y_entry_ix]
+            start_time = df.iloc[i, time_entry_ix]
+            end_time = df.iloc[i, time_exit_ix]
 
             i_start, j_start = self.__xy_to_ij(sX, sY)
 
-            if i == len(df) - 1:
+            if i == df.shape[0] - 1:
                 path = Path(i_start, j_start, i_start, j_start, sX,
                             sY, sX, sY, start_time, end_time)
-                map_[path.i_start,path.j_start] = self.__assign_value(path.i_start, path.j_start, path)
+                map_[path.i_start, path.j_start] = self.__assign_value(
+                    path.i_start, path.j_start, path)
 
             else:
-                eX = list(df['x_exit'])[i]
-                eY = list(df['y_exit'])[i]
+                eX = df.iloc[i, x_exit_ix]
+                eY = df.iloc[i, y_exit_ix]
                 i_end, j_end = self.__xy_to_ij(eX, eY)
                 case = _position_case(sX, sY, eX, eY)
                 path = Path(i_start, j_start, i_end, j_end, sX,
                             sY, eX, eY, start_time, end_time)
                 map_ = self.__matrix_path(map_, path, case)
+
         return map_
