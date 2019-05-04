@@ -21,6 +21,7 @@ def main():
     r = Raw_DF_Reader()
     train = r.train.iloc[:41]
     test = r.test.iloc[:34]
+
     t.fit(train, test)
 
     train_maps = t.transform(train)
@@ -30,7 +31,6 @@ def main():
     test_maps = np.array(list(test_maps.map_))
 
     train_maps = train_maps.reshape(train_maps.shape[0], *t.resolution, 1)
-
     test_maps = test_maps.reshape(test_maps.shape[0], *t.resolution, 1)
 
     label = Labeller().transform(train)

@@ -116,7 +116,6 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         self.value_func = value_func
 
     def fit(self, train, test):
-
         self.min_x = min(train.x_entry.min(), train.x_exit.min(),
                          test.x_entry.min(), test.x_exit.min())
         self.max_x = max(train.x_entry.max(), train.x_exit.max(),
@@ -211,16 +210,24 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         '''
         map_ = np.zeros(self.resolution)
         for i in range(len(df)):
-            sX = df.iloc[i, 8]
-            sY = df.iloc[i, 9]
-            eX = df.iloc[i, 10]
-            eY = df.iloc[i, 11]
-            start_time = pd.to_datetime(df.iloc[i, 3])
-            end_time = pd.to_datetime(df.iloc[i, 4])
+            sX = list(df['x_entry'])[i]
+            sY = list(df['y_entry'])[i]
+            start_time = list(df['time_entry'])[i]
+            end_time = list(df['time_exit'])[i]
+
             i_start, j_start = self.__xy_to_ij(sX, sY)
-            i_end, j_end = self.__xy_to_ij(eX, eY)
-            case = _position_case(sX, sY, eX, eY)
-            path = Path(i_start, j_start, i_end, j_end, sX,
-                        sY, eX, eY, start_time, end_time)
-            map_ = self.__matrix_path(map_, path, case)
+
+            if i == len(df) - 1:
+                path = Path(i_start, j_start, i_start, j_start, sX,
+                            sY, sX, sY, start_time, end_time)
+                map_[path.i_start,path.j_start] = self.__assign_value(path.i_start, path.j_start, path)
+
+            else:
+                eX = list(df['x_exit'])[i]
+                eY = list(df['y_exit'])[i]
+                i_end, j_end = self.__xy_to_ij(eX, eY)
+                case = _position_case(sX, sY, eX, eY)
+                path = Path(i_start, j_start, i_end, j_end, sX,
+                            sY, eX, eY, start_time, end_time)
+                map_ = self.__matrix_path(map_, path, case)
         return map_
