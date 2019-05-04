@@ -18,12 +18,14 @@ def naive_value(timestamp):
     return time_delta(timestamp, start) / time_delta(start, end)
 
 
+class CNNexecutor(object):
+    pass
+
 def main():
-    import matplotlib.pyplot as plt
 
     r = Raw_DF_Reader()
-    train = r.train.iloc[:41]
-    test = r.test.iloc[:34]
+    train = r.train.iloc[:216]
+    test = r.test.iloc[:10007]
 
     # train = FillPathTransformer().transform(train)
     # test = FillPathTransformer().transform(test)
@@ -37,23 +39,12 @@ def main():
     train_maps = np.array(list(train_maps.map_))
     test_maps = np.array(list(test_maps.map_))
 
-    # plt.imshow(train_maps[0], cmap=plt.cm.binary)
-    # plt.show()
-    # plt.imshow(test_maps[0], cmap=plt.cm.binary)
-    # plt.show()
-
     train_maps = train_maps.reshape(train_maps.shape[0], *t.resolution, 1)
     test_maps = test_maps.reshape(test_maps.shape[0], *t.resolution, 1)
 
     label = Labeller().transform(train)
 
-    print(label)
-
     label = to_categorical(list(label.target))
-
-    print(train_maps.shape)
-    print(t.resolution)
-    print(label)
 
     model = models.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation="relu",
@@ -63,7 +54,7 @@ def main():
 
     model.compile(optimizer="rmsprop",
                   loss="categorical_crossentropy", metrics=["accuracy"])
-    model.fit(train_maps, label, epochs=1, batch_size=64)
+    model.fit(train_maps, label, epochs=3, batch_size=64)
 
     res = model.predict(test_maps)
     print(res)
