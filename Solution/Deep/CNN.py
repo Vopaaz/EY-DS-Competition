@@ -1,12 +1,15 @@
+import sys
+sys.path.append(".")
+
 import numpy as np
 import pandas as pd
 from keras import layers, models, optimizers
 from keras.utils import to_categorical
-
-from deeputil.Matrixfy import MatrixfyTransformer
-from util.Labelling import Labeller
-from util.PathFilling import FillPathTransformer
-from util.utilFunc import Raw_DF_Reader, time_delta
+from Solution.deeputil.Matrixfy import MatrixfyTransformer
+from Solution.util.Labelling import Labeller
+from Solution.util.PathFilling import FillPathTransformer
+from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
+from Solution.util.Submition import Submitter
 
 
 def naive_value(timestamp):
@@ -33,8 +36,8 @@ class CNNCoordinator(object):
 
     def __init__(self, fill_path=True, pixel=100, value_func=naive_value):
         r = Raw_DF_Reader()
-        train = r.train.iloc[:102]
-        test = r.test.iloc[:18]
+        train = r.train.iloc
+        test = r.test.iloc
         self._test = test
 
         print("DataFrame read.")
@@ -74,7 +77,7 @@ class CNNCoordinator(object):
                 - result: a numpy array shaped (*, 2) derived from the CNN model
 
             Returns:
-                - a hash-indexed DataFrame with one column as the prediction result.
+                - The prediction result DataFrame with two columns, "hash" and "target".
         '''
 
         result = pd.DataFrame(result, index=self._test.hash.drop_duplicates())
@@ -82,7 +85,7 @@ class CNNCoordinator(object):
             lambda series: 0 if series.iloc[0] >= 0.5 else 1, axis=1)
         result = result[["target"]]
 
-        return result
+        return result.reset_index().rename({"index": "hash"})
 
 
 def init_model(resolution):
@@ -115,12 +118,13 @@ def main():
     resolution = coor.resolution
 
     model = init_model(resolution)
-
-    model.fit(train_maps, labels, epochs=3, batch_size=64)
+    model.fit(train_maps, labels, epochs=30, batch_size=64)
 
     result = model.predict(test_maps)
 
-    print(coor.transform_result(result))
+    res = coor.transform_result(result)
+    s = Submitter(res)
+    s.save("CNN 1st exploration")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util.utilFunc import Raw_DF_Reader, distance_to_border, distance_between, time_delta
+from Solution.util.BaseUtil import (Raw_DF_Reader, distance_between,
+                                    distance_to_border, time_delta)
 
 
 class DistanceInfoExtractor(TransformerMixin, BaseEstimator):

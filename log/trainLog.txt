@@ -1,0 +1,8 @@
+2019-04-21 10:27:22,036 - GradientBoosting {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
+2019-04-21 09:23:16,687 - Random Forest {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+2019-04-22 06:14:35,083 - Random Forest {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+2019-04-21 15:42:51,140 - GradientBoosting {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
+2019-04-23 14:18:29,936 - SVC {'C': 1.5, 'gamma': 'auto', 'kernel': 'rbf'}
+2019-04-26 09:15:07,764 - Random Forest {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+2019-04-26 09:30:04,337 - GradientBoosting {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 20, 'n_estimators': 100}
+2019-04-27 00:01:59,826 - XGBoost {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 200}

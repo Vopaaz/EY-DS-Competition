@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util.utilFunc import isin_center
+from Solution.util.BaseUtil import isin_center
 
 
 class Labeller(TransformerMixin, BaseEstimator):
