@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 def provide_array():
     reader = Raw_DF_Reader()
-    train = reader.train.iloc[:100000]
+    train = reader.train
     test = reader.test
 
     matrixfier = MatrixfyTransformer(pixel=1000)
@@ -47,12 +47,12 @@ def save(result):
     result["hash"] = test.hash.drop_duplicates().reset_index(drop=True)
 
     s = Submitter(result)
-    s.save("Matrixfy PCA Approach, 2nd, 100000 train data.")
+    s.save("Matrixfy PCA Approach, using full train set, pixel=1000.")
 
 
 if __name__ == "__main__":
     train, test, label = provide_array()
-    pca = PCA()
+    pca = PCA(n_components=50, svd_solver="randomized")
     train = pca.fit_transform(train)
     test = pca.transform(test)
     model = XGBClassifier()
