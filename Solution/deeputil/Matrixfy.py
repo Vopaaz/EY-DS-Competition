@@ -1,12 +1,9 @@
-import math
-import os
-from datetime import datetime
-
+from sklearn.base import TransformerMixin, BaseEstimator
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, TransformerMixin
-
-from Solution.util.BaseUtil import time_delta
+import math
+from datetime import datetime
+import os
 
 time_entry_ix = 2
 time_exit_ix = 3
@@ -121,14 +118,8 @@ def _next_place(i, j, case, d1, d2, d3, d4):
             return i, j+1
 
 
-def naive_value(timestamp):
-    start = pd.Timestamp("1900-01-01 00:00:00")
-    end = pd.Timestamp("1900-01-01 23:59:59")
-    return time_delta(timestamp, start) / time_delta(start, end)
-
-
 class MatrixfyTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, pixel=1000, value_func=naive_value):
+    def __init__(self, pixel, value_func):
         self.pixel = pixel
         self.value_func = value_func
 
@@ -255,3 +246,26 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
                 map_ = self.__matrix_path(map_, path, case)
 
         return map_
+
+    def __get_filepath(self):
+        dir_ = r"Tmp"
+        fname = "Matrix-map.csv"
+        return os.path.join(dir_, fname)
+
+    def get_map(self, df):
+        if os.path.exists(self.__filepath) and not self.overwrite:
+            print("Detected existed required file.")
+            with open(self.__filepath, "r", encoding="utf-8") as f:
+                map_ = pd.read_csv(f)
+        else:
+            print("No existed required file" if not self.overwrite else "Forced overwrite")
+            map_ = self.transform(df)
+            self.write_map(map_)
+            print("New sparse matrix maps are saved.")
+
+        return map_
+
+    def write_map(self, map_):
+        with open(self.__filepath, 'w', encoding='utf-8') as f:
+            map_.to_csv(f)
+
