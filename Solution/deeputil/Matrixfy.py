@@ -123,7 +123,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         self.pixel = pixel
         self.value_func = value_func
 
-    def fit(self, train, test, overwrite=False):
+    def fit(self, train, test):
         self.min_x = min(train.x_entry.min(), train.x_exit.min(),
                          test.x_entry.min(), test.x_exit.min())
         self.max_x = max(train.x_entry.max(), train.x_exit.max(),
@@ -138,9 +138,8 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             math.floor((self.max_x - self.min_x)/self.pixel) + 1,
             math.floor((self.max_y - self.min_y)/self.pixel) + 1
         )
+        self.big_matrix = np.zeros(self.resolution)
 
-        self.__filepath = self.__get_filepath()
-        self.overwrite = overwrite
         return self
 
     def transform(self, X):
@@ -247,25 +246,11 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         return map_
 
-    def __get_filepath(self):
-        dir_ = r"Tmp"
-        fname = "Matrix-map.csv"
-        return os.path.join(dir_, fname)
+    def to_matrix_provider(self, df):
+        tmp_df = df.groupby("hash").apply(self.__matrixfy_one_device)
+        for i in range(0, len(tmp_df)):
+            self.big_matrix = np.concatenate([self.big_matrix, tmp_df.iloc[i]], axis=1)
 
-    def get_map(self, df):
-        if os.path.exists(self.__filepath) and not self.overwrite:
-            print("Detected existed required file.")
-            with open(self.__filepath, "r", encoding="utf-8") as f:
-                map_ = pd.read_csv(f)
-        else:
-            print("No existed required file" if not self.overwrite else "Forced overwrite")
-            map_ = self.transform(df)
-            self.write_map(map_)
-            print("New sparse matrix maps are saved.")
+        return self.big_matrix, tmp_df.index
 
-        return map_
-
-    def write_map(self, map_):
-        with open(self.__filepath, 'w', encoding='utf-8') as f:
-            map_.to_csv(f)
 
