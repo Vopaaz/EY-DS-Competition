@@ -34,7 +34,7 @@ class CNNCoordinator(object):
             - resolution: The resolution of the label (The number of pixels in height and width)
     '''
 
-    def __init__(self, fill_path=True, pixel=100, value_func=naive_value):
+    def __init__(self, fill_path=True, pixel=1000, value_func=naive_value):
         r = Raw_DF_Reader()
         train = r.train
         test = r.test
