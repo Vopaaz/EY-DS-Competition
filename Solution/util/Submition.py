@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 
-from BaseUtil import Raw_DF_Reader
+from Solution.util.BaseUtil import Raw_DF_Reader
 
 
 class Submitter(object):
@@ -42,7 +42,7 @@ class Submitter(object):
             The target diretory is "Result". The file will be named by monthday-hour-minute-second.
 
             Parameters:
-                - memo: A string that describes this result DataFrame, it will be written in the memo.txt under the Result dir. 
+                - memo: A string that describes this result DataFrame, it will be written in the memo.txt under the Result dir.
         '''
         filename = datetime.datetime.now().strftime(r"%m%d-%H-%M-%S") + ".csv"
         filepath = os.path.join("Result", filename)

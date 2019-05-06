@@ -1,8 +1,8 @@
+import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
-from Coordination import BasePreprocessingExecutor
-import pandas as pd
+from Solution.Machine.Coordination import BasePreprocessingExecutor
 
 
 class StandardPreprocessor(BasePreprocessingExecutor):
