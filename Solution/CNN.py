@@ -37,6 +37,8 @@ class CNNCoordinator(object):
         test = r.test.iloc[:18]
         self._test = test
 
+        print("DataFrame read.")
+
         if fill_path:
             train = FillPathTransformer().transform(train)
             test = FillPathTransformer().transform(test)

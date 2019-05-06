@@ -222,23 +222,23 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         map_ = np.zeros(self.resolution)
 
-        for i in range(df.shape[0]):
-            sX = df.iloc[i, x_entry_ix]
-            sY = df.iloc[i, y_entry_ix]
-            start_time = df.iloc[i, time_entry_ix]
-            end_time = df.iloc[i, time_exit_ix]
+        for ix, arr in enumerate(df.values):
+            sX = arr[x_entry_ix]
+            sY = arr[y_entry_ix]
+            start_time = arr[time_entry_ix]
+            end_time = arr[time_exit_ix]
 
             i_start, j_start = self.__xy_to_ij(sX, sY)
 
-            if i == df.shape[0] - 1:
+            if ix == df.shape[0] - 1:
                 path = Path(i_start, j_start, i_start, j_start, sX,
                             sY, sX, sY, start_time, end_time)
                 map_[path.i_start, path.j_start] = self.__assign_value(
                     path.i_start, path.j_start, path)
 
             else:
-                eX = df.iloc[i, x_exit_ix]
-                eY = df.iloc[i, y_exit_ix]
+                eX = arr[x_exit_ix]
+                eY = arr[y_exit_ix]
                 i_end, j_end = self.__xy_to_ij(eX, eY)
                 case = _position_case(sX, sY, eX, eY)
                 path = Path(i_start, j_start, i_end, j_end, sX,
