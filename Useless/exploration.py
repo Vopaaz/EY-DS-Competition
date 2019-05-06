@@ -6,13 +6,14 @@ import pandas as pd
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 
-from Solution.Coordination import BaseTrainExecutor, NanCoordiantor, Submitter
+from Solution.Coordination import BaseTrainExecutor, NanCoordiantor
 from Solution.Preprocessing import (StandardOutlierPreprocessor,
                                     StandardPreprocessor)
 from Solution.Training import (CombinedExecutor, GradientBoostingExecutor,
                                RandomForestExecutor, SupportVectorExecutor,
                                XGBoostExecutor)
 from Solution.util.DFPreparation import DFProvider
+from Solution.util.Submition import Submitter
 
 
 

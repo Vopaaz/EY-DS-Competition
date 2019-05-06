@@ -8,7 +8,7 @@ from util.Labelling import Labeller
 from util.NaiveFeature import (CoordinateInfoExtractor, DistanceInfoExtractor,
                                PathInfoExtractor)
 from util.PathFilling import FillPathTransformer
-from util.utilFunc import Raw_DF_Reader
+from util.BaseUtil import Raw_DF_Reader
 
 
 class DFProvider(object):
