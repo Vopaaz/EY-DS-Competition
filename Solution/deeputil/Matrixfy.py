@@ -132,7 +132,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         self.pixel = pixel
         self.value_func = value_func
 
-    def fit(self, train, test, overwrite=False):
+    def fit(self, train, test):
         self.min_x = min(train.x_entry.min(), train.x_exit.min(),
                          test.x_entry.min(), test.x_exit.min())
         self.max_x = max(train.x_entry.max(), train.x_exit.max(),
@@ -148,8 +148,6 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             math.floor((self.max_y - self.min_y)/self.pixel) + 1
         )
 
-        self.__filepath = self.__get_filepath()
-        self.overwrite = overwrite
         return self
 
     def transform(self, X):
