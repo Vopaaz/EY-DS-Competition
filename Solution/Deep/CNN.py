@@ -36,8 +36,8 @@ class CNNCoordinator(object):
 
     def __init__(self, fill_path=True, pixel=100, value_func=naive_value):
         r = Raw_DF_Reader()
-        train = r.train.iloc
-        test = r.test.iloc
+        train = r.train
+        test = r.test
         self._test = test
 
         print("DataFrame read.")
