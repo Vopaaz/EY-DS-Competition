@@ -252,17 +252,20 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         fname = "Matrix-map.csv"
         return os.path.join(dir_, fname)
 
-    def save_map(self, df):
+    def get_map(self, df):
         if os.path.exists(self.__filepath) and not self.overwrite:
             print("Detected existed required file.")
             with open(self.__filepath, "r", encoding="utf-8") as f:
-                self.df = pd.read_csv(f)
+                map_ = pd.read_csv(f)
         else:
             print("No existed required file" if not self.overwrite else "Forced overwrite")
-            self.write_map(df)
+            map_ = self.transform(df)
+            self.write_map(map_)
             print("New sparse matrix maps are saved.")
 
-    def write_map(self, df):
+        return map_
+
+    def write_map(self, map_):
         with open(self.__filepath, 'w', encoding='utf-8') as f:
-            self.transform(df).to_csv(f)
+            map_.to_csv(f)
 
