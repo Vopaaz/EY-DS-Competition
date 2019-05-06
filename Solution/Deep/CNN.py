@@ -1,12 +1,15 @@
+import sys
+sys.path.append(".")
+
 import numpy as np
 import pandas as pd
 from keras import layers, models, optimizers
 from keras.utils import to_categorical
 
-from deeputil.Matrixfy import MatrixfyTransformer
-from util.Labelling import Labeller
-from util.PathFilling import FillPathTransformer
-from util.utilFunc import Raw_DF_Reader, time_delta
+from Solution.deeputil.Matrixfy import MatrixfyTransformer
+from Solution.util.Labelling import Labeller
+from Solution.util.PathFilling import FillPathTransformer
+from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 
 
 def naive_value(timestamp):
