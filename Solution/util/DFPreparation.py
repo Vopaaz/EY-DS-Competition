@@ -4,11 +4,12 @@ from collections import Iterable
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util.Labelling import Labeller
-from util.NaiveFeature import (CoordinateInfoExtractor, DistanceInfoExtractor,
-                               PathInfoExtractor)
-from util.PathFilling import FillPathTransformer
-from util.utilFunc import Raw_DF_Reader
+from Solution.util.BaseUtil import Raw_DF_Reader
+from Solution.util.Labelling import Labeller
+from Solution.util.NaiveFeature import (CoordinateInfoExtractor,
+                                        DistanceInfoExtractor,
+                                        PathInfoExtractor)
+from Solution.util.PathFilling import FillPathTransformer
 
 
 class DFProvider(object):
@@ -35,6 +36,7 @@ class DFProvider(object):
         1. add the extractor class to ALL_EXTRACTORS constant dictionary.
         2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
     '''
+
     ALL_EXTRACTORS = {
         "coordinate": CoordinateInfoExtractor,
         "distance": DistanceInfoExtractor,
@@ -135,7 +137,6 @@ class DFProvider(object):
 
 '''
     The following code can calculate and save the most useful csv files.
-'''
 
 if __name__ == "__main__":
     import threading
@@ -148,4 +149,4 @@ if __name__ == "__main__":
                 t.start()
             except Exception as e:
                 print(e)
-
+'''
