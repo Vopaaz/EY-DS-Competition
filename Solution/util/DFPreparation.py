@@ -4,11 +4,12 @@ from collections import Iterable
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util.Labelling import Labeller
-from util.NaiveFeature import (CoordinateInfoExtractor, DistanceInfoExtractor,
-                               PathInfoExtractor)
-from util.PathFilling import FillPathTransformer
-from util.utilFunc import Raw_DF_Reader
+from Solution.util.BaseUtil import Raw_DF_Reader
+from Solution.util.Labelling import Labeller
+from Solution.util.NaiveFeature import (CoordinateInfoExtractor,
+                                        DistanceInfoExtractor,
+                                        PathInfoExtractor)
+from Solution.util.PathFilling import FillPathTransformer
 
 
 class DFProvider(object):

@@ -2,7 +2,7 @@ import sys
 sys.path.append(".")
 sys.path.append(r".\Solution")
 from Solution.util.Labelling import Labeller
-from Solution.util.utilFunc import distance_to_border, isin_center, distance_between, time_delta
+from Solution.util.BaseUtil import distance_to_border, isin_center, distance_between, time_delta
 from Solution.util.NaiveFeature import DistanceInfoExtractor, PathInfoExtractor, CoordinateInfoExtractor
 import numpy as np
 import pandas as pd

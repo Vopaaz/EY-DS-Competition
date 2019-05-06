@@ -1,19 +1,17 @@
 import sys
 sys.path.append(".")
-sys.path.append(r".\Solution")
 
-import pandas as pd
-from sklearn import svm
-from sklearn.ensemble import RandomForestClassifier
-
-from Solution.Coordination import BaseTrainExecutor, NanCoordiantor, Submitter
-from Solution.Preprocessing import (StandardOutlierPreprocessor,
-                                    StandardPreprocessor)
-from Solution.Training import (CombinedExecutor, GradientBoostingExecutor,
-                               RandomForestExecutor, SupportVectorExecutor,
-                               XGBoostExecutor)
+from Solution.util.Submition import Submitter
 from Solution.util.DFPreparation import DFProvider
-
+from Solution.Machine.Training import (CombinedExecutor, GradientBoostingExecutor,
+                                       RandomForestExecutor, SupportVectorExecutor,
+                                       XGBoostExecutor)
+from Solution.Machine.Preprocessing import (StandardOutlierPreprocessor,
+                                            StandardPreprocessor)
+from Solution.Machine.Coordination import BaseTrainExecutor, NanCoordiantor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import svm
+import pandas as pd
 
 
 class ExploreTrainer(BaseTrainExecutor):
@@ -25,8 +23,8 @@ class ExploreTrainer(BaseTrainExecutor):
 
 if __name__ == "__main__":
 
-    train = DFProvider("train", path_filled=True).get_df()
-    test = DFProvider("test", path_filled=True).get_df()
+    train = DFProvider("train", path_filled=True).get_df().iloc[0:30]
+    test = DFProvider("test", path_filled=True).get_df().iloc[0:30]
 
     # nc = NanCoordiantor(train, test, "drop")
     # nc.preprocess(StandardOutlierPreprocessor)

@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from util.utilFunc import isin_center
+from Solution.util.BaseUtil import isin_center
 
 
 class Labeller(TransformerMixin, BaseEstimator):
@@ -17,6 +17,7 @@ class Labeller(TransformerMixin, BaseEstimator):
             Parameters: a DataFrame containing column "hash", "x_exit", "y_exit".
 
             Returns: a DataFrame of "hash" numbers of rows, one column "target".
+                    The index is the hash value of the device.
         '''
         res = pd.DataFrame(X.groupby("hash").apply(
             lambda series: isin_center(

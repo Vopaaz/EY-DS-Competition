@@ -1,16 +1,19 @@
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+import logging
+
+from sklearn.ensemble import (GradientBoostingClassifier,
+                              RandomForestClassifier, VotingClassifier)
 from sklearn.metrics import f1_score, make_scorer
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import VotingClassifier
+from sklearn.svm import SVC
+
+from Solution.Machine.Coordination import BaseTrainExecutor
+from Solution.Machine.initLogging import init_logging
+from Solution.Machine.params import (SVC_1, SVC_fill_0_best, XGBoosting_1,
+                                     gradient_boosting_2,
+                                     gradient_boosting_fill_0_best,
+                                     random_forest_2,
+                                     random_forest_fill_0_best)
 from xgboost import XGBClassifier
-
-from Coordination import BaseTrainExecutor
-
-import logging
-from initLogging import init_logging
-from params import (random_forest_2, gradient_boosting_2,
-                    SVC_1, random_forest_fill_0_best, gradient_boosting_fill_0_best, SVC_fill_0_best, XGBoosting_1)
 
 logger = init_logging()
 SCORING = make_scorer(f1_score)
@@ -70,4 +73,3 @@ class CombinedExecutor(BaseTrainExecutor):
             voting='soft'
         )
         return vot.fit(feature, target)
-
