@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import math
 from datetime import datetime
+import os
 
 time_entry_ix = 2
 time_exit_ix = 3
@@ -122,7 +123,7 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         self.pixel = pixel
         self.value_func = value_func
 
-    def fit(self, train, test):
+    def fit(self, train, test, overwrite=False):
         self.min_x = min(train.x_entry.min(), train.x_exit.min(),
                          test.x_entry.min(), test.x_exit.min())
         self.max_x = max(train.x_entry.max(), train.x_exit.max(),
@@ -137,6 +138,9 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             math.floor((self.max_x - self.min_x)/self.pixel) + 1,
             math.floor((self.max_y - self.min_y)/self.pixel) + 1
         )
+
+        self.__filepath = self.__get_filepath()
+        self.overwrite = overwrite
         return self
 
     def transform(self, X):
@@ -242,3 +246,23 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
                 map_ = self.__matrix_path(map_, path, case)
 
         return map_
+
+    def __get_filepath(self):
+        dir_ = r"Tmp"
+        fname = "Matrix-map.csv"
+        return os.path.join(dir_, fname)
+
+    def save_map(self, df):
+        if os.path.exists(self.__filepath) and not self.overwrite:
+            print("Detected existed required file.")
+            with open(self.__filepath, "r", encoding="utf-8") as f:
+                self.df = pd.read_csv(f)
+        else:
+            print("No existed required file" if not self.overwrite else "Forced overwrite")
+            self.write_map(df)
+            print("New sparse matrix maps are saved.")
+
+    def write_map(self, df):
+        with open(self.__filepath, 'w', encoding='utf-8') as f:
+            self.transform(df).to_csv(f)
+
