@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 
 def provide_array():
     reader = Raw_DF_Reader()
-    train = reader.train.iloc
-    test = reader.test.iloc
+    train = reader.train
+    test = reader.test
 
     label = Labeller().transform(train).values
     label = label.reshape(label.shape[0],)
