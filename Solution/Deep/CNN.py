@@ -35,27 +35,27 @@ class CNNCoordinator(object):
     '''
 
     def __init__(self, fill_path=True, pixel=1000, value_func=naive_value):
-        sparse_train = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func)
-        sparse_test = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func, is_train=False)
+        train_provider = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func)
+        test_provider = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func, is_train=False)
 
         r = Raw_DF_Reader()
         self._test = r.test
         self._train = r.train
 
-        train_maps = sparse_train.provide_matrix_df()
-        test_maps = sparse_test.provide_matrix_df()
+        train_maps = train_provider.provide_matrix_df()
+        test_maps = test_provider.provide_matrix_df()
 
         print("Initial matrix provided.")
 
-        self.resolution = sparse_train.resolution
+        self.resolution = train_provider.resolution
 
         train_maps = np.array(list(train_maps.map_))
         test_maps = np.array(list(test_maps.map_))
 
         self.train_maps = train_maps.reshape(
-            train_maps.shape[0], *sparse_train.resolution, 1)
+            train_maps.shape[0], *train_provider.resolution, 1)
         self.test_maps = test_maps.reshape(
-            test_maps.shape[0], *sparse_train.resolution, 1)
+            test_maps.shape[0], *test_provider.resolution, 1)
 
         print("Matrix converted to 4D tensor.")
 
