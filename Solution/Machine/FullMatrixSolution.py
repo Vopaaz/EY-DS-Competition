@@ -29,13 +29,14 @@ def provide_array():
     matrixfier = MatrixfyTransformer(pixel=1000)
     matrixfier.fit(train, test)
 
-    print("Matrixfied, resolution:", matrixfier.resolution)
 
     train_maps = matrixfier.transform(train)
     train_maps = np.array(list(train_maps.map_))
 
     test_maps = matrixfier.transform(test)
     test_maps = np.array(list(test_maps.map_))
+    
+    print("Matrixfied, resolution:", matrixfier.resolution)
 
     train_maps = train_maps.reshape(
         train_maps.shape[0], matrixfier.resolution[0] * matrixfier.resolution[1])
