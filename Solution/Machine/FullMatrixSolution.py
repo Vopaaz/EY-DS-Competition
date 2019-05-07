@@ -8,6 +8,7 @@ from xgboost import XGBClassifier
 from Solution.util.Submition import Submitter
 from Solution.util.BaseUtil import Raw_DF_Reader
 from Solution.util.Labelling import Labeller
+from Solution.util.PathFilling import FillPathTransformer
 
 import matplotlib.pyplot as plt
 
@@ -16,13 +17,19 @@ def provide_array():
     train = reader.train
     test = reader.test
 
+    label = Labeller().transform(train).values
+    label = label.reshape(label.shape[0],)
+
+    filler = FillPathTransformer()
+    train = filler.transform(train)
+    test = filler.transform(test)
+
+    print("Path filled.")
+
     matrixfier = MatrixfyTransformer(pixel=1000)
     matrixfier.fit(train, test)
 
-    print(matrixfier.resolution)
-
-    label = Labeller().transform(train).values
-    label = label.reshape(label.shape[0],)
+    print("Matrixfied, resolution:", matrixfier.resolution)
 
     train_maps = matrixfier.transform(train)
     train_maps = np.array(list(train_maps.map_))
@@ -34,6 +41,8 @@ def provide_array():
         train_maps.shape[0], matrixfier.resolution[0] * matrixfier.resolution[1])
     test_maps = test_maps.reshape(
         test_maps.shape[0], matrixfier.resolution[0] * matrixfier.resolution[1])
+
+    print("Reshape finished.")
 
     return train_maps, test_maps, label
 
@@ -47,15 +56,18 @@ def save(result):
     result["hash"] = test.hash.drop_duplicates().reset_index(drop=True)
 
     s = Submitter(result)
-    s.save("Matrixfy PCA Approach, using full train set, pixel=1000.")
+    s.save("Matrixfy PCA Approach, using full train set and PATH FILLED, pixel=1000.")
 
 
 if __name__ == "__main__":
     train, test, label = provide_array()
+    print("Array got.")
     pca = PCA(n_components=50, svd_solver="randomized")
     train = pca.fit_transform(train)
     test = pca.transform(test)
+    print("PCA finish.")
     model = XGBClassifier()
     model.fit(train, label)
+    print("XGB fit done.")
     res = model.predict(test)
     save(res)
