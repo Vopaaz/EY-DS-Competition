@@ -26,6 +26,15 @@ def provide_array():
 
     print("Path filled.")
 
+    label = Labeller().transform(train).values
+    label = label.reshape(label.shape[0],)
+
+    filler = FillPathTransformer()
+    train = filler.transform(train)
+    test = filler.transform(test)
+
+    print("Path filled.")
+
     matrixfier = MatrixfyTransformer(pixel=1000)
     matrixfier.fit(train, test)
 
