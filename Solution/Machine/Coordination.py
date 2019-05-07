@@ -1,11 +1,11 @@
+import sys
+sys.path.append(".")
+from Solution.util.BaseUtil import Raw_DF_Reader
 import datetime
 import logging
 import os
-
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-
-from Solution.util.BaseUtil import Raw_DF_Reader
 
 
 def split_hash_feature_target(full_df):
@@ -128,8 +128,26 @@ class NanCoordiantor(object):
     def __separate_all(self):
         raise NotImplementedError
 
+    def __one_df_separate_part(self, df):
+        df_info = df.iloc[:, :2]
+        df_feat = df.iloc[:, 2:]
+        df_has_feat = df_feat.applymap(
+            lambda x: pd.isnull(x)).rename(columns=lambda x: "has_"+x)
+        has_feat_columns = list(df_has_feat.columns.values)
+
+        df = pd.concat([df_info, df_feat, df_has_feat], axis=1)
+        df_groups = df.groupby(has_feat_columns)
+
+        return [i[1].drop(columns=has_feat_columns).dropna(axis=1) for i in df_groups]
+
     def __separate_part(self):
-        raise NotImplementedError
+        self.trains = self.__one_df_separate_part(self.trains)
+        self.tests = self.__one_df_separate_part(self.tests)
+
+        for train, test in zip(self.trains, self.tests):
+            if not train.columns.equals(test.columns):
+                raise IndexError(
+                    "The train and test DataFrame has different null-value structure.")
 
     def preprocess(self, PreprocessingExecutor, *args, **kwargs):
         '''
