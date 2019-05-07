@@ -253,10 +253,10 @@ class BaseExecutor(object):
             feature_cols = pd.RangeIndex(0, feature.shape[1])
 
         res = pd.DataFrame(feature, columns=feature_cols)
-        res.insert(0, "hash", hash_)
+        res.insert(0, "hash", hash_.reset_index(drop=True))
 
         if isinstance(target, pd.Series):
-            res["target"] = target
+            res["target"] = target.reset_index(drop=True)
         return res
 
 
@@ -279,3 +279,16 @@ class BaseTrainExecutor(BaseExecutor):
 
     def fit(self, train):
         raise NotImplementedError
+
+
+if __name__ == "__main__":
+    train = DFProvider("train").get_df()
+    test = DFProvider("test").get_df()
+
+    nc = NanCoordiantor(train, test, "separate_part")
+    for train, test in zip(nc.trains, nc.tests):
+        print(train.info())
+        print(test.info())
+        print(train.describe())
+        print(test.describe())
+        print("----------------")
