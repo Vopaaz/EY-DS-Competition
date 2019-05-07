@@ -12,6 +12,26 @@ def naive_value(timestamp):
     return time_delta(timestamp, start) / time_delta(start, end)
 
 class MProvider(object):
+    '''
+        Provide sparse matrix, normal matrix and the required dataframe
+        Parameters:
+            - pixel: representing the width and height for one pixel in the map
+            - fill_path: boolean, whether or not to let the map be the path-filled version
+            - value_func: the value function passed to the MatrixfyTransformer
+            - overwrite: boolean, whether or not to overwrite the file
+            - is_train: boolean, whether the dataframe is train or test
+
+        Attributes:
+            - overwrite
+            - is_train
+            - __filepath: store the file path
+            - train & test
+            - t: a MatrixfyTransformer
+            - resolution
+            - big_train & big_test: the big normal matrix that contains all the maps
+            - train_index & test_index: hash used for constructing the required dataframe
+            - big_matrix & df_index: select from big_train/test and train/test_index according to is_train
+    '''
     def __init__(self, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False, is_train=True):
         self.overwrite = overwrite
         self.is_train = is_train
@@ -53,6 +73,9 @@ class MProvider(object):
 
 
     def get_sparse_matrix(self):
+        '''
+            Return: The sparse matrix that contains all the maps
+        '''
         if os.path.exists(self.__filepath) and not self.overwrite:
             print("Detected existed required file.")
             self.sparse_matrix = sparse.load_npz(self.__filepath)
@@ -71,6 +94,9 @@ class MProvider(object):
             sparse.save_npz(self.__filepath, self.sparse_matrix)
 
     def provide_matrix_df(self):
+        '''
+            Return the required dataframe in CNN.py
+        '''
         normal_matrix = self.get_sparse_matrix().todense()
         df = pd.DataFrame(self.df_index)
         tmp_list = []
