@@ -122,7 +122,6 @@ class MProvider(object):
         for i in range(1, int(normal_matrix.shape[1]/self.resolution[1])):
             tmp_list.append(
                 normal_matrix[:, i*self.resolution[1]:(i+1)*self.resolution[1]])
-        print(self.resolution)
         df['map_'] = tmp_list
         df = df[['hash', 'map_']]
         df.set_index("hash", inplace=True)
