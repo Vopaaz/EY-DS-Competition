@@ -35,8 +35,10 @@ class CNNCoordinator(object):
     '''
 
     def __init__(self, fill_path=True, pixel=1000, value_func=naive_value):
-        train_provider = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func)
-        test_provider = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func, is_train=False)
+        train_provider = MProvider(
+            "train", pixel=pixel, fill_path=fill_path, value_func=value_func)
+        test_provider = MProvider(
+            "test", pixel=pixel, fill_path=fill_path, value_func=value_func)
 
         r = Raw_DF_Reader()
         self._test = r.test

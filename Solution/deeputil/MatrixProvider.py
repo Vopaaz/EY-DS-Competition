@@ -11,6 +11,7 @@ def naive_value(timestamp):
     end = pd.Timestamp("1900-01-01 23:59:59")
     return time_delta(timestamp, start) / time_delta(start, end)
 
+
 class MProvider(object):
     '''
         Provide sparse matrix, normal matrix and the required dataframe
@@ -29,9 +30,16 @@ class MProvider(object):
             - fill_path
             - value_func
     '''
-    def __init__(self, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False, is_train=True):
+
+    def __init__(self, set_, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False):
         self.overwrite = overwrite
-        self.is_train = is_train
+        if set_ == "train":
+            self.is_train = True
+        elif set_ == "test":
+            self.is_train = False
+        else:
+            raise ValueError(
+                "Parameter 'set_' can only be 'train' or 'test'. Now it's {}.".format(set_))
         self.__filepath = self.__get_filepath()
         self.pixel = pixel
         self.fill_path = fill_path
@@ -41,7 +49,6 @@ class MProvider(object):
         self.train = r.train
         self.test = r.test
 
-
     def __get_filepath(self):
         dir_ = r"Tmp"
         if self.is_train:
@@ -49,7 +56,6 @@ class MProvider(object):
         else:
             fname = "test_sparse_matrix.npz"
         return os.path.join(dir_, fname)
-
 
     def get_sparse_matrix(self):
         '''
@@ -79,7 +85,6 @@ class MProvider(object):
             self.__write_matrix()
             self.resolution = m.resolution
 
-
         print("Sparse matrix Provided.")
         return self.sparse_matrix
 
@@ -94,8 +99,9 @@ class MProvider(object):
         normal_matrix = self.get_sparse_matrix().todense()
         df = pd.DataFrame(self.df_index)
         tmp_list = []
-        for i in range(1,int(normal_matrix.shape[1]/self.resolution[1])):
-            tmp_list.append(normal_matrix[:,i*self.resolution[1]:(i+1)*self.resolution[1]])
+        for i in range(1, int(normal_matrix.shape[1]/self.resolution[1])):
+            tmp_list.append(
+                normal_matrix[:, i*self.resolution[1]:(i+1)*self.resolution[1]])
         df['map_'] = tmp_list
 
         return df
@@ -114,8 +120,10 @@ class Raw_M_Reader(object):
             self.test = FillPathTransformer().transform(self.test)
             print("Path filled.")
 
-        self.t = MatrixfyTransformer(matrix_provider.pixel, matrix_provider.value_func)
+        self.t = MatrixfyTransformer(
+            matrix_provider.pixel, matrix_provider.value_func)
         self.t.fit(self.train, self.test)
         self.resolution = self.t.resolution
-        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
+        self.big_train, self.train_index = self.t.to_matrix_provider(
+            self.train)
         self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
