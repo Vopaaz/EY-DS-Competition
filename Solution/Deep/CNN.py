@@ -10,7 +10,7 @@ from Solution.util.Labelling import Labeller
 from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from Solution.util.Submition import Submitter
-from Solution.deeputil.MatrixProvider import Raw_M_Reader, MProvider
+from Solution.deeputil.MatrixProvider import MProvider
 
 def naive_value(timestamp):
     start = pd.Timestamp("1900-01-01 00:00:00")
@@ -35,29 +35,28 @@ class CNNCoordinator(object):
     '''
 
     def __init__(self, fill_path=True, pixel=1000, value_func=naive_value):
-        m = Raw_M_Reader(pixel=pixel, fill_path=fill_path, value_func=value_func)
-        self._test = m.test
-        sparse_train = MProvider(m.big_train, m.train_index, m.resolution)
-        sparse_test = MProvider(m.big_test, m.test_index, m.resolution, is_train=False)
+        sparse_train = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func)
+        sparse_test = MProvider(pixel=pixel, fill_path=fill_path, value_func=value_func, is_train=False)
+        self._test = sparse_test.test
 
         train_maps = sparse_train.provide_matrix_df()
         test_maps = sparse_test.provide_matrix_df()
 
         print("Initial matrix provided.")
 
-        self.resolution = m.resolution
+        self.resolution = sparse_train.resolution
 
         train_maps = np.array(list(train_maps.map_))
         test_maps = np.array(list(test_maps.map_))
 
         self.train_maps = train_maps.reshape(
-            train_maps.shape[0], *m.t.resolution, 1)
+            train_maps.shape[0], *sparse_train.t.resolution, 1)
         self.test_maps = test_maps.reshape(
-            test_maps.shape[0], *m.t.resolution, 1)
+            test_maps.shape[0], *sparse_train.t.resolution, 1)
 
         print("Matrix converted to 4D tensor.")
 
-        labels = Labeller().transform(m.train)
+        labels = Labeller().transform(sparse_train.train)
         self.labels = to_categorical(list(labels.target))
         print("Label preparation completed.")
 

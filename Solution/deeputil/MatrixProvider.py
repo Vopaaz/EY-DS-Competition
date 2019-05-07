@@ -12,13 +12,35 @@ def naive_value(timestamp):
     return time_delta(timestamp, start) / time_delta(start, end)
 
 class MProvider(object):
-    def __init__(self, big_matrix, df_index, resolution, overwrite=False, is_train=True):
+    def __init__(self, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False, is_train=True):
         self.overwrite = overwrite
         self.is_train = is_train
         self.__filepath = self.__get_filepath()
-        self.resolution = resolution
-        self.big_matrix = big_matrix
-        self.df_index = df_index
+
+        r = Raw_DF_Reader()
+        self.train = r.train
+        self.test = r.test
+
+        print("DataFrame read.")
+
+        if fill_path:
+            self.train = FillPathTransformer().transform(self.train)
+            self.test = FillPathTransformer().transform(self.test)
+            print("Path filled.")
+
+        self.t = MatrixfyTransformer(pixel, value_func)
+        self.t.fit(self.train, self.test)
+        self.resolution = self.t.resolution
+        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
+        self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
+
+        if self.is_train:
+            self.big_matrix = self.train
+            self.df_index = self.train_index
+        else:
+            self.big_matrix = self.test
+            self.df_index =self.test_index
+
 
 
     def __get_filepath(self):
@@ -57,26 +79,3 @@ class MProvider(object):
         df['map_'] = tmp_list
 
         return df
-
-
-
-
-
-class Raw_M_Reader(object):
-    def __init__(self, pixel=1000, fill_path=True, value_func=naive_value):
-        r = Raw_DF_Reader()
-        self.train = r.train
-        self.test = r.test
-
-        print("DataFrame read.")
-
-        if fill_path:
-            self.train = FillPathTransformer().transform(self.train)
-            self.test = FillPathTransformer().transform(self.test)
-            print("Path filled.")
-
-        self.t = MatrixfyTransformer(pixel, value_func)
-        self.t.fit(self.train, self.test)
-        self.resolution = self.t.resolution
-        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
-        self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
