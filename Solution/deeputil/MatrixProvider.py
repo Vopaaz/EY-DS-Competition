@@ -25,42 +25,21 @@ class MProvider(object):
             - overwrite
             - is_train
             - __filepath: store the file path
-            - train & test
-            - t: a MatrixfyTransformer
-            - resolution
-            - big_train & big_test: the big normal matrix that contains all the maps
-            - train_index & test_index: hash used for constructing the required dataframe
-            - big_matrix & df_index: select from big_train/test and train/test_index according to is_train
+            - pixel
+            - fill_path
+            - value_func
     '''
     def __init__(self, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False, is_train=True):
         self.overwrite = overwrite
         self.is_train = is_train
         self.__filepath = self.__get_filepath()
+        self.pixel = pixel
+        self.fill_path = fill_path
+        self.value_func = value_func
 
         r = Raw_DF_Reader()
         self.train = r.train
         self.test = r.test
-
-        print("DataFrame read.")
-
-        if fill_path:
-            self.train = FillPathTransformer().transform(self.train)
-            self.test = FillPathTransformer().transform(self.test)
-            print("Path filled.")
-
-        self.t = MatrixfyTransformer(pixel, value_func)
-        self.t.fit(self.train, self.test)
-        self.resolution = self.t.resolution
-        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
-        self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
-
-        if self.is_train:
-            self.big_matrix = self.train
-            self.df_index = self.train_index
-        else:
-            self.big_matrix = self.test
-            self.df_index =self.test_index
-
 
 
     def __get_filepath(self):
@@ -79,14 +58,29 @@ class MProvider(object):
         if os.path.exists(self.__filepath) and not self.overwrite:
             print("Detected existed required file.")
             self.sparse_matrix = sparse.load_npz(self.__filepath)
+            m = Raw_M_Reader(self)
+            self.resolution = m.resolution
+            if self.is_train:
+                self.df_index = m.train_index
+            else:
+                self.df_index = m.test_index
+
         else:
             print(
                 "No existed required file" if not self.overwrite else "Forced overwrite")
+            m = Raw_M_Reader(self)
+            if self.is_train:
+                self.big_matrix = m.big_train
+                self.df_index = m.train_index
+            else:
+                self.big_matrix = m.big_test
+                self.df_index = m.test_index
             self.sparse_matrix = sparse.csr_matrix(self.big_matrix)
             self.__write_matrix()
-            print("Newly calculated dataframe retrieved and saved.")
+            self.resolution = m.resolution
 
-        print("DataFrame Provided.")
+
+        print("Sparse matrix Provided.")
         return self.sparse_matrix
 
     def __write_matrix(self):
@@ -105,3 +99,23 @@ class MProvider(object):
         df['map_'] = tmp_list
 
         return df
+
+
+class Raw_M_Reader(object):
+    def __init__(self, matrix_provider):
+        r = Raw_DF_Reader()
+        self.train = r.train
+        self.test = r.test
+
+        print("DataFrame read.")
+
+        if matrix_provider.fill_path:
+            self.train = FillPathTransformer().transform(self.train)
+            self.test = FillPathTransformer().transform(self.test)
+            print("Path filled.")
+
+        self.t = MatrixfyTransformer(matrix_provider.pixel, matrix_provider.value_func)
+        self.t.fit(self.train, self.test)
+        self.resolution = self.t.resolution
+        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
+        self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
