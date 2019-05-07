@@ -1,6 +1,7 @@
 import sys
 sys.path.append(".")
 from Solution.util.BaseUtil import Raw_DF_Reader
+from Solution.Machine.DFPreparation import DFProvider
 import datetime
 import logging
 import os
@@ -130,12 +131,18 @@ class NanCoordiantor(object):
 
     def __one_df_separate_part(self, df):
         df_info = df.iloc[:, :2]
-        df_feat = df.iloc[:, 2:]
+        if "target" in df.columns.values:
+            df_feat = df.iloc[:, 2:-1]
+            df_target = df.iloc[:, -1:]
+        else:
+            df_feat = df.iloc[:, 2:]
+            df_target = pd.DataFrame()
+
         df_has_feat = df_feat.applymap(
             lambda x: pd.isnull(x)).rename(columns=lambda x: "has_"+x)
         has_feat_columns = list(df_has_feat.columns.values)
 
-        df = pd.concat([df_info, df_feat, df_has_feat], axis=1)
+        df = pd.concat([df_info, df_feat, df_has_feat, df_target], axis=1)
         df_groups = df.groupby(has_feat_columns)
 
         return [i[1].drop(columns=has_feat_columns).dropna(axis=1) for i in df_groups]
@@ -145,7 +152,7 @@ class NanCoordiantor(object):
         self.tests = self.__one_df_separate_part(self.tests)
 
         for train, test in zip(self.trains, self.tests):
-            if not train.columns.equals(test.columns):
+            if not train.drop(columns=["target"]).columns.equals(test.columns):
                 raise IndexError(
                     "The train and test DataFrame has different null-value structure.")
 
