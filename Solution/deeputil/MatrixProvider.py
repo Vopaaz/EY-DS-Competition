@@ -52,9 +52,14 @@ class MProvider(object):
     def __get_filepath(self):
         dir_ = r"Tmp"
         if self.is_train:
-            fname = "train_sparse_matrix.npz"
+            name = "train_sparse_matrix"
         else:
-            fname = "test_sparse_matrix.npz"
+            name = "test_sparse_matrix"
+        if self.fill_path:
+            fp = "fill_path"
+        else:
+            fp = "not_fill_path"
+        fname = name + "-pixel" + str(self.pixel) + "-" + fp + ".npz"
         return os.path.join(dir_, fname)
 
     def get_sparse_matrix(self):
