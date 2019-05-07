@@ -40,10 +40,11 @@ class MProvider(object):
         else:
             raise ValueError(
                 "Parameter 'set_' can only be 'train' or 'test'. Now it's {}.".format(set_))
-        self.__filepath = self.__get_filepath()
+
         self.pixel = pixel
         self.fill_path = fill_path
         self.value_func = value_func
+        self.__filepath = self.__get_filepath()
 
         r = Raw_DF_Reader()
         self.train = r.train
@@ -52,14 +53,14 @@ class MProvider(object):
     def __get_filepath(self):
         dir_ = r"Tmp"
         if self.is_train:
-            name = "train_sparse_matrix"
+            name = "train_matrix"
         else:
-            name = "test_sparse_matrix"
+            name = "test_matrix"
         if self.fill_path:
-            fp = "fill_path"
+            fp = "fill"
         else:
-            fp = "not_fill_path"
-        fname = name + "-pixel" + str(self.pixel) + "-" + fp + ".npz"
+            fp = "nfill"
+        fname = name + "-p" + str(self.pixel) + "-" + fp + ".npz"
         return os.path.join(dir_, fname)
 
     def get_sparse_matrix(self):
