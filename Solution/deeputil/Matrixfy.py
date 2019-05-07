@@ -1,9 +1,12 @@
-from sklearn.base import TransformerMixin, BaseEstimator
+import math
+import os
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
-import math
-from datetime import datetime
-import os
+from sklearn.base import BaseEstimator, TransformerMixin
+
+from Solution.util.BaseUtil import time_delta
 
 time_entry_ix = 2
 time_exit_ix = 3
@@ -118,8 +121,14 @@ def _next_place(i, j, case, d1, d2, d3, d4):
             return i, j+1
 
 
+def naive_value(timestamp):
+    start = pd.Timestamp("1900-01-01 00:00:00")
+    end = pd.Timestamp("1900-01-01 23:59:59")
+    return time_delta(timestamp, start) / time_delta(start, end)
+
+
 class MatrixfyTransformer(TransformerMixin, BaseEstimator):
-    def __init__(self, pixel, value_func):
+    def __init__(self, pixel=1000, value_func=naive_value):
         self.pixel = pixel
         self.value_func = value_func
 
