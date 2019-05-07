@@ -3,6 +3,7 @@ import pandas as pd
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from scipy import sparse
 from Solution.deeputil.Matrixfy import MatrixfyTransformer
+from Solution.util.PathFilling import FillPathTransformer
 
 
 def naive_value(timestamp):
@@ -62,23 +63,20 @@ class MProvider(object):
 
 
 class Raw_M_Reader(object):
-    def __init__(self, pixel=1000, value_func=naive_value):
+    def __init__(self, pixel=1000, fill_path=True, value_func=naive_value):
         r = Raw_DF_Reader()
-        train = r.train
-        test = r.test
+        self.train = r.train
+        self.test = r.test
 
-        t = MatrixfyTransformer(pixel, value_func)
-        t.fit(train, test)
-        self.resolution = t.resolution
-        self.big_train, self.train_index = t.to_matrix_provider(train)
-        self.big_test, self.test_index = t.to_matrix_provider(test)
+        print("DataFrame read.")
 
+        if fill_path:
+            self.train = FillPathTransformer().transform(self.train)
+            self.test = FillPathTransformer().transform(self.test)
+            print("Path filled.")
 
-if __name__ == '__main__':
-    '''
-        Test
-    '''
-    m = Raw_M_Reader()
-    sp = MProvider(m.big_train, m.train_index, m.resolution)
-    df = sp.provide_matrix_df()
-    print(df)
+        self.t = MatrixfyTransformer(pixel, value_func)
+        self.t.fit(self.train, self.test)
+        self.resolution = self.t.resolution
+        self.big_train, self.train_index = self.t.to_matrix_provider(self.train)
+        self.big_test, self.test_index = self.t.to_matrix_provider(self.test)
