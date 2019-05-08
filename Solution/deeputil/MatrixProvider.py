@@ -1,6 +1,7 @@
 import os
 import math
 import pandas as pd
+import numpy as np
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from scipy import sparse
 from Solution.deeputil.Matrixfy import MatrixfyTransformer
@@ -53,6 +54,7 @@ class MProvider(object):
         self.value_func = value_func
         self.__filepath = self.__get_filepath()
         self.__indexpath = self.__get_indexpath()
+        self.resolution = self.__get_resolution()
 
 
     def __get_indexpath(self):
@@ -94,12 +96,12 @@ class MProvider(object):
             self.sparse_matrix = sparse.load_npz(self.__filepath)
             with open(self.__indexpath, "r", encoding="utf-8") as f1:
                 self.df_index = pd.read_csv(f1)
-            self.resolution = self.__get_resolution()
+
 
         else:
             print(
                 "No existed required file" if not self.overwrite else "Forced overwrite")
-            self.m_reader()
+            self.provide_matrix_and_index()
             self.sparse_matrix = sparse.csr_matrix(self.big_matrix)
             self.df_index = pd.DataFrame(self.df_index)
             self.__write_matrix()
@@ -119,7 +121,7 @@ class MProvider(object):
         normal_matrix = self.get_sparse_matrix().todense()
         df = self.df_index
         tmp_list = []
-        for i in range(1, int(normal_matrix.shape[1]/self.resolution[1])):
+        for i in range(0, int(normal_matrix.shape[1]/self.resolution[1])):
             tmp_list.append(
                 normal_matrix[:, i*self.resolution[1]:(i+1)*self.resolution[1]])
         df['map_'] = tmp_list
@@ -128,26 +130,42 @@ class MProvider(object):
 
         return df
 
-    def m_reader(self):
+    def provide_matrix_and_index(self):
         r = Raw_DF_Reader()
-        self.train = r.train[:30]
-        self.test = r.test[:30]
+        self.train = r.train
+        self.test = r.test
 
         print("DataFrame read.")
 
-        if self.fill_path:
+        if self.fill_path and self.is_train:
             self.train = FillPathTransformer().transform(self.train)
+            print("Path filled.")
+        if self.fill_path and not self.is_train:
             self.test = FillPathTransformer().transform(self.test)
             print("Path filled.")
 
-        t = MatrixfyTransformer(
-            self.pixel, self.value_func)
-        t.fit(self.train, self.test)
-        self.resolution = t.resolution
         if self.is_train:
-            self.big_matrix, self.df_index = t.to_matrix_provider(self.train)
+            self.big_matrix, self.df_index = self.matrix_and_index(self.train)
         else:
-            self.big_matrix, self.df_index = t.to_matrix_provider(self.test)
+            self.big_matrix, self.df_index = self.matrix_and_index(self.test)
+
+    def matrix_and_index(self, df):
+        '''
+            Provide a big normal matrix that contains all the maps in df
+            Parameters:
+                df: The raw dataframe or pathfilled dataframe
+            Returns:
+                self.big_matrix: a big normal matrix that contains all the maps in df
+                tmp_df.index: hash used for constructing output dataframe in MatrixProvider
+        '''
+        t= MatrixfyTransformer()
+        t.fit(self.train,self.test)
+        tmp_df = t.transform(df)['map_']
+        self.big_matrix = tmp_df.iloc[0]
+        for i in range(1, len(tmp_df)):
+            self.big_matrix = np.concatenate([self.big_matrix, tmp_df.iloc[i]], axis=1)
+
+        return self.big_matrix, tmp_df.index
 
 
 if __name__ == '__main__':

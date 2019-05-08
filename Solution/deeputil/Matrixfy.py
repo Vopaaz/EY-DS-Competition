@@ -147,7 +147,6 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
             math.floor((self.max_x - self.min_x)/self.pixel) + 1,
             math.floor((self.max_y - self.min_y)/self.pixel) + 1
         )
-        self.big_matrix = np.zeros(self.resolution)
 
         return self
 
@@ -255,19 +254,5 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
         return map_
 
-    def to_matrix_provider(self, df):
-        '''
-            Provide a big normal matrix that contains all the maps in df
-            Parameters:
-                df: The raw dataframe or pathfilled dataframe
-            Returns:
-                self.big_matrix: a big normal matrix that contains all the maps in df
-                tmp_df.index: hash used for constructing output dataframe in MatrixProvider
-        '''
-        tmp_df = df.groupby("hash").apply(self.__matrixfy_one_device)
-        for i in range(0, len(tmp_df)):
-            self.big_matrix = np.concatenate([self.big_matrix, tmp_df.iloc[i]], axis=1)
-
-        return self.big_matrix, tmp_df.index
 
 
