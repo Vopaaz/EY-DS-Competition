@@ -253,6 +253,3 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
                 map_ = self.__matrix_path(map_, path, case)
 
         return map_
-
-
-
