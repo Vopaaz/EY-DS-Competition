@@ -26,12 +26,12 @@ if __name__ == "__main__":
     train = DFProvider("train", path_filled=True).get_df()
     test = DFProvider("test", path_filled=True).get_df()
 
-    # nc = NanCoordiantor(train, test, "drop")
-    # nc.preprocess(StandardOutlierPreprocessor)
-    # nc.fit(RandomForestExecutor)
-    # res = nc.predict()
-    # Submitter(res).save(
-    #     "Drop Strategy, RandomForest")
+    nc = NanCoordiantor(train, test, "drop")
+    nc.preprocess(StandardOutlierPreprocessor)
+    nc.fit(RandomForestExecutor)
+    res = nc.predict()
+    Submitter(res).save(
+        "Random Forest drop, with fixed outlier killing routine, grid search params")
 
     # nc = NanCoordiantor(train, test, "drop")
     # nc.preprocess(StandardOutlierPreprocessor)
@@ -52,8 +52,8 @@ if __name__ == "__main__":
     # res = nc.predict()
     # Submitter(res).save("Combined Voting without SVC, use only random forest and gradient boosting, drop strategy. Parameters not optimized, using the best parameters of the fill_0 strategy")
 
-    nc = NanCoordiantor(train, test, "drop")
-    nc.preprocess(StandardOutlierPreprocessor)
-    nc.fit(XGBoostExecutor)
-    res = nc.predict()
-    Submitter(res).save("XGBOOSTING drop, with fixed outlier killing routine, grid search params")
+    # nc = NanCoordiantor(train, test, "drop")
+    # nc.preprocess(StandardOutlierPreprocessor)
+    # nc.fit(XGBoostExecutor)
+    # res = nc.predict()
+    # Submitter(res).save("XGBOOSTING drop, with fixed outlier killing routine, grid search params")

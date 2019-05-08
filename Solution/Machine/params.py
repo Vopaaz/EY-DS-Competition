@@ -8,6 +8,7 @@ random_forest_1 = {
 
 # fill_0 best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
 # drop best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+# drop with outliers killed best:{'max_depth': 10, 'max_features': 0.9, 'min_samples_leaf': 5, 'n_estimators': 100}
 random_forest_2 = {
     "n_estimators": [50, 100, 500],
     "max_features": [0.8, 0.9],
