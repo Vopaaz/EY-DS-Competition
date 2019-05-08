@@ -11,6 +11,8 @@ from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from Solution.util.Submition import Submitter
 from Solution.deeputil.MatrixProvider import MProvider
+import matplotlib.pyplot as plt
+import os
 
 def naive_value(timestamp):
     start = pd.Timestamp("1900-01-01 00:00:00")
@@ -103,6 +105,32 @@ def init_model(resolution):
 
     return model
 
+def save_history(history):
+    if not os.path.exists("Resultfig"):
+        os.makedirs("Resultfig")
+
+    acc = history.history["acc"]
+    val_acc = history.history["val_acc"]
+    loss=history.history["loss"]
+    val_loss=history.history["val_loss"]
+
+    epochs = range(1, len(acc)+1)
+
+    plt.plot(epochs, acc, "bo", label="Training acc")
+    plt.plot(epochs, val_acc, "b", label="Validation acc")
+    plt.title("Accuracy")
+    plt.legend()
+
+    plt.savefig("Resultfig/acc.png")
+    plt.close()
+
+    plt.plot(epochs, loss, "bo", label="Training loss")
+    plt.plot(epochs, val_loss, "b", label="Validation loss")
+    plt.title("Loss")
+    plt.legend()
+
+    plt.savefig("Resultfig/loss.png")
+    plt.close()
 
 def main():
     coor = CNNCoordinator()
@@ -112,7 +140,8 @@ def main():
     resolution = coor.resolution
 
     model = init_model(resolution)
-    model.fit(train_maps, labels, epochs=30, batch_size=64)
+    history = model.fit(train_maps, labels, epochs=30, batch_size=64, validation_split=0.1)
+
 
     result = model.predict(test_maps)
 
@@ -121,6 +150,8 @@ def main():
     res = coor.transform_result(result)
     s = Submitter(res)
     s.save("CNN 1st exploration")
+    
+    save_history(history)
 
 
 if __name__ == "__main__":
