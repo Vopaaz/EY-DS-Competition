@@ -10,7 +10,7 @@ from Solution.util.Labelling import Labeller
 from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from Solution.util.Submition import Submitter
-
+from Solution.deeputil.MatrixProvider import MProvider
 
 def naive_value(timestamp):
     start = pd.Timestamp("1900-01-01 00:00:00")
@@ -35,38 +35,33 @@ class CNNCoordinator(object):
     '''
 
     def __init__(self, fill_path=True, pixel=1000, value_func=naive_value):
+        train_provider = MProvider(
+            "train", pixel=pixel, fill_path=fill_path, value_func=value_func)
+        test_provider = MProvider(
+            "test", pixel=pixel, fill_path=fill_path, value_func=value_func)
+
         r = Raw_DF_Reader()
-        train = r.train
-        test = r.test
-        self._test = test
+        self._test = r.test
+        self._train = r.train
 
-        print("DataFrame read.")
-
-        if fill_path:
-            train = FillPathTransformer().transform(train)
-            test = FillPathTransformer().transform(test)
-            print("Path filled.")
-
-        t = MatrixfyTransformer(pixel, value_func)
-        t.fit(train, test)
-        train_maps = t.transform(train)
-        test_maps = t.transform(test)
+        train_maps = train_provider.provide_matrix_df()
+        test_maps = test_provider.provide_matrix_df()
 
         print("Initial matrix provided.")
 
-        self.resolution = t.resolution
+        self.resolution = train_provider.resolution
 
         train_maps = np.array(list(train_maps.map_))
         test_maps = np.array(list(test_maps.map_))
 
         self.train_maps = train_maps.reshape(
-            train_maps.shape[0], *t.resolution, 1)
+            train_maps.shape[0], *train_provider.resolution, 1)
         self.test_maps = test_maps.reshape(
-            test_maps.shape[0], *t.resolution, 1)
+            test_maps.shape[0], *test_provider.resolution, 1)
 
         print("Matrix converted to 4D tensor.")
 
-        labels = Labeller().transform(train)
+        labels = Labeller().transform(self._train)
         self.labels = to_categorical(list(labels.target))
         print("Label preparation completed.")
 
