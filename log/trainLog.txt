@@ -8,3 +8,5 @@
 2019-04-27 00:01:59,826 - XGBoost {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 200}
 2019-05-08 07:54:45,756 - XGBoost drop, outlier killed.{'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 50}
 2019-05-08 16:37:47,311 - Random Forest {'max_depth': 10, 'max_features': 0.9, 'min_samples_leaf': 5, 'n_estimators': 100}
+2019-05-08 17:03:15,970 - XGBoost separate_part column num [15], outlier killed.{'gamma': 0, 'learning_rate': 0.2, 'max_depth': 2, 'n_estimators': 200}
+2019-05-08 17:03:55,988 - XGBoost separate_part column num [8] outlier killed.{'gamma': 0, 'learning_rate': 0.05, 'max_depth': 2, 'n_estimators': 200}
