@@ -45,6 +45,8 @@ class Submitter(object):
                 - memo: A string that describes this result DataFrame, it will be written in the memo.txt under the Result dir.
         '''
         filename = datetime.datetime.now().strftime(r"%m%d-%H-%M-%S") + ".csv"
+        if not os.path.exists("Result"):
+            os.makedirs("Result")
         filepath = os.path.join("Result", filename)
         self.result.to_csv(filepath, encoding="utf-8",
                            index=False, line_terminator="\n")

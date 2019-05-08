@@ -55,7 +55,7 @@ class MProvider(object):
         self.resolution = self.__get_resolution()
 
     def __get_indexpath(self):
-        dir_ = r"Tmp"
+        dir_ = r"/floyd/input/Tmp"
         if self.is_train:
             name = "train_index"
         else:
@@ -68,7 +68,7 @@ class MProvider(object):
         return os.path.join(dir_, fname)
 
     def __get_filepath(self):
-        dir_ = r"Tmp"
+        dir_ = r"/floyd/input/Tmp"
         if self.is_train:
             name = "train_matrix"
         else:

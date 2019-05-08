@@ -29,7 +29,7 @@ class Raw_DF_Reader(object):
             Its path should be r"EY-DS-Competition\OriginalFile\data_test\data_test.csv"
         '''
 
-        with open(r"OriginalFile\data_test\data_test.csv", "r", encoding="utf-8") as f:
+        with open(r"/floyd/input/OriginalFile/data_test/data_test.csv", "r", encoding="utf-8") as f:
             self.test = pd.read_csv(f, index_col=0)
 
     def __get_raw_train(self):
@@ -37,7 +37,7 @@ class Raw_DF_Reader(object):
             Read the raw train data table.
             Its path should be r"EY-DS-Competition\OriginalFile\data_train\data_train.csv"
         '''
-        with open(r"OriginalFile\data_train\data_train.csv", "r", encoding="utf-8") as f:
+        with open(r"/floyd/input/OriginalFile/data_train/data_train.csv", "r", encoding="utf-8") as f:
             self.train = pd.read_csv(f, index_col=0)
 
     def __preprocess(self):

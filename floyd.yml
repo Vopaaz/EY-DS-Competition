@@ -1,0 +1,23 @@
+# see: https://docs.floydhub.com/floyd_config
+# All supported configs:
+#
+machine: cpu
+env: tensorflow-1.12
+input:
+ - destination: OriginalFile
+   source: vopaaz/datasets/eyds-originalfile/1
+ - destination: Tmp
+   source: vopaaz/datasets/eyds-tmp/1
+description: this is a test
+command: python Useless/floyd_test.py
+
+# You can also define multiple tasks to use with --task argument:
+#
+#task:
+#  evaluate:
+#    machine: gpu
+#    command: python evaluate.py
+#
+#  serve:
+#    machine: cpu
+#    mode: serve

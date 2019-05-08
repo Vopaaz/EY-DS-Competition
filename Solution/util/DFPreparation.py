@@ -107,7 +107,7 @@ class DFProvider(object):
         '''
             Map the parameters of the provider to an identifiable filepath.
         '''
-        dir_ = r"Tmp"
+        dir_ = r"/floyd/input/Tmp"
         fname = self.set_.upper() + "-" + "-".join(self.features) + \
             ("-pathfilled" if self.path_filled else "") + ".csv"
         return os.path.join(dir_, fname)
