@@ -50,9 +50,17 @@ SVC_fill_0_best = {'C': 1.5, 'gamma': 'auto',
                    'kernel': 'rbf', 'probability': True}
 
 # drop best: {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 200}
+# drop with outlier-elimination: {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 50}
 XGBoosting_1 = {
     "max_depth": [2, 3, 5],
     "learning_rate": [0.05, 0.1, 0.2],
     "n_estimators": [50, 100, 200],
     "gamma": [0, 0.01, 0.05],
+}
+
+XGBoosting_2 = {
+    "max_depth": [3, 5, 7],
+    "learning_rate": [0.01, 0.05, 0.1],
+    "n_estimators": [25, 50, 100],
+    "gamma": [0, 0.01]
 }
