@@ -140,7 +140,7 @@ def main():
     resolution = coor.resolution
 
     model = init_model(resolution)
-    history = model.fit(train_maps, labels, epochs=75, batch_size=256, validation_split=0.1)
+    history = model.fit(train_maps, labels, epochs=39, batch_size=256, validation_split=0.1)
 
 
     result = model.predict(test_maps)
