@@ -26,12 +26,12 @@ if __name__ == "__main__":
     train = DFProvider("train", path_filled=True).get_df()
     test = DFProvider("test", path_filled=True).get_df()
 
-    nc = NanCoordiantor(train, test, "separate_all")
+    nc = NanCoordiantor(train, test, "drop")
     nc.preprocess(StandardOutlierPreprocessor)
     nc.fit(RandomForestExecutor)
     res = nc.predict()
     Submitter(res).save(
-        "Random Forest separate_all,outlier killed, grid search params.")
+        "Random Forest drop,outlier killed, grid search params 3rd.")
 
     # nc = NanCoordiantor(train, test, "drop")
     # nc.preprocess(StandardOutlierPreprocessor)

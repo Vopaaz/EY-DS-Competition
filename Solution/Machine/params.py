@@ -16,6 +16,13 @@ random_forest_2 = {
     "min_samples_leaf": [2, 5]
 }
 
+random_forest_3 = {
+    "n_estimators": [75, 100, 150],
+    "max_features": [0.85, 0.9, 0.95],
+    "max_depth": [8, 10, 15],
+    "min_samples_leaf": [4, 5, 6]
+}
+
 # fill_0 best: {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
 gradient_boosting_1 = {
     "n_estimators": [100, 1000],
