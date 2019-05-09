@@ -35,7 +35,7 @@ class StandardOutlierPreprocessor(BasePreprocessingExecutor):
         _, feature, _ = self.split_hash_feature_target(X)
         contamination = self.kwargs["contamination"] if "contamination" in self.kwargs else 0.05
         self.i_forest = IsolationForest(
-            contamination=contamination, behaviour="new")
+            contamination=contamination)
         self.std_scaler = StandardScaler()
         self.i_forest.fit(feature)
         self.std_scaler.fit(feature)
