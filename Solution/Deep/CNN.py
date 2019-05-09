@@ -89,6 +89,7 @@ def init_model(resolution):
                             input_shape=(*resolution, 1)))
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Conv2D(64, (3, 3), activation="relu"))
+    model.add(layers.Conv2D(128, (3, 3), activation="relu"))
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Conv2D(128, (3, 3), activation="relu"))
     model.add(layers.MaxPooling2D((2, 2)))
@@ -114,6 +115,8 @@ def main():
     model.fit(train_maps, labels, epochs=30, batch_size=64)
 
     result = model.predict(test_maps)
+
+    print(model.summary())
 
     res = coor.transform_result(result)
     s = Submitter(res)
