@@ -8,11 +8,19 @@ random_forest_1 = {
 
 # fill_0 best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
 # drop best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
+# drop with outliers killed best:{'max_depth': 10, 'max_features': 0.9, 'min_samples_leaf': 5, 'n_estimators': 100}
 random_forest_2 = {
     "n_estimators": [50, 100, 500],
     "max_features": [0.8, 0.9],
     "max_depth": [5, 10, 20],
     "min_samples_leaf": [2, 5]
+}
+
+random_forest_3 = {
+    "n_estimators": [75, 100, 150],
+    "max_features": [0.85, 0.9, 0.95],
+    "max_depth": [8, 10, 15],
+    "min_samples_leaf": [4, 5, 6]
 }
 
 # fill_0 best: {'max_depth': 5, 'max_features': None, 'min_samples_leaf': 10, 'n_estimators': 100}
@@ -50,9 +58,17 @@ SVC_fill_0_best = {'C': 1.5, 'gamma': 'auto',
                    'kernel': 'rbf', 'probability': True}
 
 # drop best: {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 200}
+# drop with outlier-elimination: {'gamma': 0, 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 50}
 XGBoosting_1 = {
     "max_depth": [2, 3, 5],
     "learning_rate": [0.05, 0.1, 0.2],
     "n_estimators": [50, 100, 200],
     "gamma": [0, 0.01, 0.05],
+}
+
+XGBoosting_2 = {
+    "max_depth": [3, 5, 7],
+    "learning_rate": [0.01, 0.05, 0.1],
+    "n_estimators": [25, 50, 100],
+    "gamma": [0, 0.01]
 }

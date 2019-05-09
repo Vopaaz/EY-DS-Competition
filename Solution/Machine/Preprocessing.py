@@ -35,16 +35,19 @@ class StandardOutlierPreprocessor(BasePreprocessingExecutor):
         _, feature, _ = self.split_hash_feature_target(X)
         contamination = self.kwargs["contamination"] if "contamination" in self.kwargs else 0.05
         self.i_forest = IsolationForest(
-            contamination=contamination)
+            contamination=contamination, behaviour="new")
         self.std_scaler = StandardScaler()
         self.i_forest.fit(feature)
         self.std_scaler.fit(feature)
         return self
 
     def transform(self, X):
-        if "":   # Case train set.
-            pred_result = self.i_forest.predict(X)
-            X = X[pred_result == 1]
         hash_, feature, target = self.split_hash_feature_target(X)
-        res = self.std_scaler.transform(feature)
-        return self.combine_hash_feature_target(hash_, res, target)
+        if isinstance(target, pd.Series):   # Case train set.
+            pred_result = self.i_forest.predict(feature)
+            hash_ = hash_[pred_result == 1]
+            feature = feature[pred_result == 1]
+            target = target[pred_result == 1]
+        feature = self.std_scaler.transform(feature)
+        res =  self.combine_hash_feature_target(hash_, feature, target)
+        return res

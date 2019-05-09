@@ -1,11 +1,12 @@
+import sys
+sys.path.append(".")
+from Solution.util.BaseUtil import Raw_DF_Reader
+from Solution.Machine.DFPreparation import DFProvider
 import datetime
 import logging
 import os
-
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-
-from Solution.util.BaseUtil import Raw_DF_Reader
 
 
 def split_hash_feature_target(full_df):
@@ -125,11 +126,63 @@ class NanCoordiantor(object):
         self.trains = [self.trains.fillna(0)]
         self.tests = [self.tests.fillna(0)]
 
+    def __one_df_separate_all(self, df):
+        is_train = "target" in df.columns.values
+        if is_train:
+            df_feat = df.iloc[:, 1:-1]
+        else:
+            df_feat = df.iloc[:, 1:]
+
+        df_has_feat = df_feat.applymap(lambda x: not pd.isnull(x))
+        has_feat_groups = df_has_feat.groupby(list(df_has_feat.columns.values))
+
+        return [
+            df.loc[:,
+                   [True] + list(has_feat_group[0]) +
+                   ([True] if is_train else [])
+                   ].dropna(axis=0)
+            for has_feat_group in has_feat_groups
+        ]
+
     def __separate_all(self):
-        raise NotImplementedError
+        self.trains = self.__one_df_separate_all(self.trains)
+        self.tests = self.__one_df_separate_part(self.tests) # Note that using __*_part is NOT a mistake.
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __one_df_separate_part(self, df):
+        df_hash = df.iloc[:, :1]
+        if "target" in df.columns.values:
+            df_feat = df.iloc[:, 1:-1]
+            df_target = df.iloc[:, -1:]
+        else:
+            df_feat = df.iloc[:, 1:]
+            df_target = pd.DataFrame()
+
+        df_has_feat = df_feat.applymap(
+            lambda x: pd.isnull(x)).rename(columns=lambda x: "has_"+x)
+        has_feat_columns = df_has_feat.columns.values
+
+        df = pd.concat([df_hash, df_feat, df_has_feat, df_target], axis=1)
+        df_groups = df.groupby(list(has_feat_columns))
+
+        return [i[1].drop(columns=has_feat_columns).dropna(axis=1) for i in df_groups]
 
     def __separate_part(self):
-        raise NotImplementedError
+        self.trains = self.__one_df_separate_part(self.trains)
+        self.tests = self.__one_df_separate_part(self.tests)
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __check_separate(self):
+        for train, test in zip(self.trains, self.tests):
+            if not train.drop(columns=["target"]).columns.equals(test.columns):
+                raise IndexError(
+                    "The train and test DataFrame has different null-value structure.")
 
     def preprocess(self, PreprocessingExecutor, *args, **kwargs):
         '''
@@ -228,10 +281,10 @@ class BaseExecutor(object):
             feature_cols = pd.RangeIndex(0, feature.shape[1])
 
         res = pd.DataFrame(feature, columns=feature_cols)
-        res.insert(0, "hash", hash_)
+        res.insert(0, "hash", hash_.reset_index(drop=True))
 
         if isinstance(target, pd.Series):
-            res["target"] = target
+            res["target"] = target.reset_index(drop=True)
         return res
 
 
@@ -254,3 +307,14 @@ class BaseTrainExecutor(BaseExecutor):
 
     def fit(self, train):
         raise NotImplementedError
+
+
+if __name__ == "__main__":
+    train = DFProvider("train").get_df()
+    test = DFProvider("test").get_df()
+
+    nc = NanCoordiantor(train, test, "separate_all")
+    for train, test in zip(nc.trains, nc.tests):
+        print(train.info())
+        print(test.info())
+        print("----------------")
