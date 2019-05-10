@@ -35,7 +35,7 @@ def provide_array():
 
     test_maps = matrixfier.transform(test)
     test_maps = np.array(list(test_maps.map_))
-    
+
     print("Matrixfied, resolution:", matrixfier.resolution)
 
     train_maps = train_maps.reshape(
