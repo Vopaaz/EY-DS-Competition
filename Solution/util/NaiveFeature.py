@@ -200,3 +200,28 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
             "x_entry": "x_last_point",
             "y_entry": "y_last_point"
         })
+
+
+class TimeInfoExtractor(TransformerMixin, BaseEstimator):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+    def fit(self, X):
+        return self
+
+    def transform(self, X):
+        groups = X.groupby("hash")
+        time_info = groups.apply(self.__time_info_in_group)
+
+        time_info["last_path_time_delta"] = time_info["last_path_time_exit"] - \
+            time_info["last_path_time_entry"]
+
+        return time_info
+
+    def __time_info_in_group(self, group):
+        BASE_TIME = pd.Timestamp("1900-01-01 15:00:00")
+        last_record = group.iloc[-1]
+        return pd.Series({
+            "last_path_time_entry": (BASE_TIME - last_record.time_entry).total_seconds(),
+            "last_path_time_exit": (BASE_TIME - last_record.time_exit).total_seconds()
+        })

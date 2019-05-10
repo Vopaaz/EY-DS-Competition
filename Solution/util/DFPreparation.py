@@ -1,15 +1,15 @@
-import os
-from collections import Iterable
-
-import pandas as pd
-from sklearn.base import BaseEstimator, TransformerMixin
-
-from Solution.util.BaseUtil import Raw_DF_Reader
-from Solution.util.Labelling import Labeller
+import sys
+sys.path.append(".")
+from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.NaiveFeature import (CoordinateInfoExtractor,
                                         DistanceInfoExtractor,
-                                        PathInfoExtractor)
-from Solution.util.PathFilling import FillPathTransformer
+                                        PathInfoExtractor, TimeInfoExtractor)
+from Solution.util.Labelling import Labeller
+from Solution.util.BaseUtil import Raw_DF_Reader
+from sklearn.base import BaseEstimator, TransformerMixin
+import pandas as pd
+from collections import Iterable
+import os
 
 
 class DFProvider(object):
@@ -38,6 +38,7 @@ class DFProvider(object):
     '''
 
     ALL_EXTRACTORS = {
+        "time": TimeInfoExtractor,
         "coordinate": CoordinateInfoExtractor,
         "distance": DistanceInfoExtractor,
         "path": PathInfoExtractor
@@ -137,16 +138,14 @@ class DFProvider(object):
 
 '''
     The following code can calculate and save the most useful csv files.
-
+'''
 if __name__ == "__main__":
     import threading
-    for i in ["train", "test"]:
-        for j in [True, False]:
-            try:
-                t = threading.Thread(
-                    target=DFProvider(i, path_filled=j, overwrite=True).get_df
-                )
-                t.start()
-            except Exception as e:
-                print(e)
-'''
+    for i in ["test"]:
+        try:
+            t = threading.Thread(
+                target=DFProvider(i, path_filled=True).get_df
+            )
+            t.start()
+        except Exception as e:
+            print(e)
