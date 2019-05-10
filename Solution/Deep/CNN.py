@@ -146,7 +146,7 @@ def main():
     resolution = coor.resolution
 
     model = init_model(resolution)
-    history = model.fit(train_maps, labels, epochs=75,
+    history = model.fit(train_maps, labels, epochs=15,
                         batch_size=128, validation_split=0.1)
 
     result = model.predict(test_maps)
@@ -155,7 +155,7 @@ def main():
 
     res = coor.transform_result(result)
     s = Submitter(res)
-    s.save("CNN 2nd exploration")
+    s.save("CNN 3rd exploration, early stop at 15 epochs.")
 
     save_history(history)
 
