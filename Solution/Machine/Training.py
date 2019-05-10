@@ -28,7 +28,7 @@ class RandomForestExecutor(BaseTrainExecutor):
         g_search = GridSearchCV(rand_forest, param_grid,
                                 cv=5, scoring=SCORING)
         g_search.fit(feature, target)
-        logger.info("Random Forest, drop, best_score_: " + str(g_search.best_score_))
+        logger.info("Random Forest, separate_all, best_score_: " + str(g_search.best_score_))
         return g_search.best_estimator_
 
 
