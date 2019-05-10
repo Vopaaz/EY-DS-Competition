@@ -1,7 +1,7 @@
 # see: https://docs.floydhub.com/floyd_config
 # All supported configs:
 #
-machine: cpu
+machine: gpu
 env: tensorflow-1.12
 input:
  - destination: OriginalFile
@@ -9,7 +9,8 @@ input:
  - destination: Tmp
    source: vopaaz/datasets/eyds-tmp/1
 description: this is a test
-command: python Useless/exploration.py
+# command: python Useless/exploration.py
+command: python Solution/Deep/CNN.py
 
 # You can also define multiple tasks to use with --task argument:
 #

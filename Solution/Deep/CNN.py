@@ -1,18 +1,18 @@
 import sys
 sys.path.append(".")
-
-import numpy as np
-import pandas as pd
-from keras import layers, models, optimizers
-from keras.utils import to_categorical
-from Solution.deeputil.Matrixfy import MatrixfyTransformer
-from Solution.util.Labelling import Labeller
-from Solution.util.PathFilling import FillPathTransformer
-from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
-from Solution.util.Submition import Submitter
-from Solution.deeputil.MatrixProvider import MProvider
-import matplotlib.pyplot as plt
 import os
+import matplotlib.pyplot as plt
+from Solution.deeputil.MatrixProvider import MProvider
+from Solution.util.Submition import Submitter
+from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
+from Solution.util.PathFilling import FillPathTransformer
+from Solution.util.Labelling import Labeller
+from Solution.deeputil.Matrixfy import MatrixfyTransformer
+from keras.utils import to_categorical
+from keras import layers, models, optimizers
+import pandas as pd
+import numpy as np
+
 
 def naive_value(timestamp):
     start = pd.Timestamp("1900-01-01 00:00:00")
@@ -87,23 +87,28 @@ class CNNCoordinator(object):
 
 def init_model(resolution):
     model = models.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation="relu",
-                            input_shape=(*resolution, 1)))
+    model.add(layers.Conv2D(32, (3, 3), input_shape=(*resolution, 1)))
+    model.add(layers.PReLU())
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation="relu"))
-    model.add(layers.Conv2D(128, (3, 3), activation="relu"))
+    model.add(layers.Conv2D(64, (3, 3)))
+    model.add(layers.PReLU())
+    model.add(layers.Conv2D(128, (3, 3)))
+    model.add(layers.PReLU())
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(128, (3, 3), activation="relu"))
+    model.add(layers.Conv2D(128, (3, 3)))
+    model.add(layers.PReLU())
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
-    model.add(layers.Dense(512, activation="relu"))
+    model.add(layers.Dense(512))
+    model.add(layers.PReLU())
     model.add(layers.Dense(2, activation="sigmoid"))
 
-    model.compile(optimizer=optimizers.RMSprop(lr=1e-4),
+    model.compile(optimizer=optimizers.Adam(lr=1e-4),
                   loss="categorical_crossentropy", metrics=["accuracy"])
 
     return model
+
 
 def save_history(history):
     if not os.path.exists("Resultfig"):
@@ -111,8 +116,8 @@ def save_history(history):
 
     acc = history.history["acc"]
     val_acc = history.history["val_acc"]
-    loss=history.history["loss"]
-    val_loss=history.history["val_loss"]
+    loss = history.history["loss"]
+    val_loss = history.history["val_loss"]
 
     epochs = range(1, len(acc)+1)
 
@@ -132,6 +137,7 @@ def save_history(history):
     plt.savefig("Resultfig/loss.png")
     plt.close()
 
+
 def main():
     coor = CNNCoordinator()
     train_maps = coor.train_maps
@@ -140,8 +146,8 @@ def main():
     resolution = coor.resolution
 
     model = init_model(resolution)
-    history = model.fit(train_maps, labels, epochs=39, batch_size=256, validation_split=0.1)
-
+    history = model.fit(train_maps, labels, epochs=75,
+                        batch_size=128, validation_split=0.1)
 
     result = model.predict(test_maps)
 
