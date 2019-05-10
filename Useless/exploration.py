@@ -31,7 +31,7 @@ if __name__ == "__main__":
     nc.fit(RandomForestExecutor)
     res = nc.predict()
     Submitter(res).save(
-        "Random Forest drop,outlier killed, grid search params 3rd.")
+        "Random Forest drop, outlier killed, Final.")
 
     # nc = NanCoordiantor(train, test, "drop")
     # nc.preprocess(StandardOutlierPreprocessor)

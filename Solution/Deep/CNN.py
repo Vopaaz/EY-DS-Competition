@@ -9,7 +9,7 @@ from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.Labelling import Labeller
 from Solution.deeputil.Matrixfy import MatrixfyTransformer
 from keras.utils import to_categorical
-from keras import layers, models, optimizers
+from keras import layers, models, optimizers, regularizers
 import pandas as pd
 import numpy as np
 
