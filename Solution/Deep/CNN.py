@@ -1,5 +1,6 @@
 import sys
 sys.path.append(".")
+
 import os
 import matplotlib.pyplot as plt
 from Solution.deeputil.MatrixProvider import MProvider
@@ -12,7 +13,6 @@ from keras.utils import to_categorical
 from keras import layers, models, optimizers, regularizers
 import pandas as pd
 import numpy as np
-
 
 def naive_value(timestamp):
     start = pd.Timestamp("1900-01-01 00:00:00")
@@ -87,6 +87,7 @@ class CNNCoordinator(object):
 
 def init_model(resolution):
     model = models.Sequential()
+
     model.add(layers.Conv2D(32, (3, 3), input_shape=(*resolution, 1)))
     model.add(layers.PReLU())
     model.add(layers.MaxPooling2D((2, 2)))
@@ -109,7 +110,7 @@ def init_model(resolution):
 
     return model
 
-
+  
 def save_history(history):
     if not os.path.exists("Resultfig"):
         os.makedirs("Resultfig")
@@ -137,7 +138,7 @@ def save_history(history):
     plt.savefig("Resultfig/loss.png")
     plt.close()
 
-
+    
 def main():
     coor = CNNCoordinator()
     train_maps = coor.train_maps
@@ -148,7 +149,6 @@ def main():
     model = init_model(resolution)
     history = model.fit(train_maps, labels, epochs=15,
                         batch_size=128, validation_split=0.1)
-
     result = model.predict(test_maps)
 
     print(model.summary())
@@ -156,8 +156,8 @@ def main():
     res = coor.transform_result(result)
     s = Submitter(res)
     s.save("CNN 3rd exploration, early stop at 15 epochs.")
-
     save_history(history)
+
 
 
 if __name__ == "__main__":
