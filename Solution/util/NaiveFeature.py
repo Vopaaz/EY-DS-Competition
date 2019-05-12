@@ -12,8 +12,8 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features extracted:
             - The max, min, average level of the distance of all the points recorded by a device.
-            - The difference between the distance of the entry of the first path and the exit of the last one.
-            - The difference between the distance of the entry and the exit of the last path.
+            - The difference between the distance of the entry of the first path and the exit of the last but one.
+            - The difference between the distance of the entry and the exit of the last path but one.
 
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
@@ -173,7 +173,7 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
 class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features Extracted:
-            - The coordinate of the start point of the last path (the unknown, to be predicted path).
+            - The coordinate of the start point of the last path (the path to be predicted).
     '''
 
     def __init__(self, *args, **kwargs):
