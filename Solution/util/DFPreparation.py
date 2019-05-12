@@ -1,9 +1,9 @@
-import sys
-sys.path.append(".")
 import os
 from collections import Iterable
+
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
+
 from Solution.util.BaseUtil import Raw_DF_Reader
 from Solution.util.Labelling import Labeller
 from Solution.util.NaiveFeature import (CoordinateInfoExtractor,
@@ -124,7 +124,7 @@ class DFProvider(object):
         else:
             print(
                 "No existed required file" if not self.overwrite else "Forced overwrite"+", recalculating.")
-            self.df = self.__provide_df().apply(pd.to_numeric, errors="coerce")
+            self.df = self.__provide_df().apply(pd.to_numeric, errors="coerce").reset_index()
             self.__write_df()
             print("Newly calculated dataframe retrieved and saved.")
 
@@ -133,4 +133,4 @@ class DFProvider(object):
 
     def __write_df(self):
         with open(self.__filepath, "w", encoding="utf-8") as f:
-            self.df.to_csv(f, line_terminator="\n")
+            self.df.to_csv(f, line_terminator="\n", index=False)
