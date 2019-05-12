@@ -1,3 +1,6 @@
+import sys
+sys.path.append(".")
+
 import os
 import pandas as pd
 from Solution.Machine.Coordination import NanCoordiantor
@@ -5,8 +8,6 @@ from Solution.Machine.Preprocessing import StandardOutlierPreprocessor
 from Solution.Machine.Training import XGBoostExecutor
 from Solution.util.DFPreparation import DFProvider
 from Solution.util.Submition import Submitter
-import sys
-sys.path.append(".")
 
 
 def check():
