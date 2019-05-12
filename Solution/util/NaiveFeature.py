@@ -186,10 +186,10 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
         '''
             Parameters:
                 X: Dataframe containing column:
-                "hash", "x_entry", "y_entry"
+                    "hash", "x_entry", "y_entry"
 
             Returns:
-                A Dataframe containing numbers of "hash" rows, two columns.
+                A DataFrame containing numbers of "hash" rows, two columns.
                 The index is the hash value of the device.
                 Each column is a feature, as described by the class docstring.
         '''
@@ -203,6 +203,12 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
 
 
 class TimeInfoExtractor(TransformerMixin, BaseEstimator):
+    '''
+        Features Extracted:
+            - The difference between **3 p.m.** and the starting / ending time point of the last path. (in seconds)
+                Mind that it is not reflected in the name of the column.
+            - The difference between the starting and ending time point of the last path. (in seconds)
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__()
 
@@ -210,6 +216,16 @@ class TimeInfoExtractor(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
+        '''
+            Parameters:
+                X: Dataframe containing column:
+                    "hash", "time_entry", "time_exit"
+
+            Returns:
+                A DataFrame containing numbers of "hash" rows, three columns.
+                The index is the hash value of the device.
+                Each column is a feature, as described by the class docstring.
+        '''
         groups = X.groupby("hash")
         time_info = groups.apply(self.__time_info_in_group)
 

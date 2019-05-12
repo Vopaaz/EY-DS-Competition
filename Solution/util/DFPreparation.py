@@ -1,15 +1,15 @@
 import sys
 sys.path.append(".")
-from Solution.util.PathFilling import FillPathTransformer
+import os
+from collections import Iterable
+import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+from Solution.util.BaseUtil import Raw_DF_Reader
+from Solution.util.Labelling import Labeller
 from Solution.util.NaiveFeature import (CoordinateInfoExtractor,
                                         DistanceInfoExtractor,
                                         PathInfoExtractor, TimeInfoExtractor)
-from Solution.util.Labelling import Labeller
-from Solution.util.BaseUtil import Raw_DF_Reader
-from sklearn.base import BaseEstimator, TransformerMixin
-import pandas as pd
-from collections import Iterable
-import os
+from Solution.util.PathFilling import FillPathTransformer
 
 
 class DFProvider(object):
@@ -134,18 +134,3 @@ class DFProvider(object):
     def __write_df(self):
         with open(self.__filepath, "w", encoding="utf-8") as f:
             self.df.to_csv(f, line_terminator="\n")
-
-
-'''
-    The following code can calculate and save the most useful csv files.
-'''
-if __name__ == "__main__":
-    import threading
-    for i in ["test"]:
-        try:
-            t = threading.Thread(
-                target=DFProvider(i, path_filled=True).get_df
-            )
-            t.start()
-        except Exception as e:
-            print(e)

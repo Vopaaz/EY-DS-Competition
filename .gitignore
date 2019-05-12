@@ -118,3 +118,6 @@ Tmp/*
 
 # Results
 Result/*
+
+# Train log
+trainLog.txt

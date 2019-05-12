@@ -1,6 +1,5 @@
 import sys
 sys.path.append(".")
-
 import numpy as np
 import pandas as pd
 from keras import layers, models, optimizers
@@ -11,11 +10,7 @@ from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
 from Solution.util.Submition import Submitter
 from Solution.deeputil.MatrixProvider import MProvider
-
-def naive_value(timestamp):
-    start = pd.Timestamp("1900-01-01 00:00:00")
-    end = pd.Timestamp("1900-01-01 23:59:59")
-    return time_delta(timestamp, start) / time_delta(start, end)
+from Solution.deeputil.ValueFunc import naive_value
 
 
 class CNNCoordinator(object):

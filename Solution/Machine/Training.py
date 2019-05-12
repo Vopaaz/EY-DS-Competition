@@ -28,7 +28,8 @@ class RandomForestExecutor(BaseTrainExecutor):
         g_search = GridSearchCV(rand_forest, param_grid,
                                 cv=5, scoring=SCORING)
         g_search.fit(feature, target)
-        logger.info("Random Forest, drop, 3rd params. Final trial" + str(g_search.best_params_))
+        logger.info("Random Forest, drop, 3rd params. Final trial" +
+                    str(g_search.best_params_))
         return g_search.best_estimator_
 
 
@@ -61,7 +62,7 @@ class XGBoostExecutor(BaseTrainExecutor):
         xgb = XGBClassifier()
         g_search = GridSearchCV(xgb, param_grid, cv=5, scoring=SCORING)
         g_search.fit(feature, target)
-        logger.info("XGBoosting, separate_all strat, column num {}, param_grid using [2]".format(X.shape[1])+str(g_search.best_params_))
+        logger.info("XGBoosting, Drop strategy. Best Parameters: "+str(g_search.best_params_))
         return g_search.best_estimator_
 
 

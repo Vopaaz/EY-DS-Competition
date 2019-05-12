@@ -7,6 +7,8 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from Solution.util.BaseUtil import time_delta
+from Solution.deeputil.ValueFunc import naive_value
+
 
 time_entry_ix = 2
 time_exit_ix = 3
@@ -121,12 +123,6 @@ def _next_place(i, j, case, d1, d2, d3, d4):
             return i, j+1
 
 
-def naive_value(timestamp):
-    start = pd.Timestamp("1900-01-01 00:00:00")
-    end = pd.Timestamp("1900-01-01 23:59:59")
-    return time_delta(timestamp, start) / time_delta(start, end)
-
-
 class MatrixfyTransformer(TransformerMixin, BaseEstimator):
     def __init__(self, pixel=1000, value_func=naive_value):
         self.pixel = pixel
@@ -219,8 +215,6 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
 
     def __matrixfy_one_device(self, df):
         '''
-        Modify this function only.
-
         Parameters:
             - X: the raw DataFrame of only one device
 
