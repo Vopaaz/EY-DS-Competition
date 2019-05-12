@@ -22,7 +22,7 @@ def check():
                 os.mkdir(dir_)
     except Exception as e:
         raise Exception(
-            "Environment Initiallizing Failed. {}".format(e.message))
+            "Environment Initiallizing Failed. {}".format(e))
 
 
 def give_result():

@@ -1,12 +1,15 @@
 import sys
 sys.path.append(".")
-from Solution.util.BaseUtil import Raw_DF_Reader
-from Solution.Machine.DFPreparation import DFProvider
-import datetime
-import logging
-import os
-import pandas as pd
+
+from Solution.Machine.initLogging import init_logging
+from sklearn.metrics import f1_score, make_scorer
 from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import os
+import logging
+import datetime
+from Solution.Machine.DFPreparation import DFProvider
+from Solution.util.BaseUtil import Raw_DF_Reader
 
 
 def split_hash_feature_target(full_df):
@@ -146,7 +149,8 @@ class NanCoordiantor(object):
 
     def __separate_all(self):
         self.trains = self.__one_df_separate_all(self.trains)
-        self.tests = self.__one_df_separate_part(self.tests) # Note that using __*_part is NOT a mistake.
+        # Note that using __*_part is NOT a mistake.
+        self.tests = self.__one_df_separate_part(self.tests)
         self.trains.sort(key=lambda df: df.shape[1])
         self.tests.sort(key=lambda df: df.shape[1])
 
@@ -304,6 +308,10 @@ class BaseTrainExecutor(BaseExecutor):
     '''
         Base class for the train executors
     '''
+
+    def __init__(self):
+        self.logger = init_logging()
+        self.SCORING = make_scorer(f1_score)
 
     def fit(self, train):
         raise NotImplementedError
