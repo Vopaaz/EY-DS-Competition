@@ -10,7 +10,7 @@ from Solution.util.DFPreparation import DFProvider
 from Solution.util.Submition import Submitter
 
 
-def check():
+def init():
     dirs = ["Tmp", "Result", "log"]
     src = [r"OriginalFile\data_test\data_test.csv",
            r"OriginalFile\data_train\data_train.csv"]
@@ -36,5 +36,5 @@ def give_result():
 
 
 if __name__ == "__main__":
-    check()
+    init()
     give_result()
