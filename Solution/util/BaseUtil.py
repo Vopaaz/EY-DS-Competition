@@ -1,10 +1,30 @@
+'''
+    The basic utilities, including **l1** distance calculation and raw data reading.
+'''
+
 import pandas as pd
 import numpy as np
 
+
 MIN_X = 3750901.5068
+'''
+    The minimum Y of the center area
+'''
+
 MAX_X = 3770901.5068
+'''
+    The maximum X of the center area
+'''
+
 MIN_Y = -19268905.6133
+'''
+    The minimum Y of the center area
+'''
+
 MAX_Y = -19208905.6133
+'''
+    The maximum Y of the center area
+'''
 
 
 class Raw_DF_Reader(object):

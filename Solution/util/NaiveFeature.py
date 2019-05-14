@@ -1,3 +1,7 @@
+'''
+    Extract features used in the machine learning method.
+'''
+
 import datetime
 
 import numpy as np
@@ -209,6 +213,7 @@ class TimeInfoExtractor(TransformerMixin, BaseEstimator):
                 Mind that it is not reflected in the name of the column.
             - The difference between the starting and ending time point of the last path. (in seconds)
     '''
+
     def __init__(self, *args, **kwargs):
         super().__init__()
 

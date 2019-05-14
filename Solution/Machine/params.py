@@ -1,3 +1,7 @@
+'''
+    Hyper-parameters used for grid search.
+'''
+
 # fill_0 best: {'max_depth': 10, 'max_features': 0.8, 'min_samples_leaf': 2, 'n_estimators': 100}
 random_forest_1 = {
     "n_estimators": [10, 100],

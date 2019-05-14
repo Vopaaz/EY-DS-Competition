@@ -1,7 +1,8 @@
-import sys
-sys.path.append(".")
+'''
+    Implement the `Null` value handling and coordination strategies.
+'''
 
-from Solution.Machine.initLogging import init_logging
+from Solution.util.initLogging import init_logging
 from sklearn.metrics import f1_score, make_scorer
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
@@ -317,14 +318,3 @@ class BaseTrainExecutor(BaseExecutor):
 
     def fit(self, train):
         raise NotImplementedError
-
-
-if __name__ == "__main__":
-    train = DFProvider("train").get_df()
-    test = DFProvider("test").get_df()
-
-    nc = NanCoordiantor(train, test, "separate_all")
-    for train, test in zip(nc.trains, nc.tests):
-        print(train.info())
-        print(test.info())
-        print("----------------")

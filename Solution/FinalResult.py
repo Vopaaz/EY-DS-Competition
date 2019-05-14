@@ -1,3 +1,7 @@
+'''
+    Script that gives the final result.
+'''
+
 import sys
 sys.path.append(".")
 
@@ -11,6 +15,10 @@ from Solution.util.Submition import Submitter
 
 
 def init():
+    '''
+        Check whether the dataset are put into proper location.
+        Create certain directories used in the subsequent approach.
+    '''
     dirs = ["Tmp", "Result", "log"]
     src = [r"OriginalFile\data_test\data_test.csv",
            r"OriginalFile\data_train\data_train.csv"]
@@ -26,6 +34,9 @@ def init():
 
 
 def give_result():
+    '''
+        Run the whole thing and give the result.
+    '''
     train = DFProvider("train", path_filled=True).get_df()
     test = DFProvider("test", path_filled=True).get_df()
     nc = NanCoordiantor(train, test, "drop")
