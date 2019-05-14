@@ -24,6 +24,7 @@ class DFProvider(object):
         Parameters:
             - set_: ["train"/"test"], get train set or test set.
             - features: str "all" or list containing the following options:
+                - "time
                 - "coordinate"
                 - "distance"
                 - "path"

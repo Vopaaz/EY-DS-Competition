@@ -64,6 +64,7 @@ class NanCoordiantor(object):
 
         Explanation of Separate Strategy:
 
+        ```
             Example of train set (v means value and N means nan):
                 A   B   C
             0   v   v   v
@@ -72,6 +73,7 @@ class NanCoordiantor(object):
             3   v   v   N
             4   v   N   N
             5   v   N   N
+        ```
 
         separate_all:
             - Use (0-5).A to train the model and predict those whose non-null feature is only A
