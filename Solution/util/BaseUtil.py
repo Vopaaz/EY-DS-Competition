@@ -1,10 +1,30 @@
+'''
+    The basic utilities, including **l1** distance calculation and raw data reading.
+'''
+
 import pandas as pd
 import numpy as np
 
+
 MIN_X = 3750901.5068
+'''
+    The minimum Y of the center area
+'''
+
 MAX_X = 3770901.5068
+'''
+    The maximum X of the center area
+'''
+
 MIN_Y = -19268905.6133
+'''
+    The minimum Y of the center area
+'''
+
 MAX_Y = -19208905.6133
+'''
+    The maximum Y of the center area
+'''
 
 
 class Raw_DF_Reader(object):
@@ -15,7 +35,7 @@ class Raw_DF_Reader(object):
             train: Train dataset
 
         In the table, "time_entry" and "time_exit" column are datetime data type,
-        their year-month-date will be 1900-01-01 as they it is not provided in the source.
+        their year-month-date will be 1900-01-01 as they are not provided in the source.
     '''
 
     def __init__(self):
@@ -140,7 +160,7 @@ def _one_no_center_point_distance_to_border(x, y):
 
 def distance_between(x1, y1, x2, y2):
     '''
-        Return the l1 distance(s) between the two coodinate (Series).
+        Return the l1 distance(s) between the two coordinate (Series).
 
         Parameters can be four single numbers (representing two coordinates), or four pandas Series.
         The return value will correspondingly be a number or a Series.
@@ -161,7 +181,7 @@ def distance_between(x1, y1, x2, y2):
 
 def _distance_between_points(x1, y1, x2, y2):
     '''
-        Return the l1 distance(s) between the two coodinate (Series).
+        Return the l1 distance(s) between the two coordinate (Series).
     '''
     return abs(x1-x2) + abs(y1-y2)
 

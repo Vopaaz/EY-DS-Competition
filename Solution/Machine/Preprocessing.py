@@ -1,3 +1,7 @@
+'''
+    The data preprocessing routine.
+'''
+
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
@@ -27,7 +31,7 @@ class StandardOutlierPreprocessor(BasePreprocessingExecutor):
     '''
         Wrap the sklearn.preprocessing.StandardPreprocessor and sklearn.ensemble.IsolationForest
         Parameter (please put it in kwargs when initiallizing)
-            - contamination: IsolationForest contamination parameter.
+            - contamination: IsolationForest contamination parameter. Default 0.05.
             Refer to https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html#sklearn.ensemble.IsolationForest.
     '''
 
@@ -43,11 +47,12 @@ class StandardOutlierPreprocessor(BasePreprocessingExecutor):
 
     def transform(self, X):
         hash_, feature, target = self.split_hash_feature_target(X)
-        if isinstance(target, pd.Series):   # Case train set.
+        # Case train set. Otherwise do not eliminate outliers.
+        if isinstance(target, pd.Series):
             pred_result = self.i_forest.predict(feature)
             hash_ = hash_[pred_result == 1]
             feature = feature[pred_result == 1]
             target = target[pred_result == 1]
         feature = self.std_scaler.transform(feature)
-        res =  self.combine_hash_feature_target(hash_, feature, target)
+        res = self.combine_hash_feature_target(hash_, feature, target)
         return res

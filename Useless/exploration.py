@@ -1,7 +1,7 @@
 import sys
 sys.path.append(".")
 
-from Solution.util.Submition import Submitter
+from Solution.util.Submission import Submitter
 from Solution.util.DFPreparation import DFProvider
 from Solution.Machine.Training import (CombinedExecutor, GradientBoostingExecutor,
                                        RandomForestExecutor, SupportVectorExecutor,

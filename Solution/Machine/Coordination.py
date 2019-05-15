@@ -1,12 +1,16 @@
-import sys
-sys.path.append(".")
-from Solution.util.BaseUtil import Raw_DF_Reader
-from Solution.Machine.DFPreparation import DFProvider
-import datetime
-import logging
-import os
-import pandas as pd
+'''
+    Implement the `Null` value handling and coordination strategies.
+'''
+
+from Solution.util.initLogging import init_logging
+from sklearn.metrics import f1_score, make_scorer
 from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import os
+import logging
+import datetime
+from Solution.util.DFPreparation import DFProvider
+from Solution.util.BaseUtil import Raw_DF_Reader
 
 
 def split_hash_feature_target(full_df):
@@ -61,6 +65,7 @@ class NanCoordiantor(object):
 
         Explanation of Separate Strategy:
 
+        ```
             Example of train set (v means value and N means nan):
                 A   B   C
             0   v   v   v
@@ -69,6 +74,7 @@ class NanCoordiantor(object):
             3   v   v   N
             4   v   N   N
             5   v   N   N
+        ```
 
         separate_all:
             - Use (0-5).A to train the model and predict those whose non-null feature is only A
@@ -146,7 +152,8 @@ class NanCoordiantor(object):
 
     def __separate_all(self):
         self.trains = self.__one_df_separate_all(self.trains)
-        self.tests = self.__one_df_separate_part(self.tests) # Note that using __*_part is NOT a mistake.
+        # Note that using __*_part is NOT a mistake.
+        self.tests = self.__one_df_separate_part(self.tests)
         self.trains.sort(key=lambda df: df.shape[1])
         self.tests.sort(key=lambda df: df.shape[1])
 
@@ -302,19 +309,16 @@ class BasePreprocessingExecutor(BaseExecutor):
 
 class BaseTrainExecutor(BaseExecutor):
     '''
-        Base class for the train executors
+        Base class for the train executors.
+
+        Provides:
+            - self.logger: the logger for recording the best hyper-parameter or validation score, etc
+            - self.SCORING: the f1 scoring function
     '''
+
+    def __init__(self):
+        self.logger = init_logging()
+        self.SCORING = make_scorer(f1_score)
 
     def fit(self, train):
         raise NotImplementedError
-
-
-if __name__ == "__main__":
-    train = DFProvider("train").get_df()
-    test = DFProvider("test").get_df()
-
-    nc = NanCoordiantor(train, test, "separate_all")
-    for train, test in zip(nc.trains, nc.tests):
-        print(train.info())
-        print(test.info())
-        print("----------------")

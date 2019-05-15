@@ -1,3 +1,8 @@
+'''
+    Archieve for the differences when IO on LeiNao Cloud Computing Platform.
+'''
+
+
 # Solution\Machine\DFPreparation.py, line 108-115
 def __get_filepath(self):
     '''
@@ -29,7 +34,7 @@ def __get_raw_train(self):
     with open(r"/input_dir/datasets/eyds/data_train.csv", "r", encoding="utf-8") as f:
         self.train = pd.read_csv(f, index_col=0)
 
-# Solution\util\Submition.py, line 39-56
+# Solution\util\Submission.py, line 39-56
 
 
 def save(self, memo=""):

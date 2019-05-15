@@ -1,3 +1,9 @@
+'''
+    In our workflow, the index are always `hash_` of all the devices.
+    The submission, however, requires the `traj_id` as the index.
+    The Submitter class is thus coded for easy submission.
+'''
+
 import datetime
 import os
 
