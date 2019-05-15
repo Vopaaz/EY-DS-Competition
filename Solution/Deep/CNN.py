@@ -105,6 +105,9 @@ def init_model(resolution):
 
 
 def main():
+    '''
+        Perform the main task in "main" function
+    '''
     coor = CNNCoordinator()
     train_maps = coor.train_maps
     test_maps = coor.test_maps

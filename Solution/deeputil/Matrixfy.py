@@ -19,6 +19,17 @@ y_exit_ix = 10
 class Path(object):
     '''
         Contains time and location information of a path
+        Parameters:
+            - i_start: the vertical position of start point in the map
+            - j_start: the horizontal position of start point in the map
+            - i_end: the vertical position of end point in the map
+            - j_end: the horizontal position of end point in the map
+            - sPoint_x: x coordination of the start point
+            - sPoint_y: y coordination of the start point
+            - ePoint_x: x coordination of the end point
+            - ePoint_y: y coordination of the end point
+            - start_time: the start time
+            - end_time: the end time
     '''
 
     def __init__(self, i_start, j_start, i_end, j_end, sPoint_x, sPoint_y, ePoint_x, ePoint_y, start_time, end_time):
@@ -37,12 +48,12 @@ class Path(object):
 def _get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
     '''
         Parameters:
-            point_x: x coordination of the point
-            point_y: y coordination of the point
-            line_x1: x coordination of the start point of the line
-            line_y1: y coordination of the start point of the line
-            line_x2: x coordination of the end point of the line
-            line_y2: y coordination of the end point of the line
+            - point_x: x coordination of the point
+            - point_y: y coordination of the point
+            - line_x1: x coordination of the start point of the line
+            - line_y1: y coordination of the start point of the line
+            - line_x2: x coordination of the end point of the line
+            - line_y2: y coordination of the end point of the line
         Return:
              The l2 distance of the point to the line
     '''
@@ -56,10 +67,10 @@ def _get_dist(point_x, point_y, line_x1, line_y1, line_x2, line_y2):
 def _point_dist(x1, y1, x2, y2):
     '''
         Parameters:
-            x1: the x coordination of point1
-            y1: the y coordination of point1
-            x2: the x coordination of point2
-            y2: the y coordination of point2
+            - x1: the x coordination of point1
+            - y1: the y coordination of point1
+            - x2: the x coordination of point2
+            - y2: the y coordination of point2
         Return:
              The l2 distance from one point to the other
     '''
@@ -70,10 +81,10 @@ def _position_case(sPoint_x, sPoint_y, ePoint_x, ePoint_y):
     '''
         Determine which kind of relative position the 2 point is in
         Parameters:
-            path.sPoint_x: the x coordination of the start point
-            sPoint_y: the y coordination of the start point
-            ePoint_x: the x coordination of the end point
-            path.ePoint_y: the y coordination of the end point
+            - path.sPoint_x: the x coordination of the start point
+            - sPoint_y: the y coordination of the start point
+            - ePoint_x: the x coordination of the end point
+            - path.ePoint_y: the y coordination of the end point
         Returns:
             0 represents right-down
             1 represents left-down
@@ -96,6 +107,14 @@ def _position_case(sPoint_x, sPoint_y, ePoint_x, ePoint_y):
 def _next_place(i, j, case, d1, d2, d3, d4):
     '''
         Select next square according to the distance
+        Parameters:
+            - i: the vertical position of the point in the map
+            - j: the horizontal position of the point in the map
+            - case: the situation of position that the point is in
+            - d1: distance1 from MatrixfyTransformer.__matrix_path
+            - d2: distance2 from MatrixfyTransformer.__matrix_path
+            - d3: distance3 from MatrixfyTransformer.__matrix_path
+            - d4: distance4 from MatrixfyTransformer.__matrix_path
         Returns:
             The next matrix place (i, j)
     '''
@@ -128,6 +147,20 @@ def naive_value(timestamp):
 
 
 class MatrixfyTransformer(TransformerMixin, BaseEstimator):
+    '''
+        To transform the data to a matrix map
+        Parameters:
+            - pixel: representing the width and height for one pixel in the map
+            - value_func: the value assign function for pixels in the map
+
+        Attributes:
+            min_x: the minimum x coordination of train & test
+            max_x: the maximum x coordination of train & test
+            min_y: the minimum y coordination of train & test
+            max_y: the maximum x coordination of train & test
+            resolution: the number of pixels in height and width
+
+    '''
     def __init__(self, pixel=1000, value_func=naive_value):
         self.pixel = pixel
         self.value_func = value_func
@@ -163,9 +196,9 @@ class MatrixfyTransformer(TransformerMixin, BaseEstimator):
         '''
             Determine which square the point is in
             Parameters:
-                point_x: the x coordination of the point
-                point_y: the y coordination of the point
-                pixel: the size of one square
+                - point_x: the x coordination of the point
+                - point_y: the y coordination of the point
+                - pixel: the size of one square
             Returns:
                 The position of the point in the matrix. (like (i, j))
         '''
