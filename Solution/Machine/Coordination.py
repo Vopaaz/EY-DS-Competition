@@ -309,7 +309,11 @@ class BasePreprocessingExecutor(BaseExecutor):
 
 class BaseTrainExecutor(BaseExecutor):
     '''
-        Base class for the train executors
+        Base class for the train executors.
+
+        Provides:
+            - self.logger: the logger for recording the best hyper-parameter or validation score, etc
+            - self.SCORING: the f1 scoring function
     '''
 
     def __init__(self):
