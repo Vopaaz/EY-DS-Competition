@@ -1,3 +1,7 @@
+'''
+    The machine learning models trainner.
+'''
+
 import logging
 
 from sklearn.ensemble import (GradientBoostingClassifier,

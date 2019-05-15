@@ -6,7 +6,7 @@ import logging
 
 def init_logging():
     '''
-        Initialize the logger and return it.
+        Initialize the logger and return it. The log file will be at "log\trainLog.txt".
     '''
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)

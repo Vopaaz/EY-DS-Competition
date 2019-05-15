@@ -11,7 +11,7 @@ from Solution.Machine.Coordination import NanCoordiantor
 from Solution.Machine.Preprocessing import StandardOutlierPreprocessor
 from Solution.Machine.Training import XGBoostExecutor
 from Solution.util.DFPreparation import DFProvider
-from Solution.util.Submition import Submitter
+from Solution.util.Submission import Submitter
 
 
 def init():

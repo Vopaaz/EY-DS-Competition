@@ -8,7 +8,7 @@ from Solution.deeputil.Matrixfy import MatrixfyTransformer
 from Solution.util.Labelling import Labeller
 from Solution.util.PathFilling import FillPathTransformer
 from Solution.util.BaseUtil import Raw_DF_Reader, time_delta
-from Solution.util.Submition import Submitter
+from Solution.util.Submission import Submitter
 from Solution.deeputil.MatrixProvider import MProvider
 from Solution.deeputil.ValueFunc import naive_value
 

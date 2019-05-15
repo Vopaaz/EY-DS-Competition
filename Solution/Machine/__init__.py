@@ -1,4 +1,4 @@
 '''
-    Core machine learning approach.
-    Including the `Null` value coordination, parameter 
+    Core machine learning code.
+    Including the `Null` value coordination, parameter grid, preprocessing routine, and the model training and prediction.
 '''

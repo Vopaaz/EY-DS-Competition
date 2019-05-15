@@ -1,5 +1,5 @@
 '''
-    Extract features used in the machine learning method.
+    Feature extractors for features used in machine learning.
 '''
 
 import datetime

@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from Solution.deeputil.Matrixfy import MatrixfyTransformer
 from xgboost import XGBClassifier
-from Solution.util.Submition import Submitter
+from Solution.util.Submission import Submitter
 from Solution.util.BaseUtil import Raw_DF_Reader
 from Solution.util.Labelling import Labeller
 from Solution.util.PathFilling import FillPathTransformer
