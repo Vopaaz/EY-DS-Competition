@@ -31,6 +31,8 @@ class MProvider(object):
             - pixel
             - fill_path
             - value_func
+            - big_matrix: a big matrix with all the devices' matrix map
+            - df_index: the index of the maps in big_matrix
     '''
 
     def __init__(self, set_, pixel=1000, fill_path=True, value_func=naive_value, overwrite=False):
@@ -122,6 +124,9 @@ class MProvider(object):
         return df
 
     def __provide_matrix_and_index(self):
+        '''
+            To get big_matrix and df_index from raw data
+        '''
         r = Raw_DF_Reader()
         self.train = r.train
         self.test = r.test

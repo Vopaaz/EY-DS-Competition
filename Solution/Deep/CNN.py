@@ -79,6 +79,9 @@ class CNNCoordinator(object):
 
 
 def init_model(resolution):
+    '''
+        Initialize the CNN model.
+    '''
     model = models.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation="relu",
                             input_shape=(*resolution, 1)))
@@ -100,6 +103,9 @@ def init_model(resolution):
 
 
 def main():
+    '''
+        Perform the main task.
+    '''
     coor = CNNCoordinator()
     train_maps = coor.train_maps
     test_maps = coor.test_maps
