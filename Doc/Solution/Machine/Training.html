@@ -45,6 +45,9 @@ from xgboost import XGBClassifier
 
 
 class RandomForestExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the RandomForestClassifer.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = random_forest_3
@@ -58,6 +61,9 @@ class RandomForestExecutor(BaseTrainExecutor):
 
 
 class GradientBoostingExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the GradientBoostingClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = gradient_boosting_2
@@ -70,6 +76,9 @@ class GradientBoostingExecutor(BaseTrainExecutor):
 
 
 class SupportVectorExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the SupportVectorClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = SVC_1
@@ -81,6 +90,9 @@ class SupportVectorExecutor(BaseTrainExecutor):
 
 
 class XGBoostExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the XGBoostingClassifier
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = XGBoosting_2
@@ -93,6 +105,9 @@ class XGBoostExecutor(BaseTrainExecutor):
 
 
 class CombinedExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the VotingClassifier using RandomForestClassifier and GradientBoostingClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         rf = RandomForestClassifier(**random_forest_fill_0_best)
@@ -117,15 +132,13 @@ class CombinedExecutor(BaseTrainExecutor):
 <span>class <span class="ident">CombinedExecutor</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Base class for the train executors.</p>
-<h2 id="provides">Provides</h2>
-<ul>
-<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
-<li>self.SCORING: the f1 scoring function</li>
-</ul></section>
+<section class="desc"><p>Wrap the VotingClassifier using RandomForestClassifier and GradientBoostingClassifier.</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class CombinedExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the VotingClassifier using RandomForestClassifier and GradientBoostingClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         rf = RandomForestClassifier(**random_forest_fill_0_best)
@@ -141,32 +154,12 @@ class CombinedExecutor(BaseTrainExecutor):
 <li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
 <li><a title="Solution.Machine.Coordination.BaseExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="Solution.Machine.Training.CombinedExecutor.fit"><code class="name flex">
-<span>def <span class="ident">fit</span></span>(<span>self, X)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def fit(self, X):
-    _, feature, target = self.split_hash_feature_target(X)
-    rf = RandomForestClassifier(**random_forest_fill_0_best)
-    gb = GradientBoostingClassifier(**gradient_boosting_fill_0_best)
-    vot = VotingClassifier(
-        estimators=[(&#39;rf&#39;, rf), (&#39;gb&#39;, gb)],
-        voting=&#39;soft&#39;
-    )
-    return vot.fit(feature, target)</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></b></code>:
 <ul class="hlist">
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.combine_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.split_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
 </ul>
 </li>
@@ -176,15 +169,13 @@ class CombinedExecutor(BaseTrainExecutor):
 <span>class <span class="ident">GradientBoostingExecutor</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Base class for the train executors.</p>
-<h2 id="provides">Provides</h2>
-<ul>
-<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
-<li>self.SCORING: the f1 scoring function</li>
-</ul></section>
+<section class="desc"><p>Wrap the GradientBoostingClassifier.</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class GradientBoostingExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the GradientBoostingClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = gradient_boosting_2
@@ -200,32 +191,12 @@ class CombinedExecutor(BaseTrainExecutor):
 <li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
 <li><a title="Solution.Machine.Coordination.BaseExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="Solution.Machine.Training.GradientBoostingExecutor.fit"><code class="name flex">
-<span>def <span class="ident">fit</span></span>(<span>self, X)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def fit(self, X):
-    _, feature, target = self.split_hash_feature_target(X)
-    param_grid = gradient_boosting_2
-    g_boosting = GradientBoostingClassifier()
-    g_search = GridSearchCV(g_boosting, param_grid,
-                            cv=5, scoring=self.SCORING)
-    g_search.fit(feature, target),
-    self.logger.info(&#34;GradientBoosting &#34;+str(g_search.best_params_))
-    return g_search.best_estimator_</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></b></code>:
 <ul class="hlist">
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.combine_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.split_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
 </ul>
 </li>
@@ -235,15 +206,13 @@ class CombinedExecutor(BaseTrainExecutor):
 <span>class <span class="ident">RandomForestExecutor</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Base class for the train executors.</p>
-<h2 id="provides">Provides</h2>
-<ul>
-<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
-<li>self.SCORING: the f1 scoring function</li>
-</ul></section>
+<section class="desc"><p>Wrap the RandomForestClassifer.</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class RandomForestExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the RandomForestClassifer.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = random_forest_3
@@ -260,33 +229,12 @@ class CombinedExecutor(BaseTrainExecutor):
 <li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
 <li><a title="Solution.Machine.Coordination.BaseExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="Solution.Machine.Training.RandomForestExecutor.fit"><code class="name flex">
-<span>def <span class="ident">fit</span></span>(<span>self, X)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def fit(self, X):
-    _, feature, target = self.split_hash_feature_target(X)
-    param_grid = random_forest_3
-    rand_forest = RandomForestClassifier()
-    g_search = GridSearchCV(rand_forest, param_grid,
-                            cv=5, scoring=self.SCORING)
-    g_search.fit(feature, target)
-    self.logger.info(&#34;Random Forest, drop, 3rd params. Final trial&#34; +
-                     str(g_search.best_params_))
-    return g_search.best_estimator_</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></b></code>:
 <ul class="hlist">
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.combine_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.split_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
 </ul>
 </li>
@@ -296,15 +244,13 @@ class CombinedExecutor(BaseTrainExecutor):
 <span>class <span class="ident">SupportVectorExecutor</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Base class for the train executors.</p>
-<h2 id="provides">Provides</h2>
-<ul>
-<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
-<li>self.SCORING: the f1 scoring function</li>
-</ul></section>
+<section class="desc"><p>Wrap the SupportVectorClassifier.</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class SupportVectorExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the SupportVectorClassifier.
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = SVC_1
@@ -319,31 +265,12 @@ class CombinedExecutor(BaseTrainExecutor):
 <li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
 <li><a title="Solution.Machine.Coordination.BaseExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="Solution.Machine.Training.SupportVectorExecutor.fit"><code class="name flex">
-<span>def <span class="ident">fit</span></span>(<span>self, X)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def fit(self, X):
-    _, feature, target = self.split_hash_feature_target(X)
-    param_grid = SVC_1
-    svc = SVC()
-    g_search = GridSearchCV(svc, param_grid, cv=5, scoring=self.SCORING)
-    g_search.fit(feature, target)
-    self.logger.info(&#34;SVC &#34;+str(g_search.best_params_))
-    return g_search.best_estimator_</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></b></code>:
 <ul class="hlist">
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.combine_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.split_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
 </ul>
 </li>
@@ -353,15 +280,13 @@ class CombinedExecutor(BaseTrainExecutor):
 <span>class <span class="ident">XGBoostExecutor</span></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Base class for the train executors.</p>
-<h2 id="provides">Provides</h2>
-<ul>
-<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
-<li>self.SCORING: the f1 scoring function</li>
-</ul></section>
+<section class="desc"><p>Wrap the XGBoostingClassifier</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class XGBoostExecutor(BaseTrainExecutor):
+    &#39;&#39;&#39;
+        Wrap the XGBoostingClassifier
+    &#39;&#39;&#39;
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = XGBoosting_2
@@ -377,32 +302,12 @@ class CombinedExecutor(BaseTrainExecutor):
 <li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
 <li><a title="Solution.Machine.Coordination.BaseExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="Solution.Machine.Training.XGBoostExecutor.fit"><code class="name flex">
-<span>def <span class="ident">fit</span></span>(<span>self, X)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def fit(self, X):
-    _, feature, target = self.split_hash_feature_target(X)
-    param_grid = XGBoosting_2
-    xgb = XGBClassifier()
-    g_search = GridSearchCV(xgb, param_grid, cv=5, scoring=self.SCORING)
-    g_search.fit(feature, target)
-    self.logger.info(&#34;XGBoosting, Drop strategy. Best Parameters: &#34; +
-                     str(g_search.best_params_))
-    return g_search.best_estimator_</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></b></code>:
 <ul class="hlist">
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.combine_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="Coordination.html#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
 <li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.split_hash_feature_target" href="Coordination.html#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
 </ul>
 </li>
@@ -426,33 +331,18 @@ class CombinedExecutor(BaseTrainExecutor):
 <ul>
 <li>
 <h4><code><a title="Solution.Machine.Training.CombinedExecutor" href="#Solution.Machine.Training.CombinedExecutor">CombinedExecutor</a></code></h4>
-<ul class="">
-<li><code><a title="Solution.Machine.Training.CombinedExecutor.fit" href="#Solution.Machine.Training.CombinedExecutor.fit">fit</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="Solution.Machine.Training.GradientBoostingExecutor" href="#Solution.Machine.Training.GradientBoostingExecutor">GradientBoostingExecutor</a></code></h4>
-<ul class="">
-<li><code><a title="Solution.Machine.Training.GradientBoostingExecutor.fit" href="#Solution.Machine.Training.GradientBoostingExecutor.fit">fit</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="Solution.Machine.Training.RandomForestExecutor" href="#Solution.Machine.Training.RandomForestExecutor">RandomForestExecutor</a></code></h4>
-<ul class="">
-<li><code><a title="Solution.Machine.Training.RandomForestExecutor.fit" href="#Solution.Machine.Training.RandomForestExecutor.fit">fit</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="Solution.Machine.Training.SupportVectorExecutor" href="#Solution.Machine.Training.SupportVectorExecutor">SupportVectorExecutor</a></code></h4>
-<ul class="">
-<li><code><a title="Solution.Machine.Training.SupportVectorExecutor.fit" href="#Solution.Machine.Training.SupportVectorExecutor.fit">fit</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="Solution.Machine.Training.XGBoostExecutor" href="#Solution.Machine.Training.XGBoostExecutor">XGBoostExecutor</a></code></h4>
-<ul class="">
-<li><code><a title="Solution.Machine.Training.XGBoostExecutor.fit" href="#Solution.Machine.Training.XGBoostExecutor.fit">fit</a></code></li>
-</ul>
 </li>
 </ul>
 </li>
