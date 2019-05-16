@@ -15,6 +15,7 @@ from Solution.util.BaseUtil import (Raw_DF_Reader, distance_between,
 class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features extracted:
+
             - The max, min, average level of the distance to the border of the central area of all the points recorded by a device.
             - The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
             - The difference between the distance to the central area of the entry and the exit of the last known path.
@@ -120,6 +121,7 @@ class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
 class PathInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features extracted:
+
             - The min, max, average level of the length of all the paths recorded by a device
             - The min, max, average level of the average velocity of all the paths recorded by a device
     '''
@@ -177,6 +179,7 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
 class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features Extracted:
+
             - The coordinate of the start point of the unknown path
     '''
 
@@ -209,6 +212,7 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
 class TimeInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features Extracted:
+        
             - The difference between **3 p.m.** and the starting / ending time point of the unknown path. (in seconds)
                 Mind that it is not reflected in the name of the column.
             - The difference between the starting and ending time point of the unknown path. (in seconds)

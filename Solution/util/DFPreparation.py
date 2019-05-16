@@ -37,7 +37,9 @@ class DFProvider(object):
             - overwrite: boolean, whether or not ignore the existed csv file and recalculate the dataframe.
 
         ---
+
         Inserting New Extractors by modifying the code:
+
         1. add the extractor class to ALL_EXTRACTORS constant dictionary.
         2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
     '''
@@ -48,7 +50,15 @@ class DFProvider(object):
         "distance": DistanceInfoExtractor,
         "path": PathInfoExtractor
     }
+    '''
+        Dictionary of all the registered feature extractors.
+    '''
+
     ALL_FEATURES = ALL_EXTRACTORS.keys()
+    '''
+        Name of all the registered feature extractors.
+        `ALL_FEATURES = ALL_EXTRACTORS.keys()`
+    '''
 
     def __init__(self, set_, features="all", path_filled=True, overwrite=False):
 

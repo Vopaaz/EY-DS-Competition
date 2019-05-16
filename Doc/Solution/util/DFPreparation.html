@@ -62,7 +62,9 @@ class DFProvider(object):
             - overwrite: boolean, whether or not ignore the existed csv file and recalculate the dataframe.
 
         ---
+
         Inserting New Extractors by modifying the code:
+
         1. add the extractor class to ALL_EXTRACTORS constant dictionary.
         2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
     &#39;&#39;&#39;
@@ -73,7 +75,15 @@ class DFProvider(object):
         &#34;distance&#34;: DistanceInfoExtractor,
         &#34;path&#34;: PathInfoExtractor
     }
+    &#39;&#39;&#39;
+        Dictionary of all the registered feature extractors.
+    &#39;&#39;&#39;
+
     ALL_FEATURES = ALL_EXTRACTORS.keys()
+    &#39;&#39;&#39;
+        Name of all the registered feature extractors.
+        `ALL_FEATURES = ALL_EXTRACTORS.keys()`
+    &#39;&#39;&#39;
 
     def __init__(self, set_, features=&#34;all&#34;, path_filled=True, overwrite=False):
 
@@ -200,9 +210,11 @@ Each means a set of features. Default "all".</li>
 <li>overwrite: boolean, whether or not ignore the existed csv file and recalculate the dataframe.</li>
 </ul>
 <hr>
-<p>Inserting New Extractors by modifying the code:
-1. add the extractor class to ALL_EXTRACTORS constant dictionary.
-2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.</p></section>
+<p>Inserting New Extractors by modifying the code:</p>
+<ol>
+<li>add the extractor class to ALL_EXTRACTORS constant dictionary.</li>
+<li>(optional) pass the parameters to the extractors to the __initialize_extractors() function.</li>
+</ol></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class DFProvider(object):
@@ -226,7 +238,9 @@ Each means a set of features. Default "all".</li>
             - overwrite: boolean, whether or not ignore the existed csv file and recalculate the dataframe.
 
         ---
+
         Inserting New Extractors by modifying the code:
+
         1. add the extractor class to ALL_EXTRACTORS constant dictionary.
         2. (optional) pass the parameters to the extractors to the __initialize_extractors() function.
     &#39;&#39;&#39;
@@ -237,7 +251,15 @@ Each means a set of features. Default "all".</li>
         &#34;distance&#34;: DistanceInfoExtractor,
         &#34;path&#34;: PathInfoExtractor
     }
+    &#39;&#39;&#39;
+        Dictionary of all the registered feature extractors.
+    &#39;&#39;&#39;
+
     ALL_FEATURES = ALL_EXTRACTORS.keys()
+    &#39;&#39;&#39;
+        Name of all the registered feature extractors.
+        `ALL_FEATURES = ALL_EXTRACTORS.keys()`
+    &#39;&#39;&#39;
 
     def __init__(self, set_, features=&#34;all&#34;, path_filled=True, overwrite=False):
 
@@ -333,11 +355,12 @@ Each means a set of features. Default "all".</li>
 <dl>
 <dt id="Solution.util.DFPreparation.DFProvider.ALL_EXTRACTORS"><code class="name">var <span class="ident">ALL_EXTRACTORS</span></code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Dictionary of all the registered feature extractors.</p></section>
 </dd>
 <dt id="Solution.util.DFPreparation.DFProvider.ALL_FEATURES"><code class="name">var <span class="ident">ALL_FEATURES</span></code></dt>
 <dd>
-<section class="desc"></section>
+<section class="desc"><p>Name of all the registered feature extractors.
+<code>ALL_FEATURES = ALL_EXTRACTORS.keys()</code></p></section>
 </dd>
 </dl>
 <h3>Methods</h3>
