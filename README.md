@@ -7,25 +7,24 @@ Solution for 2019 EY Nextwave Data Science Challenge by Vopaaz and Xiaochr.
 
 <!-- code_chunk_output -->
 
-* [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
-	* [Getting the Final Result](#getting-the-final-result)
-		* [Prerequisites](#prerequisites)
-			* [Environment](#environment)
-			* [Installing Dependencies](#installing-dependencies)
-		* [Prepare Data](#prepare-data)
-		* [Running](#running)
-	* [Methodology](#methodology)
-		* [Feature Engineering](#feature-engineering)
-		* [Null Value Feature Handling](#null-value-feature-handling)
-		* [Algorithm Design](#algorithm-design)
-			* [Preprocessing](#preprocessing)
-			* [Model Training and Selection](#model-training-and-selection)
-	* [Approach Explored but not Used](#approach-explored-but-not-used)
+- [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
+	- [Getting the Final Result](#getting-the-final-result)
+		- [Prerequisites](#prerequisites)
+			- [Environment](#environment)
+			- [Installing Dependencies](#installing-dependencies)
+		- [Prepare Data](#prepare-data)
+		- [Running](#running)
+	- [Methodology](#methodology)
+		- [Feature Engineering](#feature-engineering)
+		- [Null Value Feature Handling](#null-value-feature-handling)
+		- [Algorithm Design](#algorithm-design)
+			- [Preprocessing](#preprocessing)
+			- [Model Training and Selection](#model-training-and-selection)
+	- [Approach Explored but not Used](#approach-explored-but-not-used)
 
 <!-- /code_chunk_output -->
 
 
----
 
 ## Getting the Final Result
 
@@ -59,7 +58,6 @@ This shall take about 1-2 hours. Then the `.csv` file to be submitted can be fou
 
 Note that as we neither saved the model nor set the `random_state` variable, the produced file may be slightly different from our last submission.
 
----
 
 ## Methodology
 
@@ -70,14 +68,16 @@ Thus we firstly joined all the disconnected paths and do the following feature e
 
 We listed features of each device that we think may affect the prediction target (i.e. whether the last exit point of this device is within the city center or not), they are:
 
-- The difference between 3 p.m. and the starting / ending time point of the last path. (in seconds)
-- The difference between the starting and ending time point of the last path. (in seconds)
-- The max, min, average level of the distance of all the points recorded by a device.
-- The difference between the distance of the entry of the first path and the exit of the last but one.
-- The difference between the distance of the entry and the exit of the last path but one.
+- The difference between 3 p.m. and the starting / ending time point of the unknown path. (in seconds)
+- The difference between the starting and ending time point of the unknown path. (in seconds)
+- The max, min, average level of the distance to the central area of all the points recorded by a device.
+- The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
+- The difference between the distance to the central area of the entry and the exit of the last known path.
 - The min, max, average level of the length of all the paths recorded by a device
 - The min, max, average level of the average velocity of all the paths recorded by a device
-- The coordinate of the start point of the last path (the path to be predicted).
+- The coordinate of the start point of the unknown path
+
+All the *distance to the central area* are measured by the l1 distance to the border of the central area.
 
 There are some devices which only records one path (the path to be predicted). Hence some of the above-mentioned features cannot be extracted. They are `Null` values in the Feature Panel.
 We came up with several strategies to deal with them (see the [Null Value Feature Handling](#null-value-feature-handling) part). In the best prediction result, we used the `drop` strategy, that is, to remove these features.
@@ -147,7 +147,6 @@ The best hyper-parameters we found are:
 
 Although we have found the best parameters, the script we provide still runs the final round of grid search because we try to reproduct the final submission. Also, the time required is relatively acceptable.
 
----
 
 ## Approach Explored but not Used
 
