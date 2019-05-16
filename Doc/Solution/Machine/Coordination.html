@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.1" />
+<title>Solution.Machine.Coordination API documentation</title>
+<meta name="description" content="Implement the `Null` value handling and coordination strategies." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Solution.Machine.Coordination</code></h1>
+</header>
+<section id="section-intro">
+<p>Implement the <code>Null</code> value handling and coordination strategies.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#39;&#39;&#39;
+    Implement the `Null` value handling and coordination strategies.
+&#39;&#39;&#39;
+
+from Solution.util.initLogging import init_logging
+from sklearn.metrics import f1_score, make_scorer
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import os
+import logging
+import datetime
+from Solution.util.DFPreparation import DFProvider
+from Solution.util.BaseUtil import Raw_DF_Reader
+
+
+def split_hash_feature_target(full_df):
+    &#39;&#39;&#39;
+        Split the hash, feature and target column from a DataFrame.
+        Parameter:
+            - full_df: the DataFrame to be splitted. It MUST contain column &#34;hash&#34;, but &#34;target&#34; is optional.
+
+        Return:
+            - hash_: hash Series
+            - feature: feature DataFrame
+            - target: target Series, or None
+    &#39;&#39;&#39;
+    has_target = &#34;target&#34; in full_df.columns.values
+
+    hash_ = full_df.hash
+    feature = full_df.drop(columns=[&#34;hash&#34;])
+    target = full_df.target if has_target else None
+
+    if has_target:
+        feature = feature.drop(columns=[&#34;target&#34;])
+
+    return hash_, feature, target
+
+
+def _check_preprocessed(func):
+    &#39;&#39;&#39;
+        Decorator: Check whether the preprocess is applied.
+        For decoration of the methods of NanCoordinator.
+    &#39;&#39;&#39;
+
+    def inner(self, *args, **kwargs):
+        if not self.preprocessed:
+            msg = &#34;The datasets are NOT PREPROCESSED in the coordinator. &#34; +\
+                &#34;Please check that preprocessing routine is executed somewhere in the pipeline.&#34;
+            logging.warning(msg)
+        return func(self, *args, **kwargs)
+    return inner
+
+
+class NanCoordiantor(object):
+    r&#39;&#39;&#39;
+        The Coordinator to handle nan values in the train/test set and apply different strategies.
+
+        Parameters:
+            - train: The train DataFrame
+            - test: The test DataFrame
+            - strategy: [&#34;drop&#34;/&#34;fill_0&#34;/&#34;separate_all&#34;/&#34;separate_part&#34;], str
+                - &#34;drop&#34;: use only the attributes that are non-null for all records.
+                - &#34;fill_0&#34;: fill all null values with 0
+                - &#34;separate_*&#34;: see the &#39;Explanation of Separate Strategy&#39; part
+
+        Explanation of Separate Strategy:
+
+        ```
+            Example of train set (v means value and N means nan):
+                A   B   C
+            0   v   v   v
+            1   v   v   v
+            2   v   v   N
+            3   v   v   N
+            4   v   N   N
+            5   v   N   N
+        ```
+
+        separate_all:
+            - Use (0-5).A to train the model and predict those whose non-null feature is only A
+            - Use (0-3).AB to train the model and predict those whose non-null feature is A, B
+            - Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C
+
+        separate_part:
+            - Use (4-5).A to train the model and predict those whose non-null feature is only A
+            - Use (2-3).AB to train the model and predict those whose non-null feature is A, B
+            - Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C
+
+        WARNING:
+        1. To apply &#34;drop&#34;, &#34;separate_*&#34; strategies, it is required that the train and test set has
+        &#39;similar null value structure&#39;. For example, in the previous case, a test record
+        with null A, C and non-null B is NOT ALLOWED.
+
+        2. In the whole process flow, the &#34;Executors&#34; should receive a FULL DataFrame and
+        return a FULL DataFrame. By full it means that it should contain the column names,
+        including the &#34;hash&#34; and &#34;target&#34; rows in the train set. i.e. The executors, rather
+        than the Coornidator should handle the splitting of features and labels, etc.
+    &#39;&#39;&#39;
+
+    def __init__(self, train, test, strategy=&#34;fill_0&#34;):
+
+        self.STRATEGIES = {
+            &#34;drop&#34;: self.__drop,
+            &#34;fill_0&#34;: self.__fill_0,
+            &#34;separate_all&#34;: self.__separate_all,
+            &#34;separate_part&#34;: self.__separate_part
+        }
+
+        if strategy not in self.STRATEGIES:
+            raise ValueError(
+                &#34;Parameter strategy must be &#39;fill_0&#39;,\
+                     &#39;separate_all&#39;, or &#39;separate_part&#39;, now it&#39;s {}.&#34;.format(strategy))
+
+        self.strategy = strategy
+
+        # The variables are named &#39;trains&#39; and &#39;tests&#39; rather than their singular form,
+        # because then they will be transformed into a list according to their strategies.
+        self.trains = train
+        self.tests = test
+
+        self.STRATEGIES[strategy]()
+        # Now the self.trains and self.tests are lists, in accordance with their plural form.
+
+        self.models = None
+        self.preprocessed = False
+
+    def __drop(self):
+        self.trains = [self.trains.dropna(axis=1)]
+        self.tests = [self.tests.dropna(axis=1)]
+
+    def __fill_0(self):
+        self.trains = [self.trains.fillna(0)]
+        self.tests = [self.tests.fillna(0)]
+
+    def __one_df_separate_all(self, df):
+        is_train = &#34;target&#34; in df.columns.values
+        if is_train:
+            df_feat = df.iloc[:, 1:-1]
+        else:
+            df_feat = df.iloc[:, 1:]
+
+        df_has_feat = df_feat.applymap(lambda x: not pd.isnull(x))
+        has_feat_groups = df_has_feat.groupby(list(df_has_feat.columns.values))
+
+        return [
+            df.loc[:,
+                   [True] + list(has_feat_group[0]) +
+                   ([True] if is_train else [])
+                   ].dropna(axis=0)
+            for has_feat_group in has_feat_groups
+        ]
+
+    def __separate_all(self):
+        self.trains = self.__one_df_separate_all(self.trains)
+        # Note that using __*_part is NOT a mistake.
+        self.tests = self.__one_df_separate_part(self.tests)
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __one_df_separate_part(self, df):
+        df_hash = df.iloc[:, :1]
+        if &#34;target&#34; in df.columns.values:
+            df_feat = df.iloc[:, 1:-1]
+            df_target = df.iloc[:, -1:]
+        else:
+            df_feat = df.iloc[:, 1:]
+            df_target = pd.DataFrame()
+
+        df_has_feat = df_feat.applymap(
+            lambda x: pd.isnull(x)).rename(columns=lambda x: &#34;has_&#34;+x)
+        has_feat_columns = df_has_feat.columns.values
+
+        df = pd.concat([df_hash, df_feat, df_has_feat, df_target], axis=1)
+        df_groups = df.groupby(list(has_feat_columns))
+
+        return [i[1].drop(columns=has_feat_columns).dropna(axis=1) for i in df_groups]
+
+    def __separate_part(self):
+        self.trains = self.__one_df_separate_part(self.trains)
+        self.tests = self.__one_df_separate_part(self.tests)
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __check_separate(self):
+        for train, test in zip(self.trains, self.tests):
+            if not train.drop(columns=[&#34;target&#34;]).columns.equals(test.columns):
+                raise IndexError(
+                    &#34;The train and test DataFrame has different null-value structure.&#34;)
+
+    def preprocess(self, PreprocessingExecutor, *args, **kwargs):
+        &#39;&#39;&#39;
+            Apply the same preprocessing process to the train and test sets.
+
+            Parameters:
+                - PreprocessingExecutor: a class that handles the preprocessing routines.
+                  It must provide the following APIs:
+                    - fit: use the dataset to fit the transformer, RETURN ITSELF.
+                    - transform: preprocess and transform the dataset, return a FULL DataFrame
+                - args &amp; kwargs: the parameters to be passed to the Preprocessing Executor when initializing the object.
+
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter,
+            and its transform method should also be a DataFrame containing all the columns.
+        &#39;&#39;&#39;
+        self.preprocessors = [
+            PreprocessingExecutor(*args, **kwargs).fit(i) for i in self.trains]
+        self.trains = [
+            preprocessor.transform(i) for (i, preprocessor) in zip(self.trains, self.preprocessors)]
+        self.tests = [
+            preprocessor.transform(i) for (i, preprocessor) in zip(self.tests, self.preprocessors)]
+        self.preprocessed = True
+
+    @_check_preprocessed
+    def fit(self, TrainExecutor, *args, **kwargs):
+        &#39;&#39;&#39;
+            Fit machine learning models based on the selected strategy.
+
+            Parameters:
+                - TrainExecutor: a class that handles the machine learning training routines.
+                  It must provide the following APIs:
+                    - fit: takes one train set as the parameter and return a model, who has a &#39;predict&#39; API.
+                - args &amp; kwargs: the parameters to be passed to the TrainExecutor when initializing the object.
+
+            Returns:
+                - A list of trained models.
+
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter.
+        &#39;&#39;&#39;
+
+        self.models = [TrainExecutor(*args, **kwargs).fit(i)
+                       for i in self.trains]
+        return self.models
+
+    @_check_preprocessed
+    def predict(self):
+        &#39;&#39;&#39;
+            Predict the results based on the fitted models.
+            The result of the splitted groups will be combined in one DataFrame.
+
+            Returns: a full DataFrame containing columns &#34;hash&#34; and &#34;target&#34;.
+        &#39;&#39;&#39;
+        def predict_one_group(test, model):
+            hash_, feature, _ = split_hash_feature_target(test)
+            return pd.DataFrame({
+                &#34;hash&#34;: hash_,
+                &#34;target&#34;: model.predict(feature)
+            })
+
+        res = [predict_one_group(test, model)
+               for (test, model) in zip(self.tests, self.models)]
+        return pd.concat(res, axis=0)
+
+
+class BaseExecutor(object):
+    &#39;&#39;&#39;
+        The Executor Base class.
+    &#39;&#39;&#39;
+
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def split_hash_feature_target(self, X):
+        &#39;&#39;&#39;
+            Wrap the split_hash_feature_target method (at the beginning of this file).
+        &#39;&#39;&#39;
+        return split_hash_feature_target(X)
+
+    def combine_hash_feature_target(self, hash_, feature, target, feature_cols=None):
+        &#39;&#39;&#39;
+        Combine the hash, feature and target column into a DataFrame.
+
+        Parameter:
+            - hash_: hash Series
+            - feature: feature np.ndarray (or pd.DataFrame)
+            - target: target Series, or None
+            - feature_cols: optional, the column name for the features.
+
+        Return:
+            - full_df: the combined DataFrame
+        &#39;&#39;&#39;
+        if not feature_cols:
+            feature_cols = pd.RangeIndex(0, feature.shape[1])
+
+        res = pd.DataFrame(feature, columns=feature_cols)
+        res.insert(0, &#34;hash&#34;, hash_.reset_index(drop=True))
+
+        if isinstance(target, pd.Series):
+            res[&#34;target&#34;] = target.reset_index(drop=True)
+        return res
+
+
+class BasePreprocessingExecutor(BaseExecutor):
+    &#39;&#39;&#39;
+        Base class for the preprocessing executors.
+    &#39;&#39;&#39;
+
+    def fit(self, train):
+        raise NotImplementedError
+
+    def transform(self, X):
+        raise NotImplementedError
+
+
+class BaseTrainExecutor(BaseExecutor):
+    &#39;&#39;&#39;
+        Base class for the train executors.
+
+        Provides:
+            - self.logger: the logger for recording the best hyper-parameter or validation score, etc
+            - self.SCORING: the f1 scoring function
+    &#39;&#39;&#39;
+
+    def __init__(self):
+        self.logger = init_logging()
+        self.SCORING = make_scorer(f1_score)
+
+    def fit(self, train):
+        &#39;&#39;&#39;
+            Implement proper way to train the model.
+        &#39;&#39;&#39;
+        raise NotImplementedError</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="Solution.Machine.Coordination.split_hash_feature_target"><code class="name flex">
+<span>def <span class="ident">split_hash_feature_target</span></span>(<span>full_df)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Split the hash, feature and target column from a DataFrame.</p>
+<h2 id="parameter">Parameter</h2>
+<ul>
+<li>full_df: the DataFrame to be splitted. It MUST contain column "hash", but "target" is optional.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li>hash_: hash Series</li>
+<li>feature: feature DataFrame</li>
+<li>target: target Series, or None</li>
+</ul></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def split_hash_feature_target(full_df):
+    &#39;&#39;&#39;
+        Split the hash, feature and target column from a DataFrame.
+        Parameter:
+            - full_df: the DataFrame to be splitted. It MUST contain column &#34;hash&#34;, but &#34;target&#34; is optional.
+
+        Return:
+            - hash_: hash Series
+            - feature: feature DataFrame
+            - target: target Series, or None
+    &#39;&#39;&#39;
+    has_target = &#34;target&#34; in full_df.columns.values
+
+    hash_ = full_df.hash
+    feature = full_df.drop(columns=[&#34;hash&#34;])
+    target = full_df.target if has_target else None
+
+    if has_target:
+        feature = feature.drop(columns=[&#34;target&#34;])
+
+    return hash_, feature, target</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Solution.Machine.Coordination.BaseExecutor"><code class="flex name class">
+<span>class <span class="ident">BaseExecutor</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The Executor Base class.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class BaseExecutor(object):
+    &#39;&#39;&#39;
+        The Executor Base class.
+    &#39;&#39;&#39;
+
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def split_hash_feature_target(self, X):
+        &#39;&#39;&#39;
+            Wrap the split_hash_feature_target method (at the beginning of this file).
+        &#39;&#39;&#39;
+        return split_hash_feature_target(X)
+
+    def combine_hash_feature_target(self, hash_, feature, target, feature_cols=None):
+        &#39;&#39;&#39;
+        Combine the hash, feature and target column into a DataFrame.
+
+        Parameter:
+            - hash_: hash Series
+            - feature: feature np.ndarray (or pd.DataFrame)
+            - target: target Series, or None
+            - feature_cols: optional, the column name for the features.
+
+        Return:
+            - full_df: the combined DataFrame
+        &#39;&#39;&#39;
+        if not feature_cols:
+            feature_cols = pd.RangeIndex(0, feature.shape[1])
+
+        res = pd.DataFrame(feature, columns=feature_cols)
+        res.insert(0, &#34;hash&#34;, hash_.reset_index(drop=True))
+
+        if isinstance(target, pd.Series):
+            res[&#34;target&#34;] = target.reset_index(drop=True)
+        return res</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="Solution.Machine.Coordination.BasePreprocessingExecutor" href="#Solution.Machine.Coordination.BasePreprocessingExecutor">BasePreprocessingExecutor</a></li>
+<li><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target"><code class="name flex">
+<span>def <span class="ident">combine_hash_feature_target</span></span>(<span>self, hash_, feature, target, feature_cols=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Combine the hash, feature and target column into a DataFrame.</p>
+<h2 id="parameter">Parameter</h2>
+<ul>
+<li>hash_: hash Series</li>
+<li>feature: feature np.ndarray (or pd.DataFrame)</li>
+<li>target: target Series, or None</li>
+<li>feature_cols: optional, the column name for the features.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li>full_df: the combined DataFrame</li>
+</ul></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def combine_hash_feature_target(self, hash_, feature, target, feature_cols=None):
+    &#39;&#39;&#39;
+    Combine the hash, feature and target column into a DataFrame.
+
+    Parameter:
+        - hash_: hash Series
+        - feature: feature np.ndarray (or pd.DataFrame)
+        - target: target Series, or None
+        - feature_cols: optional, the column name for the features.
+
+    Return:
+        - full_df: the combined DataFrame
+    &#39;&#39;&#39;
+    if not feature_cols:
+        feature_cols = pd.RangeIndex(0, feature.shape[1])
+
+    res = pd.DataFrame(feature, columns=feature_cols)
+    res.insert(0, &#34;hash&#34;, hash_.reset_index(drop=True))
+
+    if isinstance(target, pd.Series):
+        res[&#34;target&#34;] = target.reset_index(drop=True)
+    return res</code></pre>
+</details>
+</dd>
+<dt id="Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target"><code class="name flex">
+<span>def <span class="ident">split_hash_feature_target</span></span>(<span>self, X)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Wrap the split_hash_feature_target method (at the beginning of this file).</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def split_hash_feature_target(self, X):
+    &#39;&#39;&#39;
+        Wrap the split_hash_feature_target method (at the beginning of this file).
+    &#39;&#39;&#39;
+    return split_hash_feature_target(X)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="Solution.Machine.Coordination.BasePreprocessingExecutor"><code class="flex name class">
+<span>class <span class="ident">BasePreprocessingExecutor</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base class for the preprocessing executors.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class BasePreprocessingExecutor(BaseExecutor):
+    &#39;&#39;&#39;
+        Base class for the preprocessing executors.
+    &#39;&#39;&#39;
+
+    def fit(self, train):
+        raise NotImplementedError
+
+    def transform(self, X):
+        raise NotImplementedError</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="Solution.Machine.Coordination.BaseExecutor" href="#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="Solution.Machine.Preprocessing.StandardPreprocessor" href="Preprocessing.html#Solution.Machine.Preprocessing.StandardPreprocessor">StandardPreprocessor</a></li>
+<li><a title="Solution.Machine.Preprocessing.StandardOutlierPreprocessor" href="Preprocessing.html#Solution.Machine.Preprocessing.StandardOutlierPreprocessor">StandardOutlierPreprocessor</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="Solution.Machine.Coordination.BasePreprocessingExecutor.fit"><code class="name flex">
+<span>def <span class="ident">fit</span></span>(<span>self, train)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def fit(self, train):
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="Solution.Machine.Coordination.BasePreprocessingExecutor.transform"><code class="name flex">
+<span>def <span class="ident">transform</span></span>(<span>self, X)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def transform(self, X):
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="Solution.Machine.Coordination.BaseExecutor" href="#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></b></code>:
+<ul class="hlist">
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="Solution.Machine.Coordination.BaseTrainExecutor"><code class="flex name class">
+<span>class <span class="ident">BaseTrainExecutor</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base class for the train executors.</p>
+<h2 id="provides">Provides</h2>
+<ul>
+<li>self.logger: the logger for recording the best hyper-parameter or validation score, etc</li>
+<li>self.SCORING: the f1 scoring function</li>
+</ul></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class BaseTrainExecutor(BaseExecutor):
+    &#39;&#39;&#39;
+        Base class for the train executors.
+
+        Provides:
+            - self.logger: the logger for recording the best hyper-parameter or validation score, etc
+            - self.SCORING: the f1 scoring function
+    &#39;&#39;&#39;
+
+    def __init__(self):
+        self.logger = init_logging()
+        self.SCORING = make_scorer(f1_score)
+
+    def fit(self, train):
+        &#39;&#39;&#39;
+            Implement proper way to train the model.
+        &#39;&#39;&#39;
+        raise NotImplementedError</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="Solution.Machine.Coordination.BaseExecutor" href="#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="Solution.Machine.Training.RandomForestExecutor" href="Training.html#Solution.Machine.Training.RandomForestExecutor">RandomForestExecutor</a></li>
+<li><a title="Solution.Machine.Training.GradientBoostingExecutor" href="Training.html#Solution.Machine.Training.GradientBoostingExecutor">GradientBoostingExecutor</a></li>
+<li><a title="Solution.Machine.Training.SupportVectorExecutor" href="Training.html#Solution.Machine.Training.SupportVectorExecutor">SupportVectorExecutor</a></li>
+<li><a title="Solution.Machine.Training.XGBoostExecutor" href="Training.html#Solution.Machine.Training.XGBoostExecutor">XGBoostExecutor</a></li>
+<li><a title="Solution.Machine.Training.CombinedExecutor" href="Training.html#Solution.Machine.Training.CombinedExecutor">CombinedExecutor</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="Solution.Machine.Coordination.BaseTrainExecutor.fit"><code class="name flex">
+<span>def <span class="ident">fit</span></span>(<span>self, train)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Implement proper way to train the model.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def fit(self, train):
+    &#39;&#39;&#39;
+        Implement proper way to train the model.
+    &#39;&#39;&#39;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="Solution.Machine.Coordination.BaseExecutor" href="#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></b></code>:
+<ul class="hlist">
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="Solution.Machine.Coordination.NanCoordiantor"><code class="flex name class">
+<span>class <span class="ident">NanCoordiantor</span></span>
+<span>(</span><span>train, test, strategy='fill_0')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The Coordinator to handle nan values in the train/test set and apply different strategies.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li>train: The train DataFrame</li>
+<li>test: The test DataFrame</li>
+<li>strategy: ["drop"/"fill_0"/"separate_all"/"separate_part"], str<ul>
+<li>"drop": use only the attributes that are non-null for all records.</li>
+<li>"fill_0": fill all null values with 0</li>
+<li>"separate_*": see the 'Explanation of Separate Strategy' part
+Explanation of Separate Strategy:</li>
+</ul>
+</li>
+</ul>
+<pre><code>    Example of train set (v means value and N means nan):
+        A   B   C
+    0   v   v   v
+    1   v   v   v
+    2   v   v   N
+    3   v   v   N
+    4   v   N   N
+    5   v   N   N
+</code></pre>
+<p>separate_all:
+- Use (0-5).A to train the model and predict those whose non-null feature is only A
+- Use (0-3).AB to train the model and predict those whose non-null feature is A, B
+- Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C</p>
+<p>separate_part:
+- Use (4-5).A to train the model and predict those whose non-null feature is only A
+- Use (2-3).AB to train the model and predict those whose non-null feature is A, B
+- Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C</p>
+<p>WARNING:
+1. To apply "drop", "separate_*" strategies, it is required that the train and test set has
+'similar null value structure'. For example, in the previous case, a test record
+with null A, C and non-null B is NOT ALLOWED.</p>
+<ol>
+<li>In the whole process flow, the "Executors" should receive a FULL DataFrame and
+return a FULL DataFrame. By full it means that it should contain the column names,
+including the "hash" and "target" rows in the train set. i.e. The executors, rather
+than the Coornidator should handle the splitting of features and labels, etc.</li>
+</ol></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class NanCoordiantor(object):
+    r&#39;&#39;&#39;
+        The Coordinator to handle nan values in the train/test set and apply different strategies.
+
+        Parameters:
+            - train: The train DataFrame
+            - test: The test DataFrame
+            - strategy: [&#34;drop&#34;/&#34;fill_0&#34;/&#34;separate_all&#34;/&#34;separate_part&#34;], str
+                - &#34;drop&#34;: use only the attributes that are non-null for all records.
+                - &#34;fill_0&#34;: fill all null values with 0
+                - &#34;separate_*&#34;: see the &#39;Explanation of Separate Strategy&#39; part
+
+        Explanation of Separate Strategy:
+
+        ```
+            Example of train set (v means value and N means nan):
+                A   B   C
+            0   v   v   v
+            1   v   v   v
+            2   v   v   N
+            3   v   v   N
+            4   v   N   N
+            5   v   N   N
+        ```
+
+        separate_all:
+            - Use (0-5).A to train the model and predict those whose non-null feature is only A
+            - Use (0-3).AB to train the model and predict those whose non-null feature is A, B
+            - Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C
+
+        separate_part:
+            - Use (4-5).A to train the model and predict those whose non-null feature is only A
+            - Use (2-3).AB to train the model and predict those whose non-null feature is A, B
+            - Use (0-1).ABC to train the model and predict those whose non-null feature is A, B, and C
+
+        WARNING:
+        1. To apply &#34;drop&#34;, &#34;separate_*&#34; strategies, it is required that the train and test set has
+        &#39;similar null value structure&#39;. For example, in the previous case, a test record
+        with null A, C and non-null B is NOT ALLOWED.
+
+        2. In the whole process flow, the &#34;Executors&#34; should receive a FULL DataFrame and
+        return a FULL DataFrame. By full it means that it should contain the column names,
+        including the &#34;hash&#34; and &#34;target&#34; rows in the train set. i.e. The executors, rather
+        than the Coornidator should handle the splitting of features and labels, etc.
+    &#39;&#39;&#39;
+
+    def __init__(self, train, test, strategy=&#34;fill_0&#34;):
+
+        self.STRATEGIES = {
+            &#34;drop&#34;: self.__drop,
+            &#34;fill_0&#34;: self.__fill_0,
+            &#34;separate_all&#34;: self.__separate_all,
+            &#34;separate_part&#34;: self.__separate_part
+        }
+
+        if strategy not in self.STRATEGIES:
+            raise ValueError(
+                &#34;Parameter strategy must be &#39;fill_0&#39;,\
+                     &#39;separate_all&#39;, or &#39;separate_part&#39;, now it&#39;s {}.&#34;.format(strategy))
+
+        self.strategy = strategy
+
+        # The variables are named &#39;trains&#39; and &#39;tests&#39; rather than their singular form,
+        # because then they will be transformed into a list according to their strategies.
+        self.trains = train
+        self.tests = test
+
+        self.STRATEGIES[strategy]()
+        # Now the self.trains and self.tests are lists, in accordance with their plural form.
+
+        self.models = None
+        self.preprocessed = False
+
+    def __drop(self):
+        self.trains = [self.trains.dropna(axis=1)]
+        self.tests = [self.tests.dropna(axis=1)]
+
+    def __fill_0(self):
+        self.trains = [self.trains.fillna(0)]
+        self.tests = [self.tests.fillna(0)]
+
+    def __one_df_separate_all(self, df):
+        is_train = &#34;target&#34; in df.columns.values
+        if is_train:
+            df_feat = df.iloc[:, 1:-1]
+        else:
+            df_feat = df.iloc[:, 1:]
+
+        df_has_feat = df_feat.applymap(lambda x: not pd.isnull(x))
+        has_feat_groups = df_has_feat.groupby(list(df_has_feat.columns.values))
+
+        return [
+            df.loc[:,
+                   [True] + list(has_feat_group[0]) +
+                   ([True] if is_train else [])
+                   ].dropna(axis=0)
+            for has_feat_group in has_feat_groups
+        ]
+
+    def __separate_all(self):
+        self.trains = self.__one_df_separate_all(self.trains)
+        # Note that using __*_part is NOT a mistake.
+        self.tests = self.__one_df_separate_part(self.tests)
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __one_df_separate_part(self, df):
+        df_hash = df.iloc[:, :1]
+        if &#34;target&#34; in df.columns.values:
+            df_feat = df.iloc[:, 1:-1]
+            df_target = df.iloc[:, -1:]
+        else:
+            df_feat = df.iloc[:, 1:]
+            df_target = pd.DataFrame()
+
+        df_has_feat = df_feat.applymap(
+            lambda x: pd.isnull(x)).rename(columns=lambda x: &#34;has_&#34;+x)
+        has_feat_columns = df_has_feat.columns.values
+
+        df = pd.concat([df_hash, df_feat, df_has_feat, df_target], axis=1)
+        df_groups = df.groupby(list(has_feat_columns))
+
+        return [i[1].drop(columns=has_feat_columns).dropna(axis=1) for i in df_groups]
+
+    def __separate_part(self):
+        self.trains = self.__one_df_separate_part(self.trains)
+        self.tests = self.__one_df_separate_part(self.tests)
+        self.trains.sort(key=lambda df: df.shape[1])
+        self.tests.sort(key=lambda df: df.shape[1])
+
+        self.__check_separate()
+
+    def __check_separate(self):
+        for train, test in zip(self.trains, self.tests):
+            if not train.drop(columns=[&#34;target&#34;]).columns.equals(test.columns):
+                raise IndexError(
+                    &#34;The train and test DataFrame has different null-value structure.&#34;)
+
+    def preprocess(self, PreprocessingExecutor, *args, **kwargs):
+        &#39;&#39;&#39;
+            Apply the same preprocessing process to the train and test sets.
+
+            Parameters:
+                - PreprocessingExecutor: a class that handles the preprocessing routines.
+                  It must provide the following APIs:
+                    - fit: use the dataset to fit the transformer, RETURN ITSELF.
+                    - transform: preprocess and transform the dataset, return a FULL DataFrame
+                - args &amp; kwargs: the parameters to be passed to the Preprocessing Executor when initializing the object.
+
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter,
+            and its transform method should also be a DataFrame containing all the columns.
+        &#39;&#39;&#39;
+        self.preprocessors = [
+            PreprocessingExecutor(*args, **kwargs).fit(i) for i in self.trains]
+        self.trains = [
+            preprocessor.transform(i) for (i, preprocessor) in zip(self.trains, self.preprocessors)]
+        self.tests = [
+            preprocessor.transform(i) for (i, preprocessor) in zip(self.tests, self.preprocessors)]
+        self.preprocessed = True
+
+    @_check_preprocessed
+    def fit(self, TrainExecutor, *args, **kwargs):
+        &#39;&#39;&#39;
+            Fit machine learning models based on the selected strategy.
+
+            Parameters:
+                - TrainExecutor: a class that handles the machine learning training routines.
+                  It must provide the following APIs:
+                    - fit: takes one train set as the parameter and return a model, who has a &#39;predict&#39; API.
+                - args &amp; kwargs: the parameters to be passed to the TrainExecutor when initializing the object.
+
+            Returns:
+                - A list of trained models.
+
+            WARNING:
+            The Executors should receive the full (containing hash and target) as the parameter.
+        &#39;&#39;&#39;
+
+        self.models = [TrainExecutor(*args, **kwargs).fit(i)
+                       for i in self.trains]
+        return self.models
+
+    @_check_preprocessed
+    def predict(self):
+        &#39;&#39;&#39;
+            Predict the results based on the fitted models.
+            The result of the splitted groups will be combined in one DataFrame.
+
+            Returns: a full DataFrame containing columns &#34;hash&#34; and &#34;target&#34;.
+        &#39;&#39;&#39;
+        def predict_one_group(test, model):
+            hash_, feature, _ = split_hash_feature_target(test)
+            return pd.DataFrame({
+                &#34;hash&#34;: hash_,
+                &#34;target&#34;: model.predict(feature)
+            })
+
+        res = [predict_one_group(test, model)
+               for (test, model) in zip(self.tests, self.models)]
+        return pd.concat(res, axis=0)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="Solution.Machine.Coordination.NanCoordiantor.fit"><code class="name flex">
+<span>def <span class="ident">fit</span></span>(<span>self, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def inner(self, *args, **kwargs):
+    if not self.preprocessed:
+        msg = &#34;The datasets are NOT PREPROCESSED in the coordinator. &#34; +\
+            &#34;Please check that preprocessing routine is executed somewhere in the pipeline.&#34;
+        logging.warning(msg)
+    return func(self, *args, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="Solution.Machine.Coordination.NanCoordiantor.predict"><code class="name flex">
+<span>def <span class="ident">predict</span></span>(<span>self, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def inner(self, *args, **kwargs):
+    if not self.preprocessed:
+        msg = &#34;The datasets are NOT PREPROCESSED in the coordinator. &#34; +\
+            &#34;Please check that preprocessing routine is executed somewhere in the pipeline.&#34;
+        logging.warning(msg)
+    return func(self, *args, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="Solution.Machine.Coordination.NanCoordiantor.preprocess"><code class="name flex">
+<span>def <span class="ident">preprocess</span></span>(<span>self, PreprocessingExecutor, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Apply the same preprocessing process to the train and test sets.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li>PreprocessingExecutor: a class that handles the preprocessing routines.
+It must provide the following APIs:<ul>
+<li>fit: use the dataset to fit the transformer, RETURN ITSELF.</li>
+<li>transform: preprocess and transform the dataset, return a FULL DataFrame</li>
+</ul>
+</li>
+<li>args &amp; kwargs: the parameters to be passed to the Preprocessing Executor when initializing the object.
+WARNING:
+The Executors should receive the full (containing hash and target) as the parameter,
+and its transform method should also be a DataFrame containing all the columns.</li>
+</ul></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def preprocess(self, PreprocessingExecutor, *args, **kwargs):
+    &#39;&#39;&#39;
+        Apply the same preprocessing process to the train and test sets.
+
+        Parameters:
+            - PreprocessingExecutor: a class that handles the preprocessing routines.
+              It must provide the following APIs:
+                - fit: use the dataset to fit the transformer, RETURN ITSELF.
+                - transform: preprocess and transform the dataset, return a FULL DataFrame
+            - args &amp; kwargs: the parameters to be passed to the Preprocessing Executor when initializing the object.
+
+        WARNING:
+        The Executors should receive the full (containing hash and target) as the parameter,
+        and its transform method should also be a DataFrame containing all the columns.
+    &#39;&#39;&#39;
+    self.preprocessors = [
+        PreprocessingExecutor(*args, **kwargs).fit(i) for i in self.trains]
+    self.trains = [
+        preprocessor.transform(i) for (i, preprocessor) in zip(self.trains, self.preprocessors)]
+    self.tests = [
+        preprocessor.transform(i) for (i, preprocessor) in zip(self.tests, self.preprocessors)]
+    self.preprocessed = True</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Solution.Machine" href="index.html">Solution.Machine</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="Solution.Machine.Coordination.split_hash_feature_target" href="#Solution.Machine.Coordination.split_hash_feature_target">split_hash_feature_target</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Solution.Machine.Coordination.BaseExecutor" href="#Solution.Machine.Coordination.BaseExecutor">BaseExecutor</a></code></h4>
+<ul class="">
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.combine_hash_feature_target">combine_hash_feature_target</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target" href="#Solution.Machine.Coordination.BaseExecutor.split_hash_feature_target">split_hash_feature_target</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="Solution.Machine.Coordination.BasePreprocessingExecutor" href="#Solution.Machine.Coordination.BasePreprocessingExecutor">BasePreprocessingExecutor</a></code></h4>
+<ul class="">
+<li><code><a title="Solution.Machine.Coordination.BasePreprocessingExecutor.fit" href="#Solution.Machine.Coordination.BasePreprocessingExecutor.fit">fit</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.BasePreprocessingExecutor.transform" href="#Solution.Machine.Coordination.BasePreprocessingExecutor.transform">transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="Solution.Machine.Coordination.BaseTrainExecutor" href="#Solution.Machine.Coordination.BaseTrainExecutor">BaseTrainExecutor</a></code></h4>
+<ul class="">
+<li><code><a title="Solution.Machine.Coordination.BaseTrainExecutor.fit" href="#Solution.Machine.Coordination.BaseTrainExecutor.fit">fit</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="Solution.Machine.Coordination.NanCoordiantor" href="#Solution.Machine.Coordination.NanCoordiantor">NanCoordiantor</a></code></h4>
+<ul class="">
+<li><code><a title="Solution.Machine.Coordination.NanCoordiantor.fit" href="#Solution.Machine.Coordination.NanCoordiantor.fit">fit</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.NanCoordiantor.predict" href="#Solution.Machine.Coordination.NanCoordiantor.predict">predict</a></code></li>
+<li><code><a title="Solution.Machine.Coordination.NanCoordiantor.preprocess" href="#Solution.Machine.Coordination.NanCoordiantor.preprocess">preprocess</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.1" />
+<title>Solution.util.BaseUtil API documentation</title>
+<meta name="description" content="The basic utilities, including **l1** distance calculation and raw data reading." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>Solution.util.BaseUtil</code></h1>
+</header>
+<section id="section-intro">
+<p>The basic utilities, including <strong>l1</strong> distance calculation and raw data reading.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#39;&#39;&#39;
+    The basic utilities, including **l1** distance calculation and raw data reading.
+&#39;&#39;&#39;
+
+import pandas as pd
+import numpy as np
+
+
+MIN_X = 3750901.5068
+&#39;&#39;&#39;
+    The minimum Y of the center area
+&#39;&#39;&#39;
+
+MAX_X = 3770901.5068
+&#39;&#39;&#39;
+    The maximum X of the center area
+&#39;&#39;&#39;
+
+MIN_Y = -19268905.6133
+&#39;&#39;&#39;
+    The minimum Y of the center area
+&#39;&#39;&#39;
+
+MAX_Y = -19208905.6133
+&#39;&#39;&#39;
+    The maximum Y of the center area
+&#39;&#39;&#39;
+
+
+class Raw_DF_Reader(object):
+    &#39;&#39;&#39;
+        Provide the raw test/train dataframe.
+        Attributes:
+            test: Test dataset
+            train: Train dataset
+
+        In the table, &#34;time_entry&#34; and &#34;time_exit&#34; column are datetime data type,
+        their year-month-date will be 1900-01-01 as they are not provided in the source.
+    &#39;&#39;&#39;
+
+    def __init__(self):
+        self.__get_raw_test()
+        self.__get_raw_train()
+        self.__preprocess()
+
+    def __get_raw_test(self):
+        r&#39;&#39;&#39;
+            Read the raw test data table.
+            Its path should be r&#34;EY-DS-Competition\OriginalFile\data_test\data_test.csv&#34;
+        &#39;&#39;&#39;
+
+        with open(r&#34;OriginalFile\data_test\data_test.csv&#34;, &#34;r&#34;, encoding=&#34;utf-8&#34;) as f:
+            self.test = pd.read_csv(f, index_col=0)
+
+    def __get_raw_train(self):
+        r&#39;&#39;&#39;
+            Read the raw train data table.
+            Its path should be r&#34;EY-DS-Competition\OriginalFile\data_train\data_train.csv&#34;
+        &#39;&#39;&#39;
+        with open(r&#34;OriginalFile\data_train\data_train.csv&#34;, &#34;r&#34;, encoding=&#34;utf-8&#34;) as f:
+            self.train = pd.read_csv(f, index_col=0)
+
+    def __preprocess(self):
+        &#39;&#39;&#39;
+            Convert the &#34;time_entry&#34; and &#34;time_exit&#34; column into datetime data type.
+        &#39;&#39;&#39;
+
+        self.test.loc[:, [&#34;time_entry&#34;, &#34;time_exit&#34;]] = pd.to_datetime(
+            self.test[[&#34;time_entry&#34;, &#34;time_exit&#34;]].stack(), format=r&#34;%H:%M:%S&#34;).unstack()
+
+        self.train.loc[:, [&#34;time_entry&#34;, &#34;time_exit&#34;]] = pd.to_datetime(
+            self.train[[&#34;time_entry&#34;, &#34;time_exit&#34;]].stack(), format=r&#34;%H:%M:%S&#34;).unstack()
+
+
+def xy_is_number(x, y):
+    &#39;&#39;&#39;
+        Return whether the two parameters are both numeric data types.
+    &#39;&#39;&#39;
+    return isinstance(x, (int, float, np.float64, np.int64)) and isinstance(y, (int, float, np.float64, np.int64))
+
+
+def isin_center(x, y):
+    &#39;&#39;&#39;
+        Return whether a coordinate is in the center of Atlanta.
+        The return value will be 1 and 0 instead of True or False,
+        so as to be consistent with the competition requirement.
+
+        Parameters can be two single numbers, or two pandas Series.
+        The return value will correspondingly be a number or a Series consists of 1 and 0.
+    &#39;&#39;&#39;
+
+    if xy_is_number(x, y):
+        res = MIN_X &lt;= x &lt;= MAX_X and MIN_Y &lt;= y &lt;= MAX_Y
+        return 1 if res else 0
+    elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
+        res = (MIN_X &lt;= x) &amp; (x &lt;= MAX_X) &amp; (MIN_Y &lt;= y) &amp; (y &lt;= MAX_Y)
+        res = res.apply(lambda x: 1 if x else 0)
+        res.name = &#34;target&#34;   # To make it in accordance with the submission file
+        return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be both number or both pandas Series. The parameter type now is {}, {}&#34;.format(type(x), type(y)))
+
+
+def distance_to_border(x, y):
+    &#39;&#39;&#39;
+        Return the l1 distance of a point to the border of the central area.
+
+        Parameters can be two single numbers, or two pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if xy_is_number(x, y):
+        return _one_point_distance_to_border(x, y)
+    elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
+        res = pd.DataFrame([x, y]).apply(
+            lambda series: _one_point_distance_to_border(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be both number or both pandas Series. The parameter type now is {}, {}&#34;.format(type(x), type(y)))
+
+
+def _one_point_distance_to_border(x, y):
+    &#39;&#39;&#39;
+        Return the l1 distance of a point to the border of the central area.
+
+        Parameters: Two single numbers
+    &#39;&#39;&#39;
+    if isin_center(x, y):
+        d_north = y - MAX_Y
+        d_south = MIN_Y - y
+        d_east = x - MAX_X
+        d_west = MIN_X - x
+        return max([d_north, d_south, d_east, d_west])
+    else:
+        return _one_no_center_point_distance_to_border(x, y)
+
+
+def _one_no_center_point_distance_to_border(x, y):
+    &#39;&#39;&#39;
+        Return the l1 distance of a point to the border of the central area.
+        The point MUST NOT be in the central area.
+
+        Parameters: Two single numbers
+    &#39;&#39;&#39;
+    if MIN_X &lt;= x &lt;= MAX_X:
+        return min([abs(y-MIN_Y), abs(y-MAX_Y)])
+    elif MIN_Y &lt;= y &lt;= MAX_Y:
+        return min([abs(x-MIN_X), abs(x-MAX_X)])
+    else:   # The four corner
+        d1 = abs(x-MIN_X)+abs(y-MIN_Y)
+        d2 = abs(x-MIN_X)+abs(y-MAX_Y)
+        d3 = abs(x-MAX_X)+abs(y-MIN_Y)
+        d4 = abs(x-MAX_X)+abs(y-MAX_Y)
+        return min([d1, d2, d3, d4])
+
+
+def distance_between(x1, y1, x2, y2):
+    &#39;&#39;&#39;
+        Return the l1 distance(s) between the two coordinate (Series).
+
+        Parameters can be four single numbers (representing two coordinates), or four pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if xy_is_number(x1, y1) and xy_is_number(x2, y2):
+        return _distance_between_points(x1, y1, x2, y2)
+    elif isinstance(x1, pd.Series) and isinstance(y1, pd.Series) and isinstance(x2, pd.Series) and isinstance(y2, pd.Series):
+        res = pd.DataFrame([x1, y1, x2, y2]).apply(lambda series: _distance_between_points(
+            series[0], series[1], series[2], series[3]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be all numbers or all pandas Series. The parameter type now is {}, {}, {}, {}&#34;.format(type(x1), type(y1), type(x2), type(y2)))
+
+
+def _distance_between_points(x1, y1, x2, y2):
+    &#39;&#39;&#39;
+        Return the l1 distance(s) between the two coordinate (Series).
+    &#39;&#39;&#39;
+    return abs(x1-x2) + abs(y1-y2)
+
+
+def time_delta(timestamp1, timestamp2):
+    &#39;&#39;&#39;
+        Return the difference between two pandas Timestamps, counted in seconds.
+        The result will always be positive. i.e. The order is not taken into account.
+
+        Parameters can be two pandas Timestamps, or two pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if isinstance(timestamp1, pd.Timestamp) and isinstance(timestamp2, pd.Timestamp):
+        return _single_pair_time_delta(timestamp1, timestamp2)
+    elif isinstance(timestamp1, pd.Series) and isinstance(timestamp2, pd.Series):
+        res = pd.DataFrame([timestamp1, timestamp2]).apply(
+            lambda series: _single_pair_time_delta(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be two numbers or two pandas Series. The parameter type now is {}, {}&#34;.format(type(timestamp1), type(timestamp2)))
+
+
+def _single_pair_time_delta(timestamp1, timestamp2):
+    &#39;&#39;&#39;
+        Return the difference between two pandas Timestamps, counted in seconds.
+        The result will always be positive. i.e. The order is not taken into account.
+
+        Parameters: Two single pandas Timestamps
+    &#39;&#39;&#39;
+    return abs((timestamp1 - timestamp2).total_seconds())</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="Solution.util.BaseUtil.MAX_X"><code class="name">var <span class="ident">MAX_X</span></code></dt>
+<dd>
+<section class="desc"><p>The maximum X of the center area</p></section>
+</dd>
+<dt id="Solution.util.BaseUtil.MAX_Y"><code class="name">var <span class="ident">MAX_Y</span></code></dt>
+<dd>
+<section class="desc"><p>The maximum Y of the center area</p></section>
+</dd>
+<dt id="Solution.util.BaseUtil.MIN_X"><code class="name">var <span class="ident">MIN_X</span></code></dt>
+<dd>
+<section class="desc"><p>The minimum Y of the center area</p></section>
+</dd>
+<dt id="Solution.util.BaseUtil.MIN_Y"><code class="name">var <span class="ident">MIN_Y</span></code></dt>
+<dd>
+<section class="desc"><p>The minimum Y of the center area</p></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="Solution.util.BaseUtil.distance_between"><code class="name flex">
+<span>def <span class="ident">distance_between</span></span>(<span>x1, y1, x2, y2)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return the l1 distance(s) between the two coordinate (Series).</p>
+<p>Parameters can be four single numbers (representing two coordinates), or four pandas Series.
+The return value will correspondingly be a number or a Series.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def distance_between(x1, y1, x2, y2):
+    &#39;&#39;&#39;
+        Return the l1 distance(s) between the two coordinate (Series).
+
+        Parameters can be four single numbers (representing two coordinates), or four pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if xy_is_number(x1, y1) and xy_is_number(x2, y2):
+        return _distance_between_points(x1, y1, x2, y2)
+    elif isinstance(x1, pd.Series) and isinstance(y1, pd.Series) and isinstance(x2, pd.Series) and isinstance(y2, pd.Series):
+        res = pd.DataFrame([x1, y1, x2, y2]).apply(lambda series: _distance_between_points(
+            series[0], series[1], series[2], series[3]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be all numbers or all pandas Series. The parameter type now is {}, {}, {}, {}&#34;.format(type(x1), type(y1), type(x2), type(y2)))</code></pre>
+</details>
+</dd>
+<dt id="Solution.util.BaseUtil.distance_to_border"><code class="name flex">
+<span>def <span class="ident">distance_to_border</span></span>(<span>x, y)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return the l1 distance of a point to the border of the central area.</p>
+<p>Parameters can be two single numbers, or two pandas Series.
+The return value will correspondingly be a number or a Series.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def distance_to_border(x, y):
+    &#39;&#39;&#39;
+        Return the l1 distance of a point to the border of the central area.
+
+        Parameters can be two single numbers, or two pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if xy_is_number(x, y):
+        return _one_point_distance_to_border(x, y)
+    elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
+        res = pd.DataFrame([x, y]).apply(
+            lambda series: _one_point_distance_to_border(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be both number or both pandas Series. The parameter type now is {}, {}&#34;.format(type(x), type(y)))</code></pre>
+</details>
+</dd>
+<dt id="Solution.util.BaseUtil.isin_center"><code class="name flex">
+<span>def <span class="ident">isin_center</span></span>(<span>x, y)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return whether a coordinate is in the center of Atlanta.
+The return value will be 1 and 0 instead of True or False,
+so as to be consistent with the competition requirement.</p>
+<p>Parameters can be two single numbers, or two pandas Series.
+The return value will correspondingly be a number or a Series consists of 1 and 0.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def isin_center(x, y):
+    &#39;&#39;&#39;
+        Return whether a coordinate is in the center of Atlanta.
+        The return value will be 1 and 0 instead of True or False,
+        so as to be consistent with the competition requirement.
+
+        Parameters can be two single numbers, or two pandas Series.
+        The return value will correspondingly be a number or a Series consists of 1 and 0.
+    &#39;&#39;&#39;
+
+    if xy_is_number(x, y):
+        res = MIN_X &lt;= x &lt;= MAX_X and MIN_Y &lt;= y &lt;= MAX_Y
+        return 1 if res else 0
+    elif isinstance(x, pd.Series) and isinstance(y, pd.Series):
+        res = (MIN_X &lt;= x) &amp; (x &lt;= MAX_X) &amp; (MIN_Y &lt;= y) &amp; (y &lt;= MAX_Y)
+        res = res.apply(lambda x: 1 if x else 0)
+        res.name = &#34;target&#34;   # To make it in accordance with the submission file
+        return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be both number or both pandas Series. The parameter type now is {}, {}&#34;.format(type(x), type(y)))</code></pre>
+</details>
+</dd>
+<dt id="Solution.util.BaseUtil.time_delta"><code class="name flex">
+<span>def <span class="ident">time_delta</span></span>(<span>timestamp1, timestamp2)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return the difference between two pandas Timestamps, counted in seconds.
+The result will always be positive. i.e. The order is not taken into account.</p>
+<p>Parameters can be two pandas Timestamps, or two pandas Series.
+The return value will correspondingly be a number or a Series.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def time_delta(timestamp1, timestamp2):
+    &#39;&#39;&#39;
+        Return the difference between two pandas Timestamps, counted in seconds.
+        The result will always be positive. i.e. The order is not taken into account.
+
+        Parameters can be two pandas Timestamps, or two pandas Series.
+        The return value will correspondingly be a number or a Series.
+    &#39;&#39;&#39;
+    if isinstance(timestamp1, pd.Timestamp) and isinstance(timestamp2, pd.Timestamp):
+        return _single_pair_time_delta(timestamp1, timestamp2)
+    elif isinstance(timestamp1, pd.Series) and isinstance(timestamp2, pd.Series):
+        res = pd.DataFrame([timestamp1, timestamp2]).apply(
+            lambda series: _single_pair_time_delta(series[0], series[1]), axis=0)
+        if res.empty:
+            return pd.Series([])
+        else:
+            return res
+    else:
+        raise TypeError(
+            &#34;Parameter type should be two numbers or two pandas Series. The parameter type now is {}, {}&#34;.format(type(timestamp1), type(timestamp2)))</code></pre>
+</details>
+</dd>
+<dt id="Solution.util.BaseUtil.xy_is_number"><code class="name flex">
+<span>def <span class="ident">xy_is_number</span></span>(<span>x, y)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return whether the two parameters are both numeric data types.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def xy_is_number(x, y):
+    &#39;&#39;&#39;
+        Return whether the two parameters are both numeric data types.
+    &#39;&#39;&#39;
+    return isinstance(x, (int, float, np.float64, np.int64)) and isinstance(y, (int, float, np.float64, np.int64))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="Solution.util.BaseUtil.Raw_DF_Reader"><code class="flex name class">
+<span>class <span class="ident">Raw_DF_Reader</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provide the raw test/train dataframe.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>test</code></strong></dt>
+<dd>Test dataset</dd>
+<dt><strong><code>train</code></strong></dt>
+<dd>Train dataset</dd>
+</dl>
+<p>In the table, "time_entry" and "time_exit" column are datetime data type,
+their year-month-date will be 1900-01-01 as they are not provided in the source.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Raw_DF_Reader(object):
+    &#39;&#39;&#39;
+        Provide the raw test/train dataframe.
+        Attributes:
+            test: Test dataset
+            train: Train dataset
+
+        In the table, &#34;time_entry&#34; and &#34;time_exit&#34; column are datetime data type,
+        their year-month-date will be 1900-01-01 as they are not provided in the source.
+    &#39;&#39;&#39;
+
+    def __init__(self):
+        self.__get_raw_test()
+        self.__get_raw_train()
+        self.__preprocess()
+
+    def __get_raw_test(self):
+        r&#39;&#39;&#39;
+            Read the raw test data table.
+            Its path should be r&#34;EY-DS-Competition\OriginalFile\data_test\data_test.csv&#34;
+        &#39;&#39;&#39;
+
+        with open(r&#34;OriginalFile\data_test\data_test.csv&#34;, &#34;r&#34;, encoding=&#34;utf-8&#34;) as f:
+            self.test = pd.read_csv(f, index_col=0)
+
+    def __get_raw_train(self):
+        r&#39;&#39;&#39;
+            Read the raw train data table.
+            Its path should be r&#34;EY-DS-Competition\OriginalFile\data_train\data_train.csv&#34;
+        &#39;&#39;&#39;
+        with open(r&#34;OriginalFile\data_train\data_train.csv&#34;, &#34;r&#34;, encoding=&#34;utf-8&#34;) as f:
+            self.train = pd.read_csv(f, index_col=0)
+
+    def __preprocess(self):
+        &#39;&#39;&#39;
+            Convert the &#34;time_entry&#34; and &#34;time_exit&#34; column into datetime data type.
+        &#39;&#39;&#39;
+
+        self.test.loc[:, [&#34;time_entry&#34;, &#34;time_exit&#34;]] = pd.to_datetime(
+            self.test[[&#34;time_entry&#34;, &#34;time_exit&#34;]].stack(), format=r&#34;%H:%M:%S&#34;).unstack()
+
+        self.train.loc[:, [&#34;time_entry&#34;, &#34;time_exit&#34;]] = pd.to_datetime(
+            self.train[[&#34;time_entry&#34;, &#34;time_exit&#34;]].stack(), format=r&#34;%H:%M:%S&#34;).unstack()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="Solution.util" href="index.html">Solution.util</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="Solution.util.BaseUtil.MAX_X" href="#Solution.util.BaseUtil.MAX_X">MAX_X</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.MAX_Y" href="#Solution.util.BaseUtil.MAX_Y">MAX_Y</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.MIN_X" href="#Solution.util.BaseUtil.MIN_X">MIN_X</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.MIN_Y" href="#Solution.util.BaseUtil.MIN_Y">MIN_Y</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="Solution.util.BaseUtil.distance_between" href="#Solution.util.BaseUtil.distance_between">distance_between</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.distance_to_border" href="#Solution.util.BaseUtil.distance_to_border">distance_to_border</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.isin_center" href="#Solution.util.BaseUtil.isin_center">isin_center</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.time_delta" href="#Solution.util.BaseUtil.time_delta">time_delta</a></code></li>
+<li><code><a title="Solution.util.BaseUtil.xy_is_number" href="#Solution.util.BaseUtil.xy_is_number">xy_is_number</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="Solution.util.BaseUtil.Raw_DF_Reader" href="#Solution.util.BaseUtil.Raw_DF_Reader">Raw_DF_Reader</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

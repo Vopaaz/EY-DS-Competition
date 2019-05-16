@@ -7,20 +7,20 @@ Solution for 2019 EY Nextwave Data Science Challenge by Vopaaz and Xiaochr.
 
 <!-- code_chunk_output -->
 
-- [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
-	- [Getting the Final Result](#getting-the-final-result)
-		- [Prerequisites](#prerequisites)
-			- [Environment](#environment)
-			- [Installing Dependencies](#installing-dependencies)
-		- [Prepare Data](#prepare-data)
-		- [Running](#running)
-	- [Methodology](#methodology)
-		- [Feature Engineering](#feature-engineering)
-		- [Null Value Feature Handling](#null-value-feature-handling)
-		- [Algorithm Design](#algorithm-design)
-			- [Preprocessing](#preprocessing)
-			- [Model Training and Selection](#model-training-and-selection)
-	- [Approach Explored but not Used](#approach-explored-but-not-used)
+* [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
+	* [Getting the Final Result](#getting-the-final-result)
+		* [Prerequisites](#prerequisites)
+			* [Environment](#environment)
+			* [Installing Dependencies](#installing-dependencies)
+		* [Prepare Data](#prepare-data)
+		* [Running](#running)
+	* [Methodology](#methodology)
+		* [Feature Engineering](#feature-engineering)
+		* [Null Value Feature Handling](#null-value-feature-handling)
+		* [Algorithm Design](#algorithm-design)
+			* [Preprocessing](#preprocessing)
+			* [Model Training and Selection](#model-training-and-selection)
+	* [Approach Explored but not Used](#approach-explored-but-not-used)
 
 <!-- /code_chunk_output -->
 

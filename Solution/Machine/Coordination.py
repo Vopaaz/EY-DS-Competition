@@ -321,4 +321,7 @@ class BaseTrainExecutor(BaseExecutor):
         self.SCORING = make_scorer(f1_score)
 
     def fit(self, train):
+        '''
+            Implement proper way to train the model.
+        '''
         raise NotImplementedError

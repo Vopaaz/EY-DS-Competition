@@ -20,6 +20,9 @@ from xgboost import XGBClassifier
 
 
 class RandomForestExecutor(BaseTrainExecutor):
+    '''
+        Wrap the RandomForestClassifer.
+    '''
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = random_forest_3
@@ -33,6 +36,9 @@ class RandomForestExecutor(BaseTrainExecutor):
 
 
 class GradientBoostingExecutor(BaseTrainExecutor):
+    '''
+        Wrap the GradientBoostingClassifier.
+    '''
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = gradient_boosting_2
@@ -45,6 +51,9 @@ class GradientBoostingExecutor(BaseTrainExecutor):
 
 
 class SupportVectorExecutor(BaseTrainExecutor):
+    '''
+        Wrap the SupportVectorClassifier.
+    '''
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = SVC_1
@@ -56,6 +65,9 @@ class SupportVectorExecutor(BaseTrainExecutor):
 
 
 class XGBoostExecutor(BaseTrainExecutor):
+    '''
+        Wrap the XGBoostingClassifier
+    '''
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         param_grid = XGBoosting_2
@@ -68,6 +80,9 @@ class XGBoostExecutor(BaseTrainExecutor):
 
 
 class CombinedExecutor(BaseTrainExecutor):
+    '''
+        Wrap the VotingClassifier using RandomForestClassifier and GradientBoostingClassifier.
+    '''
     def fit(self, X):
         _, feature, target = self.split_hash_feature_target(X)
         rf = RandomForestClassifier(**random_forest_fill_0_best)
