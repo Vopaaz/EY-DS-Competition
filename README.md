@@ -7,20 +7,21 @@ Solution for 2019 EY Nextwave Data Science Challenge by Vopaaz and Xiaochr.
 
 <!-- code_chunk_output -->
 
-* [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
-	* [Getting the Final Result](#getting-the-final-result)
-		* [Prerequisites](#prerequisites)
-			* [Environment](#environment)
-			* [Installing Dependencies](#installing-dependencies)
-		* [Prepare Data](#prepare-data)
-		* [Running](#running)
-	* [Methodology](#methodology)
-		* [Feature Engineering](#feature-engineering)
-		* [Null Value Feature Handling](#null-value-feature-handling)
-		* [Algorithm Design](#algorithm-design)
-			* [Preprocessing](#preprocessing)
-			* [Model Training and Selection](#model-training-and-selection)
-	* [Approach Explored but not Used](#approach-explored-but-not-used)
+- [EY Nextwave Data Science Challenge 2019 Solution](#ey-nextwave-data-science-challenge-2019-solution)
+	- [Getting the Final Result](#getting-the-final-result)
+		- [Prerequisites](#prerequisites)
+			- [Environment](#environment)
+			- [Installing Dependencies](#installing-dependencies)
+		- [Prepare Data](#prepare-data)
+		- [Running](#running)
+	- [Methodology](#methodology)
+		- [Feature Engineering](#feature-engineering)
+		- [Null Value Feature Handling](#null-value-feature-handling)
+		- [Algorithm Design](#algorithm-design)
+			- [Preprocessing](#preprocessing)
+			- [Model Training and Selection](#model-training-and-selection)
+	- [Module Documentation](#module-documentation)
+	- [Approach Explored but not Used](#approach-explored-but-not-used)
 
 <!-- /code_chunk_output -->
 
@@ -147,6 +148,10 @@ The best hyper-parameters we found are:
 
 Although we have found the best parameters, the script we provide still runs the final round of grid search because we try to reproduct the final submission. Also, the time required is relatively acceptable.
 
+
+## Module Documentation
+
+Please use the browser to open `Doc/Solution/index.html`.
 
 ## Approach Explored but not Used
 
