@@ -40,9 +40,9 @@ from Solution.util.BaseUtil import (Raw_DF_Reader, distance_between,
 class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features extracted:
-            - The max, min, average level of the distance of all the points recorded by a device.
-            - The difference between the distance of the entry of the first path and the exit of the last but one.
-            - The difference between the distance of the entry and the exit of the last path but one.
+            - The max, min, average level of the distance to the border of the central area of all the points recorded by a device.
+            - The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
+            - The difference between the distance to the central area of the entry and the exit of the last known path.
 
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
@@ -202,7 +202,7 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
 class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features Extracted:
-            - The coordinate of the start point of the last path (the path to be predicted).
+            - The coordinate of the start point of the unknown path
     &#39;&#39;&#39;
 
     def __init__(self, *args, **kwargs):
@@ -234,9 +234,9 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
 class TimeInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features Extracted:
-            - The difference between **3 p.m.** and the starting / ending time point of the last path. (in seconds)
+            - The difference between **3 p.m.** and the starting / ending time point of the unknown path. (in seconds)
                 Mind that it is not reflected in the name of the column.
-            - The difference between the starting and ending time point of the last path. (in seconds)
+            - The difference between the starting and ending time point of the unknown path. (in seconds)
     &#39;&#39;&#39;
 
     def __init__(self, *args, **kwargs):
@@ -288,13 +288,13 @@ class TimeInfoExtractor(TransformerMixin, BaseEstimator):
 </code></dt>
 <dd>
 <section class="desc"><p>Features Extracted:
-- The coordinate of the start point of the last path (the path to be predicted).</p></section>
+- The coordinate of the start point of the unknown path</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features Extracted:
-            - The coordinate of the start point of the last path (the path to be predicted).
+            - The coordinate of the start point of the unknown path
     &#39;&#39;&#39;
 
     def __init__(self, *args, **kwargs):
@@ -384,9 +384,9 @@ Each column is a feature, as described by the class docstring.</p></section>
 </code></dt>
 <dd>
 <section class="desc"><p>Features extracted:
-- The max, min, average level of the distance of all the points recorded by a device.
-- The difference between the distance of the entry of the first path and the exit of the last but one.
-- The difference between the distance of the entry and the exit of the last path but one.</p>
+- The max, min, average level of the distance to the border of the central area of all the points recorded by a device.
+- The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
+- The difference between the distance to the central area of the entry and the exit of the last known path.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>path_filled</code></strong></dt>
@@ -398,9 +398,9 @@ Each column is a feature, as described by the class docstring.</p></section>
 <pre><code class="python">class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features extracted:
-            - The max, min, average level of the distance of all the points recorded by a device.
-            - The difference between the distance of the entry of the first path and the exit of the last but one.
-            - The difference between the distance of the entry and the exit of the last path but one.
+            - The max, min, average level of the distance to the border of the central area of all the points recorded by a device.
+            - The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
+            - The difference between the distance to the central area of the entry and the exit of the last known path.
 
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
@@ -682,17 +682,17 @@ The last path will not be considered.</p></section>
 </code></dt>
 <dd>
 <section class="desc"><p>Features Extracted:
-- The difference between <strong>3 p.m.</strong> and the starting / ending time point of the last path. (in seconds)
+- The difference between <strong>3 p.m.</strong> and the starting / ending time point of the unknown path. (in seconds)
 Mind that it is not reflected in the name of the column.
-- The difference between the starting and ending time point of the last path. (in seconds)</p></section>
+- The difference between the starting and ending time point of the unknown path. (in seconds)</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class TimeInfoExtractor(TransformerMixin, BaseEstimator):
     &#39;&#39;&#39;
         Features Extracted:
-            - The difference between **3 p.m.** and the starting / ending time point of the last path. (in seconds)
+            - The difference between **3 p.m.** and the starting / ending time point of the unknown path. (in seconds)
                 Mind that it is not reflected in the name of the column.
-            - The difference between the starting and ending time point of the last path. (in seconds)
+            - The difference between the starting and ending time point of the unknown path. (in seconds)
     &#39;&#39;&#39;
 
     def __init__(self, *args, **kwargs):
