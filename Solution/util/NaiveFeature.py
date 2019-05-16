@@ -15,9 +15,9 @@ from Solution.util.BaseUtil import (Raw_DF_Reader, distance_between,
 class DistanceInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features extracted:
-            - The max, min, average level of the distance of all the points recorded by a device.
-            - The difference between the distance of the entry of the first path and the exit of the last but one.
-            - The difference between the distance of the entry and the exit of the last path but one.
+            - The max, min, average level of the distance to the border of the central area of all the points recorded by a device.
+            - The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
+            - The difference between the distance to the central area of the entry and the exit of the last known path.
 
         Parameters:
             path_filled: whether the input dataframe is processed by PathFilling.FillPathTransformer
@@ -177,7 +177,7 @@ class PathInfoExtractor(TransformerMixin, BaseEstimator):
 class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features Extracted:
-            - The coordinate of the start point of the last path (the path to be predicted).
+            - The coordinate of the start point of the unknown path
     '''
 
     def __init__(self, *args, **kwargs):
@@ -209,9 +209,9 @@ class CoordinateInfoExtractor(TransformerMixin, BaseEstimator):
 class TimeInfoExtractor(TransformerMixin, BaseEstimator):
     '''
         Features Extracted:
-            - The difference between **3 p.m.** and the starting / ending time point of the last path. (in seconds)
+            - The difference between **3 p.m.** and the starting / ending time point of the unknown path. (in seconds)
                 Mind that it is not reflected in the name of the column.
-            - The difference between the starting and ending time point of the last path. (in seconds)
+            - The difference between the starting and ending time point of the unknown path. (in seconds)
     '''
 
     def __init__(self, *args, **kwargs):

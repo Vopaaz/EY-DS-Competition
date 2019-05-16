@@ -72,13 +72,14 @@ We listed features of each device that we think may affect the prediction target
 
 - The difference between 3 p.m. and the starting / ending time point of the unknown path. (in seconds)
 - The difference between the starting and ending time point of the unknown path. (in seconds)
-- The max, min, average level of the distance of all the points recorded by a device.
-- The difference between the distance of the entry of the first path and the exit of the last known path.
+- The max, min, average level of the distance to the central area of all the points recorded by a device.
+- The difference between the distance to the central area of the entry of the first path and the exit of the last known path.
 - The difference between the distance to the central area of the entry and the exit of the last known path.
 - The min, max, average level of the length of all the paths recorded by a device
 - The min, max, average level of the average velocity of all the paths recorded by a device
 - The coordinate of the start point of the unknown path
 
+All the *distance to the central area* are measured by the l1 distance to the border of the central area.
 
 There are some devices which only records one path (the path to be predicted). Hence some of the above-mentioned features cannot be extracted. They are `Null` values in the Feature Panel.
 We came up with several strategies to deal with them (see the [Null Value Feature Handling](#null-value-feature-handling) part). In the best prediction result, we used the `drop` strategy, that is, to remove these features.
