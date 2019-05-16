@@ -25,7 +25,6 @@ Solution for 2019 EY Nextwave Data Science Challenge by Vopaaz and Xiaochr.
 <!-- /code_chunk_output -->
 
 
----
 
 ## Getting the Final Result
 
@@ -59,7 +58,6 @@ This shall take about 1-2 hours. Then the `.csv` file to be submitted can be fou
 
 Note that as we neither saved the model nor set the `random_state` variable, the produced file may be slightly different from our last submission.
 
----
 
 ## Methodology
 
@@ -149,7 +147,6 @@ The best hyper-parameters we found are:
 
 Although we have found the best parameters, the script we provide still runs the final round of grid search because we try to reproduct the final submission. Also, the time required is relatively acceptable.
 
----
 
 ## Approach Explored but not Used
 
